@@ -10,313 +10,300 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-class Alkupera(models.Model):
+class Origin(models.Model):
     id = models.IntegerField(primary_key=True)
-    selitys = models.CharField(max_length=50, blank=True, null=True)
-    lahde = models.CharField(max_length=50, blank=True, null=True)
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
         db_table = 'alkupera'
 
 
-class Arvo(models.Model):
+class Value(models.Model):
     id = models.IntegerField(primary_key=True)
-    luokka = models.CharField(max_length=10, blank=True, null=True)
-    selite = models.CharField(max_length=50, blank=True, null=True)
-    arvottaja = models.CharField(max_length=50, blank=True, null=True)
-    pvm = models.DateField(blank=True, null=True)
-    linkki = models.CharField(max_length=4000, blank=True, null=True)
+    type = models.CharField(max_length=10, blank=True, null=True, db_column='luokka')
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selite')
+    valuator = models.CharField(max_length=50, blank=True, null=True, db_column='arvottaja')
+    date = models.DateField(blank=True, null=True, db_column='pvm')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
 
     class Meta:
         managed = False
         db_table = 'arvo'
 
 
-class ArvoKohde(models.Model):
-    arvoid = models.ForeignKey(Arvo, models.DO_NOTHING, db_column='arvoid')
-    kohdeid = models.ForeignKey('Kohde', models.DO_NOTHING, db_column='kohdeid')
+class ValueObject(models.Model):
+    value_id = models.ForeignKey(Value, models.DO_NOTHING, db_column='arvoid')
+    object_id = models.ForeignKey('Object', models.DO_NOTHING, db_column='kohdeid')
 
     class Meta:
         managed = False
         db_table = 'arvo_kohde'
-        unique_together = (('arvoid', 'kohdeid'),)
+        unique_together = (('value_id', 'object_id'),)
 
 
-class Esiintyma(models.Model):
+class Occurrence(models.Model):
     id = models.IntegerField(primary_key=True)
-    selitys = models.CharField(max_length=50, blank=True, null=True)
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
 
     class Meta:
         managed = False
         db_table = 'esiintyma'
 
 
-class Havaintosarja(models.Model):
+class ObservationSeries(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=50, blank=True, null=True)
-    hloid = models.ForeignKey('Henkilo', models.DO_NOTHING, db_column='hloid', blank=True, null=True)
-    kuvaus = models.CharField(max_length=255, blank=True, null=True)
-    alkupvm = models.DateField(blank=True, null=True)
-    loppupvm = models.DateField(blank=True, null=True)
-    menetelma = models.CharField(max_length=255, blank=True, null=True)
-    huomioitavaa = models.CharField(max_length=255, blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    voimassa = models.BooleanField()
+    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
+    person_id = models.ForeignKey('Person', models.DO_NOTHING, blank=True, null=True, db_column='hloid')
+    description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
+    start_date = models.DateField(blank=True, null=True, db_column='alkupvm')
+    end_date = models.DateField(blank=True, null=True, db_column='loppupvm')
+    method = models.CharField(max_length=255, blank=True, null=True, db_column='menetelma')
+    notes = models.CharField(max_length=255, blank=True, null=True, db_column='huomioitavaa')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    active = models.BooleanField(db_column='voimassa')
 
     class Meta:
         managed = False
         db_table = 'havaintosarja'
 
 
-class Henkilo(models.Model):
+class Person(models.Model):
     id = models.IntegerField(primary_key=True)
-    sukunimi = models.CharField(max_length=25, blank=True, null=True)
-    etunimi = models.CharField(max_length=25, blank=True, null=True)
-    asiantuntemus = models.CharField(max_length=150, blank=True, null=True)
-    huomioitavaa = models.CharField(max_length=255, blank=True, null=True)
-    yritys = models.CharField(max_length=100, blank=True, null=True)
-    viranomainen = models.BooleanField()
-    puhnro = models.CharField(max_length=50, blank=True, null=True)
-    email = models.CharField(max_length=100, blank=True, null=True)
-    lisaysaika = models.DateTimeField(blank=True, null=True)
+    surname = models.CharField(max_length=25, blank=True, null=True, db_column='sukunimi')
+    first_name = models.CharField(max_length=25, blank=True, null=True, db_column='etunimi')
+    expertise = models.CharField(max_length=150, blank=True, null=True, db_column='asiantuntemus')
+    notes = models.CharField(max_length=255, blank=True, null=True, db_column='huomioitavaa')
+    company = models.CharField(max_length=100, blank=True, null=True, db_column='yritys')
+    public_servant = models.BooleanField(db_column='viranomainen')
+    telephone = models.CharField(max_length=50, blank=True, null=True, db_column='puhnro')
+    email = models.CharField(max_length=100, blank=True, null=True, db_column='email')
+    created_time = models.DateTimeField(blank=True, null=True, db_column='lisaysaika')
 
     class Meta:
         managed = False
         db_table = 'henkilo'
 
 
-class Julkaisu(models.Model):
+class Publication(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=150, blank=True, null=True)
-    tekija = models.CharField(max_length=100, blank=True, null=True)
-    sarja = models.CharField(max_length=100, blank=True, null=True)
-    painopaikka = models.CharField(max_length=50, blank=True, null=True)
-    vuosi = models.CharField(max_length=50, blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    julktyyppiid = models.ForeignKey('Julktyyppi', models.DO_NOTHING, db_column='julktyyppiid')
-    linkki = models.CharField(max_length=4000, blank=True, null=True)
+    name = models.CharField(max_length=150, blank=True, null=True, db_column='nimi')
+    author = models.CharField(max_length=100, blank=True, null=True, db_column='tekija')
+    series = models.CharField(max_length=100, blank=True, null=True, db_column='sarja')
+    place_of_printing = models.CharField(max_length=50, blank=True, null=True, db_column='painopaikka')
+    year = models.CharField(max_length=50, blank=True, null=True, db_column='vuosi')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    publication_type = models.ForeignKey('PublicationType', models.DO_NOTHING, db_column='julktyyppiid')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
 
     class Meta:
         managed = False
         db_table = 'julkaisu'
 
 
-class Julktyyppi(models.Model):
+class PublicationType(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=20, blank=True, null=True)
+    name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
 
     class Meta:
         managed = False
         db_table = 'julktyyppi'
 
 
-class Kohde(models.Model):
+class Object(models.Model):
     id = models.IntegerField(primary_key=True)
-    tunnus = models.CharField(max_length=10, blank=True, null=True)
-    luokkatunnus = models.ForeignKey('Luokka', models.DO_NOTHING, db_column='luokkatunnus')
+    type = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
+    object_class = models.ForeignKey('Luokka', models.DO_NOTHING, db_column='luokkatunnus')
     geometry1 = models.GeometryField()
-    nimi = models.CharField(max_length=80, blank=True, null=True)
-    kuvaus = models.CharField(max_length=255, blank=True, null=True)
-    huom = models.CharField(max_length=255, blank=True, null=True)
-    voimassa = models.BooleanField()
-    digipvm = models.DateField(blank=True, null=True)
-    numero = models.IntegerField(blank=True, null=True)
-    digitoija = models.CharField(max_length=50, blank=True, null=True)
-    suojaustasoid = models.ForeignKey('Suojaustaso', models.DO_NOTHING, db_column='suojaustasoid')
-    pvm_editoitu = models.DateTimeField(blank=True, null=True)
-    muokkaaja = models.CharField(max_length=10, blank=True, null=True)
-    pinta_ala = models.FloatField(blank=True, null=True)
-    teksti = models.CharField(max_length=4000, blank=True, null=True)
-    teksti_www = models.CharField(max_length=4000, blank=True, null=True)
+    name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
+    description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
+    notes = models.CharField(max_length=255, blank=True, null=True, db_column='huom')
+    active = models.BooleanField(db_column='voimassa')
+    created_time = models.DateField(blank=True, null=True, db_column='digipvm')
+    number = models.IntegerField(blank=True, null=True, db_column='numero')
+    created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')
+    protection_level = models.ForeignKey('ProtectionLevel', models.DO_NOTHING, db_column='suojaustasoid')
+    last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
+    last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
+    area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
+    text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
+    values = models.ManyToManyField(Value, through=ValueObject, related_name='objects')
+    publications = models.ManyToManyField(Publication, through='ObjectPublication', related_name='objects')
 
     class Meta:
         managed = False
         db_table = 'kohde'
 
 
-class KohdeHistoria(models.Model):
-    id = models.IntegerField(primary_key=True)
-    tunnus = models.CharField(max_length=10, blank=True, null=True)
-    luokkatunnus = models.CharField(max_length=10)
-    geometry1 = models.GeometryField()
-    nimi = models.CharField(max_length=80, blank=True, null=True)
-    kuvaus = models.CharField(max_length=255, blank=True, null=True)
-    huom = models.CharField(max_length=255, blank=True, null=True)
-    voimassa = models.BooleanField()
-    digipvm = models.DateField(blank=True, null=True)
-    numero = models.IntegerField(blank=True, null=True)
-    digitoija = models.CharField(max_length=50, blank=True, null=True)
-    suojaustasoid = models.ForeignKey('Suojaustaso', models.DO_NOTHING, db_column='suojaustasoid')
-    pvm_editoitu = models.DateTimeField(blank=True, null=True)
-    muokkaaja = models.CharField(max_length=10, blank=True, null=True)
-    pinta_ala = models.FloatField(blank=True, null=True)
-    teksti = models.CharField(max_length=4000, blank=True, null=True)
-    teksti_www = models.CharField(max_length=4000, blank=True, null=True)
-    historia_pvm = models.DateTimeField()
-    kohde_id = models.IntegerField()
+class HistoricalObject(Object):
+    archived_time = models.DateTimeField(db_column='historia_pvm')
+    object = models.ForeignKey(Object, models.DO_NOTHING, db_column='kohde_id')
 
     class Meta:
         managed = False
         db_table = 'kohde_historia'
 
 
-class KohdeJulk(models.Model):
-    kohdeid = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='kohdeid')
-    julkid = models.ForeignKey(Julkaisu, models.DO_NOTHING, db_column='julkid')
+class ObjectPublication(models.Model):
+    object_id = models.ForeignKey(Object, models.DO_NOTHING, db_column='kohdeid')
+    publication_id = models.ForeignKey(Publication, models.DO_NOTHING, db_column='julkid')
 
     class Meta:
         managed = False
         db_table = 'kohde_julk'
-        unique_together = (('kohdeid', 'julkid'),)
+        unique_together = (('object_id', 'publication_id'),)
 
 
-class Kohdelinkki(models.Model):
+class ObjectLink(models.Model):
     id = models.IntegerField(primary_key=True)
-    tekstiid = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='tekstiid')
-    linkki = models.CharField(max_length=4000, blank=True, null=True)
-    linkkiteksti = models.CharField(max_length=4000, blank=True, null=True)
-    tyyppiid = models.ForeignKey('Linkkityyppi', models.DO_NOTHING, db_column='tyyppiid')
-    jarjestys = models.IntegerField(blank=True, null=True)
-    linkin_teksti = models.CharField(max_length=1000, blank=True, null=True)
-    suojaustasoid = models.ForeignKey('Suojaustaso', models.DO_NOTHING, db_column='suojaustasoid')
+    object = models.ForeignKey(Object, models.DO_NOTHING, db_column='tekstiid')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='link')
+    text = models.CharField(max_length=4000, blank=True, null=True, db_column='linkkiteksti')
+    type = models.ForeignKey('LinkType', models.DO_NOTHING, db_column='tyyppiid')
+    ordering = models.IntegerField(blank=True, null=True, db_column='jarjestys')
+    link_text = models.CharField(max_length=1000, blank=True, null=True, db_column='linkin_teksti ')
+    protection_level = models.ForeignKey('ProtectionLevel', models.DO_NOTHING, db_column='suojaustasoid')
 
     class Meta:
         managed = False
         db_table = 'kohdelinkki'
 
 
-class LajSaa(models.Model):
-    lajid = models.ForeignKey('Lajirekisteri', models.DO_NOTHING, db_column='lajid')
-    saaid = models.ForeignKey('Saados', models.DO_NOTHING, db_column='saaid')
+class SpeciesRegulation(models.Model):
+    species_id = models.ForeignKey('Species', models.DO_NOTHING, db_column='lajid')
+    regulation_id = models.ForeignKey('Regulation', models.DO_NOTHING, db_column='saaid')
 
     class Meta:
         managed = False
         db_table = 'laj_saa'
-        unique_together = (('lajid', 'saaid'),)
+        unique_together = (('species_id', 'regulation_id'),)
 
 
-class Lajihavainto(models.Model):
+class Observation(models.Model):
     id = models.IntegerField(primary_key=True)
-    kohdeid = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='kohdeid')
-    lajid = models.ForeignKey('Lajirekisteri', models.DO_NOTHING, db_column='lajid')
-    hsaid = models.ForeignKey(Havaintosarja, models.DO_NOTHING, db_column='hsaid', blank=True, null=True)
-    runsausid = models.ForeignKey('Runsaus', models.DO_NOTHING, db_column='runsausid', blank=True, null=True)
-    yleisyysid = models.ForeignKey('Yleisyys', models.DO_NOTHING, db_column='yleisyysid', blank=True, null=True)
-    hloid = models.ForeignKey(Henkilo, models.DO_NOTHING, db_column='hloid', blank=True, null=True)
-    lkm = models.CharField(max_length=30, blank=True, null=True)
-    liikkumislkid = models.ForeignKey('Liikkumislk', models.DO_NOTHING, db_column='liikkumislkid', blank=True, null=True)
-    alkuperaid = models.ForeignKey(Alkupera, models.DO_NOTHING, db_column='alkuperaid', blank=True, null=True)
-    pesimisvarmuusid = models.ForeignKey('Pesimisvarmuus', models.DO_NOTHING, db_column='pesimisvarmuusid', blank=True, null=True)
-    kuvaus = models.CharField(max_length=255, blank=True, null=True)
-    huom = models.CharField(max_length=100, blank=True, null=True)
-    pvm = models.DateField(blank=True, null=True)
-    esiintymaid = models.ForeignKey(Esiintyma, models.DO_NOTHING, db_column='esiintymaid', blank=True, null=True)
-    suojaustasoid = models.ForeignKey('Suojaustaso', models.DO_NOTHING, db_column='suojaustasoid')
-    pvm_luotu = models.DateTimeField()
-    pvm_editoitu = models.DateTimeField(blank=True, null=True)
+    location = models.ForeignKey(Object, models.DO_NOTHING, db_column='kohdeid')
+    species = models.ForeignKey('Species', models.DO_NOTHING, db_column='lajid')
+    series = models.ForeignKey(ObservationSeries, models.DO_NOTHING, db_column='hsaid', blank=True, null=True)
+    abundance = models.ForeignKey('Abundance', models.DO_NOTHING, db_column='runsausid', blank=True, null=True)
+    incidence = models.ForeignKey('Incidence', models.DO_NOTHING, db_column='yleisyysid', blank=True, null=True)
+    observer = models.ForeignKey(Person, models.DO_NOTHING, db_column='hloid', blank=True, null=True)
+    number = models.CharField(max_length=30, blank=True, null=True, db_column='lkm')
+    mobility = models.ForeignKey('Mobility', models.DO_NOTHING, db_column='liikkumislkid', blank=True, null=True)
+    origin = models.ForeignKey(Origin, models.DO_NOTHING, db_column='alkuperaid', blank=True, null=True)
+    breeding_category = models.ForeignKey('BreedingCategory', models.DO_NOTHING, db_column='pesimisvarmuusid', blank=True, null=True)
+    description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
+    notes = models.CharField(max_length=100, blank=True, null=True, db_column='huom')
+    date = models.DateField(blank=True, null=True, db_column='pvm')
+    occurrence = models.ForeignKey(Occurrence, models.DO_NOTHING, db_column='esiintymaid', blank=True, null=True)
+    protection_level = models.ForeignKey('ProtectionLevel', models.DO_NOTHING, db_column='suojaustasoid')
+    created_time = models.DateTimeField(db_column='pvm_luotu')
+    last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
 
     class Meta:
         managed = False
         db_table = 'lajihavainto'
 
 
-class Lajirekisteri(models.Model):
+class Species(models.Model):
     id = models.IntegerField(primary_key=True)
-    ryhma = models.CharField(max_length=5, blank=True, null=True)
-    elioryhma1 = models.CharField(max_length=50, blank=True, null=True)
-    elioryhma2 = models.CharField(max_length=50, blank=True, null=True)
-    lahko_suomi = models.CharField(max_length=150, blank=True, null=True)
-    lahko_tiet = models.CharField(max_length=150, blank=True, null=True)
-    heimo_suomi = models.CharField(max_length=150, blank=True, null=True)
-    heimo_tiet = models.CharField(max_length=150, blank=True, null=True)
-    nimi_suomi1 = models.CharField(max_length=150, blank=True, null=True)
-    nimi_suomi2 = models.CharField(max_length=150, blank=True, null=True)
-    nimi_tiet1 = models.CharField(max_length=150, blank=True, null=True)
-    nimi_tiet2 = models.CharField(max_length=150, blank=True, null=True)
-    alalaji1 = models.CharField(max_length=150, blank=True, null=True)
-    alalaji2 = models.CharField(max_length=150, blank=True, null=True)
-    auktori1 = models.CharField(max_length=150, blank=True, null=True)
-    auktori2 = models.CharField(max_length=150, blank=True, null=True)
-    nimilyhenne1 = models.CharField(max_length=10, blank=True, null=True)
-    nimilyhenne2 = models.CharField(max_length=10, blank=True, null=True)
-    nimi_ruotsi = models.CharField(max_length=150, blank=True, null=True)
-    nimi_englanti = models.CharField(max_length=150, blank=True, null=True)
-    rekisteripvm = models.DateTimeField(blank=True, null=True)
-    suojaustasoid = models.ForeignKey('Suojaustaso', models.DO_NOTHING, db_column='suojaustasoid')
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    koodi = models.CharField(max_length=20, blank=True, null=True)
-    linkki = models.CharField(max_length=4000, blank=True, null=True)
+    taxon = models.CharField(max_length=5, blank=True, null=True, db_column='ryhma')
+    taxon_1 = models.CharField(max_length=50, blank=True, null=True, db_column='elioryhma1')
+    taxon_2 = models.CharField(max_length=50, blank=True, null=True, db_column='elioryhma2')
+    order_fi = models.CharField(max_length=150, blank=True, null=True, db_column='lahko_suomi')
+    order_la = models.CharField(max_length=150, blank=True, null=True, db_column='lahko_tiet')
+    family_fi = models.CharField(max_length=150, blank=True, null=True, db_column='heimo_suomi')
+    family_la = models.CharField(max_length=150, blank=True, null=True, db_column='heimo_tiet')
+    name_fi_1 = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_suomi1')
+    name_fi_2 = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_suomi2')
+    name_la_1 = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_tiet1')
+    name_la_2 = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_tiet2')
+    subspecies_1 = models.CharField(max_length=150, blank=True, null=True, db_column='alalaji1')
+    subspecies_2 = models.CharField(max_length=150, blank=True, null=True, db_column='alalaji2')
+    author_1 = models.CharField(max_length=150, blank=True, null=True, db_column='auktori1')
+    author_2 = models.CharField(max_length=150, blank=True, null=True, db_column='auktori2')
+    name_abbreviated_1 = models.CharField(max_length=10, blank=True, null=True, db_column='nimilyhenne1')
+    name_abbreviated_2 = models.CharField(max_length=10, blank=True, null=True, db_column='nimilyhenne2')
+    name_sv = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_ruotsi')
+    name_en = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_englanti')
+    registry_date = models.DateTimeField(blank=True, null=True, db_column='rekisteripvm')
+    protection_level = models.ForeignKey('ProtectionLevel', models.DO_NOTHING, db_column='suojaustasoid')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    code = models.CharField(max_length=20, blank=True, null=True, db_column='koodi')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
+    regulations = models.ManyToManyField('Regulation', through=SpeciesRegulation, related_name='species')
 
     class Meta:
         managed = False
         db_table = 'lajirekisteri'
 
 
-class Liikkumislk(models.Model):
+class Mobility(models.Model):
     id = models.IntegerField(primary_key=True)
-    arvo = models.IntegerField(blank=True, null=True)
-    selitys = models.CharField(max_length=50, blank=True, null=True)
-    lahde = models.CharField(max_length=50, blank=True, null=True)
+    value = models.IntegerField(blank=True, null=True, db_column='arvo')
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
         db_table = 'liikkumislk'
 
 
-class Linkkityyppi(models.Model):
+class LinkType(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
 
     class Meta:
         managed = False
         db_table = 'linkkityyppi'
 
 
-class LtyyppiSaados(models.Model):
-    ltyyppiid = models.ForeignKey('Ltyyppirekisteri', models.DO_NOTHING, db_column='ltyyppiid')
-    saadosid = models.ForeignKey('Saados', models.DO_NOTHING, db_column='saadosid')
+class HabitatTypeRegulation(models.Model):
+    habitat_type_id = models.ForeignKey('HabitatType', models.DO_NOTHING, db_column='ltyyppiid')
+    regulation_id = models.ForeignKey('Regulation', models.DO_NOTHING, db_column='saadosid')
 
     class Meta:
         managed = False
         db_table = 'ltyyppi_saados'
-        unique_together = (('ltyyppiid', 'saadosid'),)
+        unique_together = (('habitat_type_id', 'regulation_id'),)
 
 
-class Ltyyppihavainto(models.Model):
+class HabitatTypeObservation(models.Model):
     id = models.IntegerField(primary_key=True)
-    kohdeid = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='kohdeid')
-    ltyypid = models.ForeignKey('Ltyyppirekisteri', models.DO_NOTHING, db_column='ltyypid')
-    osuus_kuviosta = models.IntegerField(blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    hsaid = models.ForeignKey(Havaintosarja, models.DO_NOTHING, db_column='hsaid')
-    pvm_luotu = models.DateTimeField()
-    pvm_editoitu = models.DateTimeField(blank=True, null=True)
+    object = models.ForeignKey(Object, models.DO_NOTHING, db_column='kohdeid')
+    habitat_type = models.ForeignKey('HabitatType', models.DO_NOTHING, db_column='ltyypid')
+    group_fraction = models.IntegerField(blank=True, null=True, db_column='osuus_kuviosta')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    observation_series = models.ForeignKey(ObservationSeries, models.DO_NOTHING, db_column='hsaid')
+    created_time = models.DateTimeField(db_column='pvm_luotu')
+    last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
 
     class Meta:
         managed = False
         db_table = 'ltyyppihavainto'
 
 
-class Ltyyppirekisteri(models.Model):
+class HabitatType(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=50, blank=True, null=True)
-    koodi = models.CharField(max_length=10, blank=True, null=True)
-    kuvaus = models.CharField(max_length=255, blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    ltyyppiryhma = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
+    code = models.CharField(max_length=10, blank=True, null=True, db_column='koodi')
+    description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    group = models.CharField(max_length=50, blank=True, null=True, db_column='ltyyppiryhma')
+    regulations = models.ManyToManyField(Regulation, through=HabitatTypeRegulation, related_name='habitat_types')
 
     class Meta:
         managed = False
         db_table = 'ltyyppirekisteri'
 
 
-class Luokka(models.Model):
-    tunnus = models.CharField(primary_key=True, max_length=10)
-    nimi = models.CharField(max_length=50, blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    paatunnus = models.CharField(max_length=40, blank=True, null=True)
-    raportointi = models.BooleanField()
+class Class(models.Model):
+    id = models.CharField(primary_key=True, max_length=10, db_column='tunnus')
+    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    super_class = models.ForeignKey('Class', blank=True, null=True, db_column='paatunnus')
+    reporting = models.BooleanField(db_column='raportointi')
     www = models.BooleanField()
     metadata = models.CharField(max_length=4000, blank=True, null=True)
 
@@ -325,168 +312,174 @@ class Luokka(models.Model):
         db_table = 'luokka'
 
 
-class Pesimisvarmuus(models.Model):
+class BreedingCategory(models.Model):
     id = models.IntegerField(primary_key=True)
-    arvo = models.CharField(max_length=50, blank=True, null=True)
-    selitys = models.CharField(max_length=50, blank=True, null=True)
-    lahde = models.CharField(max_length=50, blank=True, null=True)
+    value = models.CharField(max_length=50, blank=True, null=True, db_column='arvo')
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
         db_table = 'pesimisvarmuus'
 
 
-class Runsaus(models.Model):
+class Abundance(models.Model):
     id = models.IntegerField(primary_key=True)
-    arvo = models.CharField(max_length=5, blank=True, null=True)
-    selitys = models.CharField(max_length=30, blank=True, null=True)
-    lahde = models.CharField(max_length=50, blank=True, null=True)
+    value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
+    explanation = models.CharField(max_length=30, blank=True, null=True, db_column='selitys')
+    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
         db_table = 'runsaus'
 
 
-class Ruutu(models.Model):
-    id = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='id', primary_key=True)
-    nro = models.CharField(max_length=10, blank=True, null=True)
-    selvitysaste = models.IntegerField(blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
+class Tile(models.Model):
+    id = models.ForeignKey(Object, models.DO_NOTHING, db_column='id', primary_key=True)
+    number = models.CharField(max_length=10, blank=True, null=True, db_column='nro')
+    degree_of_determination = models.IntegerField(blank=True, null=True, db_column='selvitysaste')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
 
     class Meta:
         managed = False
         db_table = 'ruutu'
 
 
-class Saados(models.Model):
+class Regulation(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=255, blank=True, null=True)
-    pykala = models.CharField(max_length=100, blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
-    arvo = models.CharField(max_length=10, blank=True, null=True)
-    arvon_selitys = models.CharField(max_length=255, blank=True, null=True)
-    voimassa = models.BooleanField()
-    voimaantulo = models.DateTimeField(blank=True, null=True)
-    linkki = models.CharField(max_length=4000, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True, db_column='nimi')
+    paragraph = models.CharField(max_length=100, blank=True, null=True, db_column='pykala')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    value = models.CharField(max_length=10, blank=True, null=True, db_column='arvo')
+    value_explanation = models.CharField(max_length=255, blank=True, null=True, db_column='arvon_selitys')
+    valid = models.BooleanField(db_column='voimassa')
+    date_of_entry = models.DateTimeField(blank=True, null=True, db_column='voimaantulo')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
 
     class Meta:
         managed = False
         db_table = 'saados'
 
 
-class Sohjelma(models.Model):
+class ConservationProgramme(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
 
     class Meta:
         managed = False
         db_table = 'sohjelma'
 
 
-class SuoPeruste(models.Model):
-    perusteid = models.ForeignKey('Suoperuste', models.DO_NOTHING, db_column='perusteid')
-    suoid = models.ForeignKey('Suojelu', models.DO_NOTHING, db_column='suoid')
+class ProtectionCriterion(models.Model):
+    criterion_id = models.ForeignKey('Criterion', models.DO_NOTHING, db_column='perusteid')
+    protection_id = models.ForeignKey('Protection', models.DO_NOTHING, db_column='suoid')
 
     class Meta:
         managed = False
         db_table = 'suo_peruste'
-        unique_together = (('perusteid', 'suoid'),)
+        unique_together = (('criterion_id', 'protection_id'),)
 
 
-class Suojaustaso(models.Model):
+class ProtectionLevel(models.Model):
     id = models.IntegerField(primary_key=True)
-    selitys = models.CharField(max_length=50, blank=True, null=True)
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
 
     class Meta:
         managed = False
         db_table = 'suojaustaso'
 
 
-class Suojelu(models.Model):
-    id = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='id', primary_key=True)
-    ilmoitettu_pinta_ala = models.CharField(max_length=50, blank=True, null=True)
-    maapinta_ala = models.CharField(max_length=50, blank=True, null=True)
-    vesipinta_ala = models.CharField(max_length=50, blank=True, null=True)
-    liikkuminen = models.CharField(max_length=255, blank=True, null=True)
-    maaraykset = models.CharField(max_length=255, blank=True, null=True)
-    lisatieto = models.CharField(max_length=255, blank=True, null=True)
+class Protection(models.Model):
+    id = models.ForeignKey(Object, models.DO_NOTHING, db_column='id', primary_key=True)
+    reported_area = models.CharField(max_length=50, blank=True, null=True, db_column='ilmoitettu_pinta_ala')
+    land_area = models.CharField(max_length=50, blank=True, null=True, db_column='maapinta_ala')
+    water_area = models.CharField(max_length=50, blank=True, null=True, db_column='vesipinta_ala')
+    hiking = models.CharField(max_length=255, blank=True, null=True, db_column='liikkuminen')
+    regulations = models.CharField(max_length=255, blank=True, null=True, db_column='maaraykset')
+    additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
+    criteria = models.ManyToManyField('Criterion', through=ProtectionCriterion, related_name='protections')
+    conservation_programmes = models.ManyToManyField(ConservationProgramme,
+                                                     through='ProtectionConservationProgramme',
+                                                     related_name='protections')
 
     class Meta:
         managed = False
         db_table = 'suojelu'
 
 
-class SuojeluSohjelma(models.Model):
-    suojeluid = models.ForeignKey(Suojelu, models.DO_NOTHING, db_column='suojeluid')
-    sohjelmaid = models.ForeignKey(Sohjelma, models.DO_NOTHING, db_column='sohjelmaid')
+class ProtectionConservationProgramme(models.Model):
+    protection_id = models.ForeignKey(Protection, models.DO_NOTHING, db_column='suojeluid')
+    conservation_programme_id = models.ForeignKey(ConservationProgramme, models.DO_NOTHING, db_column='sohjelmaid')
 
     class Meta:
         managed = False
         db_table = 'suojelu_sohjelma'
-        unique_together = (('suojeluid', 'sohjelmaid'),)
+        unique_together = (('protection_id', 'conservation_programme_id'),)
 
 
-class Suoperuste(models.Model):
+class Criterion(models.Model):
     id = models.IntegerField(primary_key=True)
-    peruste = models.CharField(max_length=50, blank=True, null=True)
-    tarkperuste = models.CharField(max_length=50, blank=True, null=True)
-    alaperuste = models.CharField(max_length=50, blank=True, null=True)
+    criterion = models.CharField(max_length=50, blank=True, null=True, db_column='peruste')
+    specific_criterion = models.CharField(max_length=50, blank=True, null=True, db_column='tarkperuste')
+    subcriterion = models.CharField(max_length=50, blank=True, null=True, db_column='alaperuste')
 
     class Meta:
         managed = False
         db_table = 'suoperuste'
 
 
-class TapSaados(models.Model):
-    tapid = models.ForeignKey('Tapahtuma', models.DO_NOTHING, db_column='tapid')
-    saaid = models.ForeignKey(Saados, models.DO_NOTHING, db_column='saaid')
+class EventRegulation(models.Model):
+    event_id = models.ForeignKey('Event', models.DO_NOTHING, db_column='tapid')
+    regulation_id = models.ForeignKey(Regulation, models.DO_NOTHING, db_column='saaid')
 
     class Meta:
         managed = False
         db_table = 'tap_saados'
-        unique_together = (('tapid', 'saaid'),)
+        unique_together = (('event_id', 'regulation_id'),)
 
 
-class Tapahtuma(models.Model):
+class Event(models.Model):
     id = models.IntegerField(primary_key=True)
-    diaarinro = models.CharField(max_length=20, blank=True, null=True)
-    kuvaus = models.CharField(max_length=255, blank=True, null=True)
-    tapahtumatyyppiid = models.ForeignKey('Tapahtumatyyppi', models.DO_NOTHING, db_column='tapahtumatyyppiid')
-    paivittaja = models.CharField(max_length=20, blank=True, null=True)
-    pvm = models.DateField(blank=True, null=True)
-    hloid = models.ForeignKey(Henkilo, models.DO_NOTHING, db_column='hloid', blank=True, null=True)
-    linkki = models.CharField(max_length=4000, blank=True, null=True)
-    suojaustasoid = models.ForeignKey(Suojaustaso, models.DO_NOTHING, db_column='suojaustasoid')
+    register_id = models.CharField(max_length=20, blank=True, null=True, db_column='diaarinro')
+    description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
+    type = models.ForeignKey('EventType', models.DO_NOTHING, db_column='tapahtumatyyppiid')
+    last_modified_by = models.CharField(max_length=20, blank=True, null=True, db_column='paivittaja')
+    date = models.DateField(blank=True, null=True, db_column='pvm')
+    person = models.ForeignKey(Person, models.DO_NOTHING, db_column='hloid', blank=True, null=True, db_column='')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
+    protection_level = models.ForeignKey(ProtectionLevel, models.DO_NOTHING, db_column='suojaustasoid')
+    objects = models.ManyToManyField(Object, through='EventObject', related_name='events')
+    regulations = models.ManyToManyField(Regulation, throuhg='EventRegulation', related_name='events')
 
     class Meta:
         managed = False
         db_table = 'tapahtuma'
 
 
-class TapahtumaKohde(models.Model):
-    kohdeid = models.ForeignKey(Kohde, models.DO_NOTHING, db_column='kohdeid')
-    tapid = models.ForeignKey(Tapahtuma, models.DO_NOTHING, db_column='tapid')
+class EventObject(models.Model):
+    object_id = models.ForeignKey(Object, models.DO_NOTHING, db_column='kohdeid')
+    event_id = models.ForeignKey(Event, models.DO_NOTHING, db_column='tapid')
 
     class Meta:
         managed = False
         db_table = 'tapahtuma_kohde'
-        unique_together = (('kohdeid', 'tapid'),)
+        unique_together = (('object_id', 'event_id'),)
 
 
-class Tapahtumatyyppi(models.Model):
+class EventType(models.Model):
     id = models.IntegerField(primary_key=True)
-    nimi = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
 
     class Meta:
         managed = False
         db_table = 'tapahtumatyyppi'
 
 
-class Yleisyys(models.Model):
+class Incidence(models.Model):
     id = models.IntegerField(primary_key=True)
-    arvo = models.CharField(max_length=5, blank=True, null=True)
-    selitys = models.CharField(max_length=30, blank=True, null=True)
-    lahde = models.CharField(max_length=50, blank=True, null=True)
+    value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
+    explanation = models.CharField(max_length=30, blank=True, null=True, db_column='selitys')
+    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
