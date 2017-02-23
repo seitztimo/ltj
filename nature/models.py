@@ -9,21 +9,37 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-
-class Origin(models.Model):
+# These seem to be the standard building blocks of most ltj tables
+class Category(models.Model):
     id = models.IntegerField(primary_key=True)
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+
+    class Meta:
+        abstract = True
+
+class CategoryWithSource(Category):
     source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
+
+    class Meta:
+        abstract = True
+
+class Type(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
+
+    class Meta:
+        abstract = True
+
+# Now, for the actual data
+class Origin(CategoryWithSource):
 
     class Meta:
         managed = False
         db_table = 'alkupera'
 
 
-class Value(models.Model):
-    id = models.IntegerField(primary_key=True)
+class Value(Category):
     type = models.CharField(max_length=10, blank=True, null=True, db_column='luokka')
-    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selite')
     valuator = models.CharField(max_length=50, blank=True, null=True, db_column='arvottaja')
     date = models.DateField(blank=True, null=True, db_column='pvm')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
@@ -43,9 +59,7 @@ class ValueObject(models.Model):
         unique_together = (('value_id', 'object_id'),)
 
 
-class Occurrence(models.Model):
-    id = models.IntegerField(primary_key=True)
-    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+class Occurrence(Category):
 
     class Meta:
         managed = False
@@ -102,9 +116,7 @@ class Publication(models.Model):
         db_table = 'julkaisu'
 
 
-class PublicationType(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
+class PublicationType(Type):
 
     class Meta:
         managed = False
@@ -114,7 +126,7 @@ class PublicationType(models.Model):
 class Object(models.Model):
     id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
-    object_class = models.ForeignKey('Luokka', models.DO_NOTHING, db_column='luokkatunnus')
+    object_class = models.ForeignKey('Class', models.DO_NOTHING, db_column='luokkatunnus')
     geometry1 = models.GeometryField()
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
@@ -239,20 +251,15 @@ class Species(models.Model):
         db_table = 'lajirekisteri'
 
 
-class Mobility(models.Model):
-    id = models.IntegerField(primary_key=True)
+class Mobility(CategoryWithSource):
     value = models.IntegerField(blank=True, null=True, db_column='arvo')
-    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
-    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
         db_table = 'liikkumislk'
 
 
-class LinkType(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
+class LinkType(Type):
 
     class Meta:
         managed = False
@@ -312,22 +319,16 @@ class Class(models.Model):
         db_table = 'luokka'
 
 
-class BreedingCategory(models.Model):
-    id = models.IntegerField(primary_key=True)
+class BreedingCategory(CategoryWithSource):
     value = models.CharField(max_length=50, blank=True, null=True, db_column='arvo')
-    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
-    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
         db_table = 'pesimisvarmuus'
 
 
-class Abundance(models.Model):
-    id = models.IntegerField(primary_key=True)
+class Abundance(CategoryWithSource):
     value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
-    explanation = models.CharField(max_length=30, blank=True, null=True, db_column='selitys')
-    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
@@ -361,9 +362,7 @@ class Regulation(models.Model):
         db_table = 'saados'
 
 
-class ConservationProgramme(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
+class ConservationProgramme(Type):
 
     class Meta:
         managed = False
@@ -380,9 +379,7 @@ class ProtectionCriterion(models.Model):
         unique_together = (('criterion_id', 'protection_id'),)
 
 
-class ProtectionLevel(models.Model):
-    id = models.IntegerField(primary_key=True)
-    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+class ProtectionLevel(Category):
 
     class Meta:
         managed = False
@@ -445,7 +442,7 @@ class Event(models.Model):
     type = models.ForeignKey('EventType', models.DO_NOTHING, db_column='tapahtumatyyppiid')
     last_modified_by = models.CharField(max_length=20, blank=True, null=True, db_column='paivittaja')
     date = models.DateField(blank=True, null=True, db_column='pvm')
-    person = models.ForeignKey(Person, models.DO_NOTHING, db_column='hloid', blank=True, null=True, db_column='')
+    person = models.ForeignKey(Person, models.DO_NOTHING, db_column='hloid', blank=True, null=True)
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
     protection_level = models.ForeignKey(ProtectionLevel, models.DO_NOTHING, db_column='suojaustasoid')
     objects = models.ManyToManyField(Object, through='EventObject', related_name='events')
@@ -466,20 +463,15 @@ class EventObject(models.Model):
         unique_together = (('object_id', 'event_id'),)
 
 
-class EventType(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
+class EventType(Type):
 
     class Meta:
         managed = False
         db_table = 'tapahtumatyyppi'
 
 
-class Incidence(models.Model):
-    id = models.IntegerField(primary_key=True)
+class Incidence(CategoryWithSource):
     value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
-    explanation = models.CharField(max_length=30, blank=True, null=True, db_column='selitys')
-    source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
         managed = False
