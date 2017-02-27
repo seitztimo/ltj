@@ -7,12 +7,24 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
-from django.db import models
+from django.contrib.gis.db import models
+
+
+class NatureModel(models.Model):
+
+    def __str__(self):
+        try:
+            return self.id
+        except AttributeError:
+            return super().__str__(self)
+
+    class Meta:
+        abstract = True
 
 # These seem to be the standard building blocks of most ltj tables
 
 
-class Category(models.Model):
+class Category(NatureModel):
     id = models.IntegerField(primary_key=True)
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
 
@@ -27,7 +39,7 @@ class CategoryWithSource(Category):
         abstract = True
 
 
-class Type(models.Model):
+class Type(NatureModel):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
 
@@ -55,14 +67,14 @@ class Value(Category):
         db_table = 'arvo'
 
 
-class ValueObject(models.Model):
+class ValueFeature(NatureModel):
     value_id = models.ForeignKey(Value, models.CASCADE, db_column='arvoid')
-    object_id = models.ForeignKey('Object', models.CASCADE, db_column='kohdeid')
+    feature_id = models.ForeignKey('Feature', models.CASCADE, db_column='kohdeid')
 
     class Meta:
         managed = False
         db_table = 'arvo_kohde'
-        unique_together = (('value_id', 'object_id'),)
+        unique_together = (('value_id', 'feature_id'),)
 
 
 class Occurrence(Category):
@@ -72,7 +84,7 @@ class Occurrence(Category):
         db_table = 'esiintyma'
 
 
-class ObservationSeries(models.Model):
+class ObservationSeries(NatureModel):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
     person = models.ForeignKey('Person', models.PROTECT, blank=True, null=True, db_column='hloid', related_name='observation_series')
@@ -89,7 +101,7 @@ class ObservationSeries(models.Model):
         db_table = 'havaintosarja'
 
 
-class Person(models.Model):
+class Person(NatureModel):
     id = models.IntegerField(primary_key=True)
     surname = models.CharField(max_length=25, blank=True, null=True, db_column='sukunimi')
     first_name = models.CharField(max_length=25, blank=True, null=True, db_column='etunimi')
@@ -106,7 +118,7 @@ class Person(models.Model):
         db_table = 'henkilo'
 
 
-class Publication(models.Model):
+class Publication(NatureModel):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=150, blank=True, null=True, db_column='nimi')
     author = models.CharField(max_length=100, blank=True, null=True, db_column='tekija')
@@ -129,10 +141,10 @@ class PublicationType(Type):
         db_table = 'julktyyppi'
 
 
-class Object(models.Model):
+class Feature(NatureModel):
     id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
-    object_class = models.ForeignKey('Class', models.PROTECT, db_column='luokkatunnus', related_name='objects')
+    feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
     geometry1 = models.GeometryField()
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
@@ -141,42 +153,42 @@ class Object(models.Model):
     created_time = models.DateField(blank=True, null=True, db_column='digipvm')
     number = models.IntegerField(blank=True, null=True, db_column='numero')
     created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid', related_name='objects')
+    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid', related_name='features')
     last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
     last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
     area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
-    values = models.ManyToManyField(Value, through=ValueObject, related_name='objects')
-    publications = models.ManyToManyField(Publication, through='ObjectPublication', related_name='objects')
+    values = models.ManyToManyField('Value', through=ValueFeature, related_name='features')
+    publications = models.ManyToManyField('Publication', through='FeaturePublication', related_name='features')
 
     class Meta:
         managed = False
         db_table = 'kohde'
 
 
-class HistoricalObject(Object):
+class HistoricalFeature(Feature):
     archived_time = models.DateTimeField(db_column='historia_pvm')
-    object = models.ForeignKey(Object, models.SET_NULL, db_column='kohde_id', blank=True, null=True)
+    feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True, related_name='historical_features')
 
     class Meta:
         managed = False
         db_table = 'kohde_historia'
 
 
-class ObjectPublication(models.Model):
-    object_id = models.ForeignKey(Object, models.CASCADE, db_column='kohdeid')
+class FeaturePublication(NatureModel):
+    feature_id = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid')
     publication_id = models.ForeignKey(Publication, models.CASCADE, db_column='julkid')
 
     class Meta:
         managed = False
         db_table = 'kohde_julk'
-        unique_together = (('object_id', 'publication_id'),)
+        unique_together = (('feature_id', 'publication_id'),)
 
 
-class ObjectLink(models.Model):
+class FeatureLink(NatureModel):
     id = models.IntegerField(primary_key=True)
-    object = models.ForeignKey(Object, models.CASCADE, db_column='tekstiid', related_name='link')
+    feature = models.ForeignKey(Feature, models.CASCADE, db_column='tekstiid', related_name='link')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='link')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='linkkiteksti')
     type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid')
@@ -189,7 +201,7 @@ class ObjectLink(models.Model):
         db_table = 'kohdelinkki'
 
 
-class SpeciesRegulation(models.Model):
+class SpeciesRegulation(NatureModel):
     species_id = models.ForeignKey('Species', models.CASCADE, db_column='lajid')
     regulation_id = models.ForeignKey('Regulation', models.CASCADE, db_column='saaid')
 
@@ -199,9 +211,9 @@ class SpeciesRegulation(models.Model):
         unique_together = (('species_id', 'regulation_id'),)
 
 
-class Observation(models.Model):
+class Observation(NatureModel):
     id = models.IntegerField(primary_key=True)
-    location = models.ForeignKey(Object, models.PROTECT, db_column='kohdeid', related_name='observations')
+    location = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='observations')
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations')
     series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', blank=True, null=True, related_name='observations')
     abundance = models.ForeignKey('Abundance', models.PROTECT, db_column='runsausid', blank=True, null=True, related_name='observations')
@@ -224,7 +236,7 @@ class Observation(models.Model):
         db_table = 'lajihavainto'
 
 
-class Species(models.Model):
+class Species(NatureModel):
     id = models.IntegerField(primary_key=True)
     taxon = models.CharField(max_length=5, blank=True, null=True, db_column='ryhma')
     taxon_1 = models.CharField(max_length=50, blank=True, null=True, db_column='elioryhma1')
@@ -272,7 +284,7 @@ class LinkType(Type):
         db_table = 'linkkityyppi'
 
 
-class HabitatTypeRegulation(models.Model):
+class HabitatTypeRegulation(NatureModel):
     habitat_type_id = models.ForeignKey('HabitatType', models.CASCADE, db_column='ltyyppiid')
     regulation_id = models.ForeignKey('Regulation', models.CASCADE, db_column='saadosid')
 
@@ -282,9 +294,9 @@ class HabitatTypeRegulation(models.Model):
         unique_together = (('habitat_type_id', 'regulation_id'),)
 
 
-class HabitatTypeObservation(models.Model):
+class HabitatTypeObservation(NatureModel):
     id = models.IntegerField(primary_key=True)
-    object = models.ForeignKey(Object, models.PROTECT, db_column='kohdeid', related_name='habitat_type_observations')
+    feature = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='habitat_type_observations')
     habitat_type = models.ForeignKey('HabitatType', models.PROTECT, db_column='ltyypid', related_name='habitat_type_observations')
     group_fraction = models.IntegerField(blank=True, null=True, db_column='osuus_kuviosta')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
@@ -297,25 +309,25 @@ class HabitatTypeObservation(models.Model):
         db_table = 'ltyyppihavainto'
 
 
-class HabitatType(models.Model):
+class HabitatType(NatureModel):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
     code = models.CharField(max_length=10, blank=True, null=True, db_column='koodi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
     group = models.CharField(max_length=50, blank=True, null=True, db_column='ltyyppiryhma')
-    regulations = models.ManyToManyField(Regulation, through=HabitatTypeRegulation, related_name='habitat_types')
+    regulations = models.ManyToManyField('Regulation', through=HabitatTypeRegulation, related_name='habitat_types')
 
     class Meta:
         managed = False
         db_table = 'ltyyppirekisteri'
 
 
-class Class(models.Model):
+class FeatureClass(NatureModel):
     id = models.CharField(primary_key=True, max_length=10, db_column='tunnus')
     name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
-    super_class = models.ForeignKey('Class', models.PROTECT, blank=True, null=True, db_column='paatunnus', related_name='subclasses')
+    super_class = models.ForeignKey('FeatureClass', models.PROTECT, blank=True, null=True, db_column='paatunnus', related_name='subclasses')
     reporting = models.BooleanField(db_column='raportointi')
     www = models.BooleanField()
     metadata = models.CharField(max_length=4000, blank=True, null=True)
@@ -341,8 +353,8 @@ class Abundance(CategoryWithSource):
         db_table = 'runsaus'
 
 
-class Tile(models.Model):
-    id = models.ForeignKey(Object, models.CASCADE, db_column='id', primary_key=True, related_name='tile')
+class Tile(NatureModel):
+    id = models.OneToOneField(Feature, models.CASCADE, db_column='id', primary_key=True, related_name='tile')
     number = models.CharField(max_length=10, blank=True, null=True, db_column='nro')
     degree_of_determination = models.IntegerField(blank=True, null=True, db_column='selvitysaste')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
@@ -352,7 +364,7 @@ class Tile(models.Model):
         db_table = 'ruutu'
 
 
-class Regulation(models.Model):
+class Regulation(NatureModel):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True, db_column='nimi')
     paragraph = models.CharField(max_length=100, blank=True, null=True, db_column='pykala')
@@ -375,7 +387,7 @@ class ConservationProgramme(Type):
         db_table = 'sohjelma'
 
 
-class ProtectionCriterion(models.Model):
+class ProtectionCriterion(NatureModel):
     criterion_id = models.ForeignKey('Criterion', models.CASCADE, db_column='perusteid')
     protection_id = models.ForeignKey('Protection', models.CASCADE, db_column='suoid')
 
@@ -392,8 +404,8 @@ class ProtectionLevel(Category):
         db_table = 'suojaustaso'
 
 
-class Protection(models.Model):
-    id = models.ForeignKey(Object, models.CASCADE, db_column='id', primary_key=True, related_name='protection')
+class Protection(NatureModel):
+    id = models.OneToOneField(Feature, models.CASCADE, db_column='id', primary_key=True, related_name='protection')
     reported_area = models.CharField(max_length=50, blank=True, null=True, db_column='ilmoitettu_pinta_ala')
     land_area = models.CharField(max_length=50, blank=True, null=True, db_column='maapinta_ala')
     water_area = models.CharField(max_length=50, blank=True, null=True, db_column='vesipinta_ala')
@@ -401,7 +413,7 @@ class Protection(models.Model):
     regulations = models.CharField(max_length=255, blank=True, null=True, db_column='maaraykset')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
     criteria = models.ManyToManyField('Criterion', through=ProtectionCriterion, related_name='protections')
-    conservation_programmes = models.ManyToManyField(ConservationProgramme,
+    conservation_programmes = models.ManyToManyField('ConservationProgramme',
                                                      through='ProtectionConservationProgramme',
                                                      related_name='protections')
 
@@ -410,7 +422,7 @@ class Protection(models.Model):
         db_table = 'suojelu'
 
 
-class ProtectionConservationProgramme(models.Model):
+class ProtectionConservationProgramme(NatureModel):
     protection_id = models.ForeignKey(Protection, models.CASCADE, db_column='suojeluid')
     conservation_programme_id = models.ForeignKey(ConservationProgramme, models.CASCADE, db_column='sohjelmaid')
 
@@ -420,7 +432,7 @@ class ProtectionConservationProgramme(models.Model):
         unique_together = (('protection_id', 'conservation_programme_id'),)
 
 
-class Criterion(models.Model):
+class Criterion(NatureModel):
     id = models.IntegerField(primary_key=True)
     criterion = models.CharField(max_length=50, blank=True, null=True, db_column='peruste')
     specific_criterion = models.CharField(max_length=50, blank=True, null=True, db_column='tarkperuste')
@@ -431,7 +443,7 @@ class Criterion(models.Model):
         db_table = 'suoperuste'
 
 
-class EventRegulation(models.Model):
+class EventRegulation(NatureModel):
     event_id = models.ForeignKey('Event', models.CASCADE, db_column='tapid')
     regulation_id = models.ForeignKey(Regulation, models.CASCADE, db_column='saaid')
 
@@ -441,7 +453,7 @@ class EventRegulation(models.Model):
         unique_together = (('event_id', 'regulation_id'),)
 
 
-class Event(models.Model):
+class Event(NatureModel):
     id = models.IntegerField(primary_key=True)
     register_id = models.CharField(max_length=20, blank=True, null=True, db_column='diaarinro')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
@@ -451,22 +463,22 @@ class Event(models.Model):
     person = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True)
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
     protection_level = models.ForeignKey(ProtectionLevel, models.PROTECT, db_column='suojaustasoid')
-    objects = models.ManyToManyField(Object, through='EventObject', related_name='events')
-    regulations = models.ManyToManyField(Regulation, throuhg='EventRegulation', related_name='events')
+    features = models.ManyToManyField(Feature, through='EventFeature', related_name='events')
+    regulations = models.ManyToManyField(Regulation, through='EventRegulation', related_name='events')
 
     class Meta:
         managed = False
         db_table = 'tapahtuma'
 
 
-class EventObject(models.Model):
-    object_id = models.ForeignKey(Object, models.CASCADE, db_column='kohdeid')
+class EventFeature(NatureModel):
+    feature_id = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid')
     event_id = models.ForeignKey(Event, models.CASCADE, db_column='tapid')
 
     class Meta:
         managed = False
         db_table = 'tapahtuma_kohde'
-        unique_together = (('object_id', 'event_id'),)
+        unique_together = (('feature_id', 'event_id'),)
 
 
 class EventType(Type):
