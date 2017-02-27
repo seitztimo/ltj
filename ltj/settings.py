@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'nature'
 ]
 
@@ -71,6 +72,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ltj.wsgi.application'
 
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 10
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

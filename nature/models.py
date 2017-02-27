@@ -10,18 +10,39 @@ from __future__ import unicode_literals
 from django.contrib.gis.db import models
 
 
+class Permission:
+    ADMIN_ONLY = 0
+    ADMIN_AND_STAFF = 1
+    PUBLIC = 2
+
+
+PERMISSIONS = (
+    (Permission.ADMIN_ONLY, "Administrators only"),
+    (Permission.ADMIN_AND_STAFF, "Administrators and staff"),
+    (Permission.PUBLIC, "Public"),
+)
+
+
 class NatureModel(models.Model):
 
     def __str__(self):
         try:
-            return self.id
+            return str(self.id)
         except AttributeError:
             return super().__str__(self)
 
     class Meta:
         abstract = True
 
+
 # These seem to be the standard building blocks of most ltj tables
+
+
+class ProtectedNatureModel(NatureModel):
+    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
+
+    class Meta:
+        abstract = True
 
 
 class Category(NatureModel):
@@ -56,7 +77,9 @@ class Origin(CategoryWithSource):
         db_table = 'alkupera'
 
 
-class Value(Category):
+class Value(NatureModel):
+    id = models.IntegerField(primary_key=True)
+    explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selite')
     type = models.CharField(max_length=10, blank=True, null=True, db_column='luokka')
     valuator = models.CharField(max_length=50, blank=True, null=True, db_column='arvottaja')
     date = models.DateField(blank=True, null=True, db_column='pvm')
@@ -141,7 +164,7 @@ class PublicationType(Type):
         db_table = 'julktyyppi'
 
 
-class Feature(NatureModel):
+class Feature(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
@@ -153,7 +176,6 @@ class Feature(NatureModel):
     created_time = models.DateField(blank=True, null=True, db_column='digipvm')
     number = models.IntegerField(blank=True, null=True, db_column='numero')
     created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid', related_name='features')
     last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
     last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
     area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
@@ -186,7 +208,7 @@ class FeaturePublication(NatureModel):
         unique_together = (('feature_id', 'publication_id'),)
 
 
-class FeatureLink(NatureModel):
+class FeatureLink(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='tekstiid', related_name='link')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='link')
@@ -194,7 +216,6 @@ class FeatureLink(NatureModel):
     type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid')
     ordering = models.IntegerField(blank=True, null=True, db_column='jarjestys')
     link_text = models.CharField(max_length=1000, blank=True, null=True, db_column='linkin_teksti ')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
         managed = False
@@ -211,7 +232,7 @@ class SpeciesRegulation(NatureModel):
         unique_together = (('species_id', 'regulation_id'),)
 
 
-class Observation(NatureModel):
+class Observation(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
     location = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='observations')
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations')
@@ -227,7 +248,6 @@ class Observation(NatureModel):
     notes = models.CharField(max_length=100, blank=True, null=True, db_column='huom')
     date = models.DateField(blank=True, null=True, db_column='pvm')
     occurrence = models.ForeignKey(Occurrence, models.PROTECT, db_column='esiintymaid', blank=True, null=True)
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid', related_name='observations')
     created_time = models.DateTimeField(db_column='pvm_luotu')
     last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
 
@@ -236,7 +256,7 @@ class Observation(NatureModel):
         db_table = 'lajihavainto'
 
 
-class Species(NatureModel):
+class Species(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
     taxon = models.CharField(max_length=5, blank=True, null=True, db_column='ryhma')
     taxon_1 = models.CharField(max_length=50, blank=True, null=True, db_column='elioryhma1')
@@ -258,7 +278,6 @@ class Species(NatureModel):
     name_sv = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_ruotsi')
     name_en = models.CharField(max_length=150, blank=True, null=True, db_column='nimi_englanti')
     registry_date = models.DateTimeField(blank=True, null=True, db_column='rekisteripvm')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid', related_name='species')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
     code = models.CharField(max_length=20, blank=True, null=True, db_column='koodi')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
@@ -453,7 +472,7 @@ class EventRegulation(NatureModel):
         unique_together = (('event_id', 'regulation_id'),)
 
 
-class Event(NatureModel):
+class Event(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
     register_id = models.CharField(max_length=20, blank=True, null=True, db_column='diaarinro')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
@@ -462,7 +481,6 @@ class Event(NatureModel):
     date = models.DateField(blank=True, null=True, db_column='pvm')
     person = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True)
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
-    protection_level = models.ForeignKey(ProtectionLevel, models.PROTECT, db_column='suojaustasoid')
     features = models.ManyToManyField(Feature, through='EventFeature', related_name='events')
     regulations = models.ManyToManyField(Regulation, through='EventRegulation', related_name='events')
 
