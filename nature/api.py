@@ -1,71 +1,44 @@
-from rest_framework import serializers, viewsets, routers
-from nature.models import Feature, Species, Observation, Publication, Event, Person, Regulation, HabitatType, HabitatTypeObservation, FeatureClass, Value
+from django.core.exceptions import FieldError
+from rest_framework import serializers, viewsets, routers, relations
+from rest_framework.utils import model_meta
 from nature.models import ProtectionLevel, Permission, PERMISSIONS
+from nature.models import Feature, Species, Observation, Publication, Event, Person, Regulation, HabitatType, HabitatTypeObservation, FeatureClass, Value
+
+# the abstract serializers
 
 
-class FeatureSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Feature
-        fields = ('id', 'name', 'type', 'feature_class', 'geometry1', 'description', 'notes', 'active',
-                  'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications')
+class ProtectedManyRelatedField(relations.ManyRelatedField):
+    """
+    Handles view permissions for related field listings with ProtectedNatureModel instances.
+    """
+    def to_representation(self, iterable):
+        try:
+            iterable = iterable.filter(protection_level=Permission.PUBLIC)
+        except FieldError:
+            # this allows the field to be used even with non-protected models
+            pass
+        return super().to_representation(iterable)
 
 
-class FeatureClassSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = FeatureClass
-        fields = '__all__'
+class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
+    """
+    Handles view permissions for related field listings with ProtectedNatureModel instances.
+    """
+    @classmethod
+    def many_init(cls, *args, **kwargs):
+        # the correct arguments must be passed on to the parent
+        list_kwargs = {'child_relation': cls(*args, **kwargs)}
+        for key in kwargs.keys():
+            if key in relations.MANY_RELATION_KWARGS:
+                list_kwargs[key] = kwargs[key]
+        return ProtectedManyRelatedField(**list_kwargs)
 
 
-class ValueSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = FeatureClass
-        fields = ('id', 'explanation', 'type', 'date', 'link')
-
-
-class PublicationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Publication
-        fields = '__all__'
-
-
-class SpeciesSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Species
-
-
-class ObservationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Observation
-
-
-class EventSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Event
-
-
-class PublicationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Publication
-
-
-class PersonSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Person
-
-
-class RegulationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Regulation
-
-
-class HabitatTypeSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = HabitatType
-
-
-class HabitatTypeObservationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = HabitatTypeObservation
+class ProtectedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Handles view permissions for related field listings with ProtectedNatureModel instances.
+    """
+    serializer_related_field = ProtectedHyperlinkedRelatedField
 
 
 class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
@@ -74,7 +47,75 @@ class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     def get_queryset(self):
-        return super().get_queryset().filter(protection_level=Permission.PUBLIC)
+        qs = super().get_queryset()
+        try:
+            return qs.filter(protection_level=Permission.PUBLIC)
+        except FieldError:
+            # this allows the viewset to be used even with non-protected models
+            return qs
+
+# the model serializers
+
+
+class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Feature
+        fields = ('id', 'name', 'type', 'feature_class', 'geometry1', 'description', 'notes', 'active',
+                  'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications')
+
+
+class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
+
+    class Meta:
+        model = FeatureClass
+        fields = ('id', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
+
+
+class ValueSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = FeatureClass
+        fields = ('id', 'explanation', 'type', 'date', 'link')
+
+
+class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Publication
+        fields = '__all__'
+
+
+class SpeciesSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Species
+
+
+class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Observation
+
+
+class EventSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Event
+
+
+class PersonSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Person
+
+
+class RegulationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Regulation
+
+
+class HabitatTypeSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = HabitatType
+
+
+class HabitatTypeObservationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = HabitatTypeObservation
 
 
 class FeatureViewSet(ProtectedViewSet):
@@ -82,17 +123,17 @@ class FeatureViewSet(ProtectedViewSet):
     serializer_class = FeatureSerializer
 
 
-class FeatureClassViewSet(viewsets.ReadOnlyModelViewSet):
+class FeatureClassViewSet(ProtectedViewSet):
     queryset = FeatureClass.objects.all()
     serializer_class = FeatureClassSerializer
 
 
-class ValueViewSet(viewsets.ReadOnlyModelViewSet):
+class ValueViewSet(ProtectedViewSet):
     queryset = Value.objects.all()
     serializer_class = ValueSerializer
 
 
-class PublicationViewSet(viewsets.ReadOnlyModelViewSet):
+class PublicationViewSet(ProtectedViewSet):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
 
