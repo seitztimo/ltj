@@ -11,9 +11,9 @@ from django.contrib.gis.db import models
 
 
 class Permission:
-    ADMIN_ONLY = 0
-    ADMIN_AND_STAFF = 1
-    PUBLIC = 2
+    ADMIN_ONLY = 1
+    ADMIN_AND_STAFF = 2
+    PUBLIC = 3
 
 
 PERMISSIONS = (
