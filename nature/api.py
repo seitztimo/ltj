@@ -1,8 +1,11 @@
 from django.core.exceptions import FieldError
+from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
 from rest_framework.utils import model_meta
 from nature.models import ProtectionLevel, Permission, PERMISSIONS
-from nature.models import Feature, Species, Observation, Publication, Event, Person, Regulation, HabitatType, HabitatTypeObservation, FeatureClass, Value
+from nature.models import Feature, Species, Observation, Publication, Event, Person, Regulation, HabitatType,\
+    HabitatTypeObservation, FeatureClass, Value, ObservationSeries, Abundance, Incidence, Mobility, Origin,\
+    BreedingCategory, Tile, Protection, Criterion, ConservationProgramme
 
 # the abstract serializers
 
@@ -57,40 +60,143 @@ class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
 # the model serializers
 
 
+class SpanOneToOneProtectedHyperlinkedRelatedField(ProtectedHyperlinkedRelatedField):
+    """
+    Allows linking directly back to the feature, instead of an object with the same id as feature.
+    Useful for spanning useless one-to-one mappings.
+    """
+
+    def get_url(self, obj, view_name, request, format):
+        kwargs = {'pk': obj.pk}
+        return reverse(view_name, kwargs=kwargs, request=request, format=format)
+
+
+class ConservationProgrammeSerializer(ProtectedHyperlinkedModelSerializer):
+    protected_features = SpanOneToOneProtectedHyperlinkedRelatedField(many=True,
+                                                                      source='protections',
+                                                                      view_name='feature-detail',
+                                                                      queryset=Feature.objects.all())
+
+    class Meta:
+        model = ConservationProgramme
+        fields = ('id', 'name', 'protected_features')
+
+
+class CriterionSerializer(ProtectedHyperlinkedModelSerializer):
+    protected_features = SpanOneToOneProtectedHyperlinkedRelatedField(many=True,
+                                                                      source='protections',
+                                                                      view_name='feature-detail',
+                                                                      queryset=Feature.objects.all())
+
+    class Meta:
+        model = Criterion
+        fields = ('id', 'criterion', 'specific_criterion', 'subcriterion', 'protected_features')
+
+
+class TileSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Tile
+        fields = ('number', 'degree_of_determination', 'additional_info')
+
+
+class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
+    criteria = CriterionSerializer(many=True)
+    conservation_programmes = ConservationProgrammeSerializer(many=True)
+
+    class Meta:
+        model = Protection
+        fields = ('reported_area', 'land_area', 'water_area', 'hiking', 'regulations', 'additional_info',
+                  'criteria', 'conservation_programmes')
+
+
 class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
+    tile = TileSerializer()
+    protection = ProtectionSerializer()
+
     class Meta:
         model = Feature
-        fields = ('id', 'name', 'type', 'feature_class', 'geometry1', 'description', 'notes', 'active',
-                  'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications')
+        fields = ('url', 'name', 'type', 'feature_class', 'geometry1', 'description', 'notes', 'active',
+                  'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
+                  'observations', 'habitat_type_observations', 'links', 'tile', 'protection')
 
 
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = FeatureClass
-        fields = ('id', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
+        fields = ('url', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
 
 
 class ValueSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
-        model = FeatureClass
-        fields = ('id', 'explanation', 'type', 'date', 'link')
+        model = Value
+        fields = ('url', 'explanation', 'type', 'date', 'link', 'features')
 
 
 class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
+    publication_type = serializers.StringRelatedField()
+
     class Meta:
         model = Publication
-        fields = '__all__'
+        fields = ('url', 'publication_type', 'name', 'author', 'series', 'place_of_printing', 'year',
+                  'additional_info', 'link', 'features')
 
 
 class SpeciesSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Species
+        fields = ('url', 'taxon', 'taxon_1', 'name_la_1', 'registry_date', 'regulations', 'observations')
+
+
+class AbundanceSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Abundance
+        fields = ('id', 'value', 'explanation', 'source')
+
+
+class IncidenceSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Incidence
+        fields = ('id', 'value', 'explanation', 'source')
+
+
+class MobilitySerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Mobility
+        fields = ('id', 'value', 'explanation', 'source')
+
+
+class OriginSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = Origin
+        fields = ('id', 'explanation', 'source')
+
+
+class BreedingCategorySerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = BreedingCategory
+        fields = ('id', 'value', 'explanation', 'source')
 
 
 class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
+    occurrence = serializers.StringRelatedField()
+    abundance = AbundanceSerializer()
+    incidence = IncidenceSerializer()
+    mobility = MobilitySerializer()
+    origin = OriginSerializer()
+    breeding_category = BreedingCategorySerializer()
+
     class Meta:
         model = Observation
+        fields = ('url', 'location', 'species', 'series', 'abundance', 'incidence', 'number', 'mobility', 'origin',
+                  'breeding_category', 'description', 'notes', 'date', 'occurrence', 'created_time', 'last_modified_time')
+
+
+class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = ObservationSeries
+        fields = ('url', 'name', 'description', 'start_date', 'end_date', 'method', 'notes', 'additional_info',
+                  'valid', 'observations', 'habitat_type_observations')
 
 
 class EventSerializer(ProtectedHyperlinkedModelSerializer):
@@ -106,16 +212,22 @@ class PersonSerializer(ProtectedHyperlinkedModelSerializer):
 class RegulationSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Regulation
+        fields = ('url', 'name', 'paragraph', 'additional_info', 'value', 'value_explanation', 'valid',
+                  'date_of_entry', 'link', 'species', 'events', 'habitat_types')
 
 
 class HabitatTypeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = HabitatType
+        fields = ('url', 'name', 'code', 'description', 'additional_info', 'group', 'regulations',
+                  'habitat_type_observations')
 
 
 class HabitatTypeObservationSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = HabitatTypeObservation
+        fields = ('url', 'feature', 'habitat_type', 'group_fraction', 'additional_info', 'observation_series',
+                  'created_time', 'last_modified_time')
 
 
 class FeatureViewSet(ProtectedViewSet):
@@ -138,9 +250,9 @@ class PublicationViewSet(ProtectedViewSet):
     serializer_class = PublicationSerializer
 
 
-class ObservationViewSet(ProtectedViewSet):
-    queryset = Observation.objects.all()
-    serializer_class = ObservationSerializer
+class RegulationViewSet(ProtectedViewSet):
+    queryset = Regulation.objects.all()
+    serializer_class = RegulationSerializer
 
 
 class SpeciesViewSet(ProtectedViewSet):
@@ -148,16 +260,76 @@ class SpeciesViewSet(ProtectedViewSet):
     serializer_class = SpeciesSerializer
 
 
+class ObservationViewSet(ProtectedViewSet):
+    queryset = Observation.objects.all()
+    serializer_class = ObservationSerializer
+
+
+class ObservationSeriesViewSet(ProtectedViewSet):
+    queryset = ObservationSeries.objects.all()
+    serializer_class = ObservationSeriesSerializer
+
+
+class HabitatTypeViewSet(ProtectedViewSet):
+    queryset = HabitatType.objects.all()
+    serializer_class = HabitatTypeSerializer
+
+
+class HabitatTypeObservationViewSet(ProtectedViewSet):
+    queryset = HabitatTypeObservation.objects.all()
+    serializer_class = HabitatTypeObservationSerializer
+
+
 class EventViewSet(ProtectedViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
 
+class AbundanceViewSet(ProtectedViewSet):
+    queryset = Abundance.objects.all()
+    serializer_class = AbundanceSerializer
+
+
+class IncidenceViewSet(ProtectedViewSet):
+    queryset = Incidence.objects.all()
+    serializer_class = IncidenceSerializer
+
+
+class MobilityViewSet(ProtectedViewSet):
+    queryset = Mobility.objects.all()
+    serializer_class = MobilitySerializer
+
+
+class OriginViewSet(ProtectedViewSet):
+    queryset = Origin.objects.all()
+    serializer_class = OriginSerializer
+
+
+class BreedingCategoryViewSet(ProtectedViewSet):
+    queryset = BreedingCategory.objects.all()
+    serializer_class = BreedingCategorySerializer
+
+
+class ProtectionCriterionViewSet(ProtectedViewSet):
+    queryset = Criterion.objects.all()
+    serializer_class = CriterionSerializer
+
+
+class ConservationProgrammeViewSet(ProtectedViewSet):
+    queryset = ConservationProgramme.objects.all()
+    serializer_class = ConservationProgrammeSerializer
+
 router = routers.DefaultRouter()
 router.register(r'feature', FeatureViewSet)
 router.register(r'feature_class', FeatureClassViewSet)
 router.register(r'value', ValueViewSet)
-router.register(r'publication', PublicationViewSet)
-router.register(r'observation', ObservationViewSet)
 router.register(r'species', SpeciesViewSet)
+router.register(r'observation', ObservationViewSet)
+router.register(r'observation_series', ObservationSeriesViewSet)
+router.register(r'habitat_type', HabitatTypeViewSet)
+router.register(r'habitat_type_observation', HabitatTypeObservationViewSet)
+router.register(r'publication', PublicationViewSet)
+router.register(r'regulation', RegulationViewSet)
 router.register(r'event', EventViewSet)
+router.register(r'protection_criterion', ProtectionCriterionViewSet)
+router.register(r'conservation_programme', ConservationProgrammeViewSet)

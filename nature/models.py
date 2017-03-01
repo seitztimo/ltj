@@ -27,9 +27,12 @@ class NatureModel(models.Model):
 
     def __str__(self):
         try:
-            return str(self.id)
+            return str(self.name)
         except AttributeError:
-            return super().__str__(self)
+            try:
+                return str(self.id)
+            except AttributeError:
+                return super().__str__(self)
 
     class Meta:
         abstract = True
@@ -48,6 +51,9 @@ class ProtectedNatureModel(NatureModel):
 class Category(NatureModel):
     id = models.IntegerField(primary_key=True)
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
+
+    def __str__(self):
+        return str(self.explanation)
 
     class Meta:
         abstract = True
@@ -210,12 +216,12 @@ class FeaturePublication(NatureModel):
 
 class FeatureLink(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
-    feature = models.ForeignKey(Feature, models.CASCADE, db_column='tekstiid', related_name='link')
-    link = models.CharField(max_length=4000, blank=True, null=True, db_column='link')
+    feature = models.ForeignKey(Feature, models.CASCADE, db_column='tekstiid', related_name='links')
+    link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='linkkiteksti')
     type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid')
     ordering = models.IntegerField(blank=True, null=True, db_column='jarjestys')
-    link_text = models.CharField(max_length=1000, blank=True, null=True, db_column='linkin_teksti ')
+    link_text = models.CharField(max_length=1000, blank=True, null=True, db_column='linkin_teksti')
 
     class Meta:
         managed = False
