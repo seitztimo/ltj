@@ -37,6 +37,17 @@ class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
         return ProtectedManyRelatedField(**list_kwargs)
 
 
+class SpanOneToOneProtectedHyperlinkedRelatedField(ProtectedHyperlinkedRelatedField):
+    """
+    Allows linking directly back to the feature, instead of an object with the same id as feature.
+    Useful for spanning useless one-to-one mappings.
+    """
+
+    def get_url(self, obj, view_name, request, format):
+        kwargs = {'pk': obj.pk}
+        return reverse(view_name, kwargs=kwargs, request=request, format=format)
+
+
 class ProtectedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
     """
     Handles view permissions for related field listings with ProtectedNatureModel instances.
@@ -58,17 +69,6 @@ class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
             return qs
 
 # the model serializers
-
-
-class SpanOneToOneProtectedHyperlinkedRelatedField(ProtectedHyperlinkedRelatedField):
-    """
-    Allows linking directly back to the feature, instead of an object with the same id as feature.
-    Useful for spanning useless one-to-one mappings.
-    """
-
-    def get_url(self, obj, view_name, request, format):
-        kwargs = {'pk': obj.pk}
-        return reverse(view_name, kwargs=kwargs, request=request, format=format)
 
 
 class ConservationProgrammeSerializer(ProtectedHyperlinkedModelSerializer):
