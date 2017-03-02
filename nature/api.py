@@ -1,7 +1,7 @@
 from django.core.exceptions import FieldError
 from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
-from rest_framework.utils import model_meta
+from munigeo.api import GeoModelSerializer
 from nature.models import ProtectionLevel, Permission, PERMISSIONS
 from nature.models import *
 
@@ -105,7 +105,7 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
                   'criteria', 'conservation_programmes')
 
 
-class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
+class FeatureSerializer(ProtectedHyperlinkedModelSerializer, GeoModelSerializer):
     tile = TileSerializer()
     protection = ProtectionSerializer()
 
