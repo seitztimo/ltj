@@ -125,3 +125,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# local_settings.py can be used to override environment-specific settings
+# like database and email that differ between development and production.
+f = os.path.join(BASE_DIR, "local_settings.py")
+if os.path.exists(f):
+    import sys
+    import imp
+    module_name = "%s.local_settings" % ROOT_URLCONF.split('.')[0]
+    module = imp.new_module(module_name)
+    module.__file__ = f
+    sys.modules[module_name] = module
+    exec(open(f, "rb").read())
+
+if 'SECRET_KEY' not in locals():
+    secret_file = os.path.join(BASE_DIR, '.django_secret')
+    try:
+        SECRET_KEY = open(secret_file).read().strip()
+    except IOError:
+        import random
+        system_random = random.SystemRandom()
+        try:
+            SECRET_KEY = ''.join([system_random.choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)')
+                                  for i in range(64)])
+            secret = open(secret_file, 'w')
+            import os
+            os.chmod(secret_file, 0o0600)
+            secret.write(SECRET_KEY)
+            secret.close()
+        except IOError:
+            Exception('Please create a %s file with random characters to generate your secret key!' % secret_file)
