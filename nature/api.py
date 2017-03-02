@@ -98,8 +98,6 @@ class TileSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
-    criteria = CriterionSerializer(many=True)
-    conservation_programmes = ConservationProgrammeSerializer(many=True)
 
     class Meta:
         model = Protection
