@@ -3,9 +3,7 @@ from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
 from rest_framework.utils import model_meta
 from nature.models import ProtectionLevel, Permission, PERMISSIONS
-from nature.models import Feature, Species, Observation, Publication, Event, Person, Regulation, HabitatType,\
-    HabitatTypeObservation, FeatureClass, Value, ObservationSeries, Abundance, Incidence, Mobility, Origin,\
-    BreedingCategory, Tile, Protection, Criterion, ConservationProgramme
+from nature.models import *
 
 # the abstract serializers
 
@@ -117,7 +115,7 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
         model = Feature
         fields = ('url', 'name', 'type', 'feature_class', 'geometry1', 'description', 'notes', 'active',
                   'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
-                  'observations', 'habitat_type_observations', 'links', 'tile', 'protection')
+                  'observations', 'habitat_type_observations', 'links', 'tile', 'protection', 'events')
 
 
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
@@ -199,9 +197,18 @@ class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
                   'valid', 'observations', 'habitat_type_observations')
 
 
+class EventTypeSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = EventType
+        fields = ('id', 'name')
+
+
 class EventSerializer(ProtectedHyperlinkedModelSerializer):
+    type = EventTypeSerializer()
+
     class Meta:
         model = Event
+        fields = ('url', 'register_id', 'description', 'type', 'date', 'link', 'features', 'regulations')
 
 
 class PersonSerializer(ProtectedHyperlinkedModelSerializer):
