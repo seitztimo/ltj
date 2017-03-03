@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import GEOSException
 
 
 class Permission:
@@ -37,6 +38,19 @@ class NatureModel(models.Model):
     class Meta:
         abstract = True
 
+
+class PermissiveGeometryField(models.GeometryField):
+    """
+    Required to catch exceptions if curved geometries are encountered. Currently, the GEOS library, GeoDjango
+    and GeoJSON do not support curved geometries.
+    """
+
+    def from_db_value(self, value, expression, connection, context):
+        try:
+            value = super().from_db_value(value, expression, connection, context)
+        except GEOSException:
+            value = None
+        return value
 
 # These seem to be the standard building blocks of most ltj tables
 
@@ -174,7 +188,7 @@ class Feature(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
-    geometry1 = models.GeometryField()
+    geometry1 = PermissiveGeometryField()
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     notes = models.CharField(max_length=255, blank=True, null=True, db_column='huom')
