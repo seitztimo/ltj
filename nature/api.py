@@ -160,9 +160,9 @@ class AbundanceSerializer(ProtectedHyperlinkedModelSerializer):
         fields = ('id', 'value', 'explanation', 'source')
 
 
-class IncidenceSerializer(ProtectedHyperlinkedModelSerializer):
+class FrequencySerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
-        model = Incidence
+        model = Frequency
         fields = ('id', 'value', 'explanation', 'source')
 
 
@@ -178,24 +178,24 @@ class OriginSerializer(ProtectedHyperlinkedModelSerializer):
         fields = ('id', 'explanation', 'source')
 
 
-class BreedingCategorySerializer(ProtectedHyperlinkedModelSerializer):
+class BreedingDegreeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
-        model = BreedingCategory
+        model = BreedingDegree
         fields = ('id', 'value', 'explanation', 'source')
 
 
 class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
     occurrence = serializers.StringRelatedField()
     abundance = AbundanceSerializer()
-    incidence = IncidenceSerializer()
-    mobility = MobilitySerializer()
+    frequency = FrequencySerializer()
+    local_or_migrating = MobilitySerializer()
     origin = OriginSerializer()
-    breeding_category = BreedingCategorySerializer()
+    breeding_degree = BreedingDegreeSerializer()
 
     class Meta:
         model = Observation
-        fields = ('url', 'location', 'species', 'series', 'abundance', 'incidence', 'number', 'mobility', 'origin',
-                  'breeding_category', 'description', 'notes', 'date', 'occurrence', 'created_time', 'last_modified_time')
+        fields = ('url', 'location', 'species', 'series', 'abundance', 'frequency', 'number', 'local_or_migrating', 'origin',
+                  'breeding_degree', 'description', 'notes', 'date', 'occurrence', 'created_time', 'last_modified_time')
 
 
 class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
@@ -305,9 +305,9 @@ class AbundanceViewSet(ProtectedViewSet):
     serializer_class = AbundanceSerializer
 
 
-class IncidenceViewSet(ProtectedViewSet):
-    queryset = Incidence.objects.all()
-    serializer_class = IncidenceSerializer
+class FrequencyViewSet(ProtectedViewSet):
+    queryset = Frequency.objects.all()
+    serializer_class = FrequencySerializer
 
 
 class MobilityViewSet(ProtectedViewSet):
@@ -320,9 +320,9 @@ class OriginViewSet(ProtectedViewSet):
     serializer_class = OriginSerializer
 
 
-class BreedingCategoryViewSet(ProtectedViewSet):
-    queryset = BreedingCategory.objects.all()
-    serializer_class = BreedingCategorySerializer
+class BreedingDegreeViewSet(ProtectedViewSet):
+    queryset = BreedingDegree.objects.all()
+    serializer_class = BreedingDegreeSerializer
 
 
 class ProtectionCriterionViewSet(ProtectedViewSet):

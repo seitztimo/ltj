@@ -258,12 +258,12 @@ class Observation(ProtectedNatureModel):
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations')
     series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', blank=True, null=True, related_name='observations')
     abundance = models.ForeignKey('Abundance', models.PROTECT, db_column='runsausid', blank=True, null=True, related_name='observations')
-    incidence = models.ForeignKey('Incidence', models.PROTECT, db_column='yleisyysid', blank=True, null=True, related_name='observations')
+    frequency = models.ForeignKey('Frequency', models.PROTECT, db_column='yleisyysid', blank=True, null=True, related_name='observations')
     observer = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True, related_name='observations')
     number = models.CharField(max_length=30, blank=True, null=True, db_column='lkm')
-    mobility = models.ForeignKey('Mobility', models.PROTECT, db_column='liikkumislkid', blank=True, null=True, related_name='observations')
+    local_or_migrating = models.ForeignKey('Mobility', models.PROTECT, db_column='liikkumislkid', blank=True, null=True, related_name='observations')
     origin = models.ForeignKey(Origin, models.PROTECT, db_column='alkuperaid', blank=True, null=True, related_name='observations')
-    breeding_category = models.ForeignKey('BreedingCategory', models.PROTECT, db_column='pesimisvarmuusid', blank=True, null=True, related_name='observations')
+    breeding_degree = models.ForeignKey('BreedingDegree', models.PROTECT, db_column='pesimisvarmuusid', blank=True, null=True, related_name='observations')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     notes = models.CharField(max_length=100, blank=True, null=True, db_column='huom')
     date = models.DateField(blank=True, null=True, db_column='pvm')
@@ -376,7 +376,7 @@ class FeatureClass(NatureModel):
         db_table = 'luokka'
 
 
-class BreedingCategory(CategoryWithSource):
+class BreedingDegree(CategoryWithSource):
     value = models.CharField(max_length=50, blank=True, null=True, db_column='arvo')
 
     class Meta:
@@ -526,7 +526,7 @@ class EventType(Type):
         db_table = 'tapahtumatyyppi'
 
 
-class Incidence(CategoryWithSource):
+class Frequency(CategoryWithSource):
     value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
 
     class Meta:
