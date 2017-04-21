@@ -91,9 +91,9 @@ class CriterionSerializer(ProtectedHyperlinkedModelSerializer):
         fields = ('id', 'criterion', 'specific_criterion', 'subcriterion', 'protected_features')
 
 
-class TileSerializer(ProtectedHyperlinkedModelSerializer):
+class SquareSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
-        model = Tile
+        model = Square
         fields = ('number', 'degree_of_determination', 'additional_info')
 
 
@@ -106,14 +106,14 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class FeatureSerializer(ProtectedHyperlinkedModelSerializer, GeoModelSerializer):
-    tile = TileSerializer()
+    square = SquareSerializer()
     protection = ProtectionSerializer()
 
     class Meta:
         model = Feature
-        fields = ('url', 'name', 'type', 'feature_class', 'geometry1', 'description', 'notes', 'active',
+        fields = ('url', 'name', 'fid', 'feature_class', 'geometry1', 'description', 'notes', 'active',
                   'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
-                  'observations', 'habitat_type_observations', 'links', 'tile', 'protection', 'events')
+                  'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'events')
 
 
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):

@@ -186,7 +186,7 @@ class PublicationType(Type):
 
 class Feature(ProtectedNatureModel):
     id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
+    fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
     geometry1 = PermissiveGeometryField()
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
@@ -392,8 +392,8 @@ class Abundance(CategoryWithSource):
         db_table = 'runsaus'
 
 
-class Tile(NatureModel):
-    id = models.OneToOneField(Feature, models.CASCADE, db_column='id', primary_key=True, related_name='tile')
+class Square(NatureModel):
+    id = models.OneToOneField(Feature, models.CASCADE, db_column='id', primary_key=True, related_name='square')
     number = models.CharField(max_length=10, blank=True, null=True, db_column='nro')
     degree_of_determination = models.IntegerField(blank=True, null=True, db_column='selvitysaste')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
