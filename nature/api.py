@@ -1,4 +1,5 @@
 from django.core.exceptions import FieldError
+from rest_framework.fields import SerializerMethodField
 from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
 from munigeo.api import GeoModelSerializer
@@ -108,6 +109,14 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
 class FeatureSerializer(ProtectedHyperlinkedModelSerializer, GeoModelSerializer):
     square = SquareSerializer()
     protection = ProtectionSerializer()
+    text = SerializerMethodField()
+
+    def get_text(self, obj):
+        # now this is a silly feature: text should not be public if text_www exists
+        if obj.text_www:
+            return obj.text_www
+        else:
+            return obj.text
 
     class Meta:
         model = Feature
