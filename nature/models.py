@@ -23,6 +23,10 @@ PERMISSIONS = (
     (Permission.PUBLIC, "Public"),
 )
 
+PROTECTED_FEATURE_CLASSES = [
+    'PM'
+]
+
 
 class NatureModel(models.Model):
 
