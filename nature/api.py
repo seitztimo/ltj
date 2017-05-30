@@ -36,6 +36,13 @@ class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
                 list_kwargs[key] = kwargs[key]
         return ProtectedManyRelatedField(**list_kwargs)
 
+    def get_url(self, obj, view_name, request, format):
+        # prevents revealing ids of non-permitted objects in one-to-one relations
+        if hasattr(obj, 'protection_level'):
+            if not getattr(obj, 'protection_level').id == Permission.PUBLIC:
+                return None
+        return super().get_url(obj, view_name, request, format)
+
 
 class SpanOneToOneProtectedHyperlinkedRelatedField(ProtectedHyperlinkedRelatedField):
     """
