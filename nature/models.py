@@ -75,6 +75,7 @@ class Category(NatureModel):
 
     class Meta:
         abstract = True
+        ordering = ['id']
 
 
 class CategoryWithSource(Category):
@@ -82,6 +83,7 @@ class CategoryWithSource(Category):
 
     class Meta:
         abstract = True
+        ordering = ['id']
 
 
 class Type(NatureModel):
@@ -90,6 +92,7 @@ class Type(NatureModel):
 
     class Meta:
         abstract = True
+        ordering = ['id']
 
 # Now, for the actual data
 
@@ -98,6 +101,7 @@ class Origin(CategoryWithSource):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'alkupera'
 
 
@@ -111,6 +115,7 @@ class Value(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'arvo'
 
 
@@ -128,6 +133,7 @@ class Occurrence(Category):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'esiintyma'
 
 
@@ -145,6 +151,7 @@ class ObservationSeries(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'havaintosarja'
 
 
@@ -162,6 +169,7 @@ class Person(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'henkilo'
 
 
@@ -178,6 +186,7 @@ class Publication(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'julkaisu'
 
 
@@ -185,6 +194,7 @@ class PublicationType(Type):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'julktyyppi'
 
 
@@ -210,6 +220,7 @@ class Feature(ProtectedNatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'kohde'
 
 
@@ -219,6 +230,7 @@ class HistoricalFeature(Feature):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'kohde_historia'
 
 
@@ -243,6 +255,7 @@ class FeatureLink(ProtectedNatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'kohdelinkki'
 
 
@@ -277,6 +290,7 @@ class Observation(ProtectedNatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'lajihavainto'
 
 
@@ -309,6 +323,7 @@ class Species(ProtectedNatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'lajirekisteri'
 
 
@@ -317,6 +332,7 @@ class Mobility(CategoryWithSource):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'liikkumislk'
 
 
@@ -324,6 +340,7 @@ class LinkType(Type):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'linkkityyppi'
 
 
@@ -349,6 +366,7 @@ class HabitatTypeObservation(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'ltyyppihavainto'
 
 
@@ -363,6 +381,7 @@ class HabitatType(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'ltyyppirekisteri'
 
 
@@ -377,6 +396,7 @@ class FeatureClass(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'luokka'
 
 
@@ -385,6 +405,7 @@ class BreedingDegree(CategoryWithSource):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'pesimisvarmuus'
 
 
@@ -393,6 +414,7 @@ class Abundance(CategoryWithSource):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'runsaus'
 
 
@@ -404,6 +426,7 @@ class Square(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'ruutu'
 
 
@@ -420,6 +443,7 @@ class Regulation(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'saados'
 
 
@@ -427,6 +451,7 @@ class ConservationProgramme(Type):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'sohjelma'
 
 
@@ -444,6 +469,7 @@ class ProtectionLevel(Category):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'suojaustaso'
 
 
@@ -462,6 +488,7 @@ class Protection(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'suojelu'
 
 
@@ -483,6 +510,7 @@ class Criterion(NatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'suoperuste'
 
 
@@ -510,6 +538,7 @@ class Event(ProtectedNatureModel):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'tapahtuma'
 
 
@@ -527,6 +556,7 @@ class EventType(Type):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'tapahtumatyyppi'
 
 
@@ -535,4 +565,5 @@ class Frequency(CategoryWithSource):
 
     class Meta:
         managed = False
+        ordering = ['id']
         db_table = 'yleisyys'
