@@ -145,7 +145,7 @@ class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
 class ValueSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Value
-        fields = ('url', 'explanation', 'type', 'date', 'link', 'features')
+        fields = ('url', 'explanation', 'value_type', 'date', 'link', 'features')
 
 
 class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
@@ -204,7 +204,7 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Observation
-        fields = ('url', 'location', 'species', 'series', 'abundance', 'frequency', 'number', 'local_or_migrating', 'origin',
+        fields = ('url', 'feature', 'species', 'series', 'abundance', 'frequency', 'number', 'local_or_migrating', 'origin',
                   'breeding_degree', 'description', 'notes', 'date', 'occurrence', 'created_time', 'last_modified_time')
 
 
@@ -222,11 +222,11 @@ class EventTypeSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class EventSerializer(ProtectedHyperlinkedModelSerializer):
-    type = EventTypeSerializer()
+    event_type = EventTypeSerializer()
 
     class Meta:
         model = Event
-        fields = ('url', 'register_id', 'description', 'type', 'date', 'link', 'features', 'regulations')
+        fields = ('url', 'register_id', 'description', 'event_type', 'date', 'link', 'features', 'regulations')
 
 
 class PersonSerializer(ProtectedHyperlinkedModelSerializer):
