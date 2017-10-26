@@ -7,8 +7,20 @@ python:
   - "3.6"
   - "nightly"
 
+# As of 2017-08 the new travis trusty images have broken postgis,
+# so we have to specify the exact postgres version to install right addons
+addons:
+  postgresql: 9.6
+  apt:
+    packages:
+    - postgresql-9.6-postgis-2.3
+
 install:
-  - pip install pytest-cov -r requirements.txt
+  - pip install -r requirements-dev.txt
+
+before_script:
+  - psql -U postgres template1 -c 'create extension postgis;'
+  - psql -U postgres -c 'create database ltj;'
 
 script:
   - pytest --cov=.

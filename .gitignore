@@ -2,3 +2,9 @@
 *~
 __pycache__
 local_settings.py
+
+# unit tests / coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
