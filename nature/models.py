@@ -78,9 +78,6 @@ class ValueFeature(models.Model):
         db_table = 'arvo_kohde'
         unique_together = (('value', 'feature'),)
 
-    def __str__(self):
-        return '{0} {1}'.format(self.value, self.feature)
-
 
 class Occurrence(models.Model):
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
@@ -122,7 +119,7 @@ class Person(models.Model):
     public_servant = models.BooleanField(db_column='viranomainen')
     telephone = models.CharField(max_length=50, blank=True, null=True, db_column='puhnro')
     email = models.CharField(max_length=100, blank=True, null=True, db_column='email')
-    created_time = models.DateTimeField(blank=True, null=True, db_column='lisaysaika')
+    created_time = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_column='lisaysaika')
 
     class Meta:
         ordering = ['id']
@@ -170,10 +167,10 @@ class Feature(ProtectionLevelMixin, models.Model):
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     notes = models.CharField(max_length=255, blank=True, null=True, db_column='huom')
     active = models.BooleanField(db_column='voimassa')
-    created_time = models.DateField(blank=True, null=True, db_column='digipvm')
+    created_time = models.DateField(blank=True, null=True, auto_now_add=True, db_column='digipvm')
     number = models.IntegerField(blank=True, null=True, db_column='numero')
     created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')
-    last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
+    last_modified_time = models.DateTimeField(blank=True, null=True, auto_now=True, db_column='pvm_editoitu')
     last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
     area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
@@ -184,6 +181,9 @@ class Feature(ProtectionLevelMixin, models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'kohde'
+
+    def __str__(self):
+        return self.name
 
 
 class HistoricalFeature(Feature):
@@ -255,15 +255,15 @@ class Observation(ProtectionLevelMixin, models.Model):
     notes = models.CharField(max_length=100, blank=True, null=True, db_column='huom')
     date = models.DateField(blank=True, null=True, db_column='pvm')
     occurrence = models.ForeignKey(Occurrence, models.PROTECT, db_column='esiintymaid', blank=True, null=True)
-    created_time = models.DateTimeField(db_column='pvm_luotu')
-    last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
+    created_time = models.DateTimeField(auto_now_add=True, db_column='pvm_luotu')
+    last_modified_time = models.DateTimeField(blank=True, null=True, auto_now=True, db_column='pvm_editoitu')
 
     class Meta:
         ordering = ['id']
         db_table = 'lajihavainto'
 
     def __str__(self):
-        return self.id  # TODO: need to find more meaningful string representation
+        return self.code
 
 
 class Species(ProtectionLevelMixin, models.Model):
@@ -342,8 +342,8 @@ class HabitatTypeObservation(models.Model):
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
     observation_series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid',
                                            related_name='habitat_type_observations')
-    created_time = models.DateTimeField(db_column='pvm_luotu')
-    last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
+    created_time = models.DateTimeField(auto_now_add=True, db_column='pvm_luotu')
+    last_modified_time = models.DateTimeField(blank=True, null=True, auto_now=True, db_column='pvm_editoitu')
 
     class Meta:
         ordering = ['id']
@@ -547,7 +547,7 @@ class Event(ProtectionLevelMixin, models.Model):
         db_table = 'tapahtuma'
 
     def __str__(self):
-        return self.description
+        return self.register_id
 
 
 class EventFeature(models.Model):
