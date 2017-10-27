@@ -28,6 +28,23 @@ PROTECTED_FEATURE_CLASSES = [
 ]
 
 
+class ProtectionLevelMixin(models.Model):
+    ADMIN_ONLY = 1
+    ADMIN_AND_STAFF = 2
+    PUBLIC = 3
+
+    PROTECTION_LEVEL_CHOICES = (
+        (ADMIN_ONLY, "Administrators only"),
+        (ADMIN_AND_STAFF, "Administrators and staff"),
+        (PUBLIC, "Public"),
+    )
+
+    protection_level = models.IntegerField(choices=PROTECTION_LEVEL_CHOICES, db_column='suojaustasoid')
+
+    class Meta:
+        abstract = True
+
+
 class PermissiveGeometryField(models.GeometryField):
     """
     Required to catch exceptions if curved geometries are encountered. Currently, the GEOS library, GeoDjango
@@ -162,7 +179,7 @@ class PublicationType(models.Model):
         return self.name
 
 
-class Feature(models.Model):
+class Feature(ProtectionLevelMixin, models.Model):
     fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
     geometry1 = PermissiveGeometryField()
@@ -175,7 +192,6 @@ class Feature(models.Model):
     created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')
     last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
     last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
     area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
@@ -207,14 +223,13 @@ class FeaturePublication(models.Model):
         unique_together = (('feature', 'publication'),)
 
 
-class FeatureLink(models.Model):
+class FeatureLink(ProtectionLevelMixin, models.Model):
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='tekstiid', related_name='links')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='linkkiteksti')
     link_type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid')
     ordering = models.IntegerField(blank=True, null=True, db_column='jarjestys')
     link_text = models.CharField(max_length=1000, blank=True, null=True, db_column='linkin_teksti')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
         ordering = ['id']
@@ -234,7 +249,7 @@ class SpeciesRegulation(models.Model):
         unique_together = (('species', 'regulation'),)
 
 
-class Observation(models.Model):
+class Observation(ProtectionLevelMixin, models.Model):
     code = models.CharField(max_length=100, blank=True, null=True, db_column='hav_koodi')
     feature = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='observations')
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations')
@@ -259,7 +274,6 @@ class Observation(models.Model):
     occurrence = models.ForeignKey(Occurrence, models.PROTECT, db_column='esiintymaid', blank=True, null=True)
     created_time = models.DateTimeField(db_column='pvm_luotu')
     last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
         ordering = ['id']
@@ -269,7 +283,7 @@ class Observation(models.Model):
         return self.id  # TODO: need to find more meaningful string representation
 
 
-class Species(models.Model):
+class Species(ProtectionLevelMixin, models.Model):
     taxon = models.CharField(max_length=5, blank=True, null=True, db_column='ryhma')
     taxon_1 = models.CharField(max_length=50, blank=True, null=True, db_column='elioryhma1')
     taxon_2 = models.CharField(max_length=50, blank=True, null=True, db_column='elioryhma2')
@@ -294,7 +308,6 @@ class Species(models.Model):
     code = models.CharField(max_length=100, blank=True, null=True, db_column='koodi')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
     regulations = models.ManyToManyField('Regulation', through=SpeciesRegulation, related_name='species')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
         ordering = ['id']
@@ -535,7 +548,7 @@ class EventRegulation(models.Model):
         unique_together = (('event', 'regulation'),)
 
 
-class Event(models.Model):
+class Event(ProtectionLevelMixin, models.Model):
     register_id = models.CharField(max_length=20, blank=True, null=True, db_column='diaarinro')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     event_type = models.ForeignKey('EventType', models.PROTECT, db_column='tapahtumatyyppiid')
@@ -545,7 +558,6 @@ class Event(models.Model):
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
     features = models.ManyToManyField(Feature, through='EventFeature', related_name='events')
     regulations = models.ManyToManyField(Regulation, through='EventRegulation', related_name='events')
-    protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
         ordering = ['id']

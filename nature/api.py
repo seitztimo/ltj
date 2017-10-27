@@ -39,7 +39,7 @@ class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
     def get_url(self, obj, view_name, request, format):
         # prevents revealing ids of non-permitted objects in one-to-one relations
         if hasattr(obj, 'protection_level'):
-            if not getattr(obj, 'protection_level').id == Permission.PUBLIC:
+            if not getattr(obj, 'protection_level') == Permission.PUBLIC:
                 return None
         return super().get_url(obj, view_name, request, format)
 
