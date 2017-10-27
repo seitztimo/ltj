@@ -47,7 +47,6 @@ class Origin(models.Model):
     source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'alkupera'
 
@@ -63,7 +62,6 @@ class Value(models.Model):
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'arvo'
 
@@ -72,11 +70,11 @@ class Value(models.Model):
 
 
 class ValueFeature(models.Model):
+    """Through model for Value & Feature m2m relation"""
     value = models.ForeignKey(Value, models.CASCADE, db_column='arvoid')
     feature = models.ForeignKey('Feature', models.CASCADE, db_column='kohdeid')
 
     class Meta:
-        managed = False
         db_table = 'arvo_kohde'
         unique_together = (('value', 'feature'),)
 
@@ -88,7 +86,6 @@ class Occurrence(models.Model):
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'esiintyma'
 
@@ -98,7 +95,8 @@ class Occurrence(models.Model):
 
 class ObservationSeries(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
-    person = models.ForeignKey('Person', models.PROTECT, blank=True, null=True, db_column='hloid', related_name='observation_series')
+    person = models.ForeignKey('Person', models.PROTECT, blank=True, null=True, db_column='hloid',
+                               related_name='observation_series')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     start_date = models.DateField(blank=True, null=True, db_column='alkupvm')
     end_date = models.DateField(blank=True, null=True, db_column='loppupvm')
@@ -108,7 +106,6 @@ class ObservationSeries(models.Model):
     valid = models.BooleanField(db_column='voimassa')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'havaintosarja'
 
@@ -128,7 +125,6 @@ class Person(models.Model):
     created_time = models.DateTimeField(blank=True, null=True, db_column='lisaysaika')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'henkilo'
 
@@ -143,11 +139,11 @@ class Publication(models.Model):
     place_of_printing = models.CharField(max_length=50, blank=True, null=True, db_column='painopaikka')
     year = models.CharField(max_length=50, blank=True, null=True, db_column='vuosi')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
-    publication_type = models.ForeignKey('PublicationType', models.PROTECT, db_column='julktyyppiid', related_name='publications')
+    publication_type = models.ForeignKey('PublicationType', models.PROTECT, db_column='julktyyppiid',
+                                         related_name='publications')
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'julkaisu'
 
@@ -159,7 +155,6 @@ class PublicationType(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'julktyyppi'
 
@@ -188,17 +183,16 @@ class Feature(models.Model):
     publications = models.ManyToManyField('Publication', through='FeaturePublication', related_name='features')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'kohde'
 
 
 class HistoricalFeature(Feature):
     archived_time = models.DateTimeField(db_column='historia_pvm')
-    feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True, related_name='historical_features')
+    feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True,
+                                related_name='historical_features')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'kohde_historia'
 
@@ -209,7 +203,6 @@ class FeaturePublication(models.Model):
     publication = models.ForeignKey(Publication, models.CASCADE, db_column='julkid')
 
     class Meta:
-        managed = False
         db_table = 'kohde_julk'
         unique_together = (('feature', 'publication'),)
 
@@ -224,7 +217,6 @@ class FeatureLink(models.Model):
     protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'kohdelinkki'
 
@@ -238,7 +230,6 @@ class SpeciesRegulation(models.Model):
     regulation = models.ForeignKey('Regulation', models.CASCADE, db_column='saaid')
 
     class Meta:
-        managed = False
         db_table = 'laj_saa'
         unique_together = (('species', 'regulation'),)
 
@@ -247,14 +238,21 @@ class Observation(models.Model):
     code = models.CharField(max_length=100, blank=True, null=True, db_column='hav_koodi')
     feature = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='observations')
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations')
-    series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', blank=True, null=True, related_name='observations')
-    abundance = models.ForeignKey('Abundance', models.PROTECT, db_column='runsausid', blank=True, null=True, related_name='observations')
-    frequency = models.ForeignKey('Frequency', models.PROTECT, db_column='yleisyysid', blank=True, null=True, related_name='observations')
-    observer = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True, related_name='observations')
+    series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', blank=True, null=True,
+                               related_name='observations')
+    abundance = models.ForeignKey('Abundance', models.PROTECT, db_column='runsausid', blank=True, null=True,
+                                  related_name='observations')
+    frequency = models.ForeignKey('Frequency', models.PROTECT, db_column='yleisyysid', blank=True, null=True,
+                                  related_name='observations')
+    observer = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True,
+                                 related_name='observations')
     number = models.CharField(max_length=30, blank=True, null=True, db_column='lkm')
-    local_or_migrating = models.ForeignKey('Mobility', models.PROTECT, db_column='liikkumislkid', blank=True, null=True, related_name='observations')
-    origin = models.ForeignKey(Origin, models.PROTECT, db_column='alkuperaid', blank=True, null=True, related_name='observations')
-    breeding_degree = models.ForeignKey('BreedingDegree', models.PROTECT, db_column='pesimisvarmuusid', blank=True, null=True, related_name='observations')
+    local_or_migrating = models.ForeignKey('Mobility', models.PROTECT, db_column='liikkumislkid', blank=True, null=True,
+                                           related_name='observations')
+    origin = models.ForeignKey(Origin, models.PROTECT, db_column='alkuperaid', blank=True, null=True,
+                               related_name='observations')
+    breeding_degree = models.ForeignKey('BreedingDegree', models.PROTECT, db_column='pesimisvarmuusid', blank=True,
+                                        null=True, related_name='observations')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     notes = models.CharField(max_length=100, blank=True, null=True, db_column='huom')
     date = models.DateField(blank=True, null=True, db_column='pvm')
@@ -264,7 +262,6 @@ class Observation(models.Model):
     protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'lajihavainto'
 
@@ -300,7 +297,6 @@ class Species(models.Model):
     protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'lajirekisteri'
 
@@ -314,7 +310,6 @@ class Mobility(models.Model):
     value = models.IntegerField(blank=True, null=True, db_column='arvo')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'liikkumislk'
 
@@ -326,7 +321,6 @@ class LinkType(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')  # type name
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'linkkityyppi'
 
@@ -340,22 +334,22 @@ class HabitatTypeRegulation(models.Model):
     regulation = models.ForeignKey('Regulation', models.CASCADE, db_column='saadosid')
 
     class Meta:
-        managed = False
         db_table = 'ltyyppi_saados'
         unique_together = (('habitat_type', 'regulation'),)
 
 
 class HabitatTypeObservation(models.Model):
     feature = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='habitat_type_observations')
-    habitat_type = models.ForeignKey('HabitatType', models.PROTECT, db_column='ltyypid', related_name='habitat_type_observations')
+    habitat_type = models.ForeignKey('HabitatType', models.PROTECT, db_column='ltyypid',
+                                     related_name='habitat_type_observations')
     group_fraction = models.IntegerField(blank=True, null=True, db_column='osuus_kuviosta')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
-    observation_series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', related_name='habitat_type_observations')
+    observation_series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid',
+                                           related_name='habitat_type_observations')
     created_time = models.DateTimeField(db_column='pvm_luotu')
     last_modified_time = models.DateTimeField(blank=True, null=True, db_column='pvm_editoitu')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'ltyyppihavainto'
 
@@ -372,7 +366,6 @@ class HabitatType(models.Model):
     regulations = models.ManyToManyField('Regulation', through=HabitatTypeRegulation, related_name='habitat_types')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'ltyyppirekisteri'
 
@@ -384,13 +377,13 @@ class FeatureClass(models.Model):
     id = models.CharField(primary_key=True, max_length=10, db_column='tunnus')
     name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
-    super_class = models.ForeignKey('FeatureClass', models.PROTECT, blank=True, null=True, db_column='paatunnus', related_name='subclasses')
+    super_class = models.ForeignKey('FeatureClass', models.PROTECT, blank=True, null=True, db_column='paatunnus',
+                                    related_name='subclasses')
     reporting = models.BooleanField(db_column='raportointi')
     www = models.BooleanField()
     metadata = models.CharField(max_length=4000, blank=True, null=True)
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'luokka'
 
@@ -404,7 +397,6 @@ class BreedingDegree(models.Model):
     value = models.CharField(max_length=50, blank=True, null=True, db_column='arvo')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'pesimisvarmuus'
 
@@ -418,7 +410,6 @@ class Abundance(models.Model):
     value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'runsaus'
 
@@ -433,7 +424,6 @@ class Square(models.Model):
     additional_info = models.CharField(max_length=255, blank=True, null=True, db_column='lisatieto')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'ruutu'
 
@@ -452,7 +442,6 @@ class Regulation(models.Model):
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'saados'
 
@@ -464,7 +453,6 @@ class ConservationProgramme(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'sohjelma'
 
@@ -478,7 +466,6 @@ class ProtectionCriterion(models.Model):
     protection = models.ForeignKey('Protection', models.CASCADE, db_column='suoid')
 
     class Meta:
-        managed = False
         db_table = 'suo_peruste'
         unique_together = (('criterion', 'protection'),)
 
@@ -487,7 +474,6 @@ class ProtectionLevel(models.Model):
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'suojaustaso'
 
@@ -509,7 +495,6 @@ class Protection(models.Model):
                                                      related_name='protections')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'suojelu'
 
@@ -523,7 +508,6 @@ class ProtectionConservationProgramme(models.Model):
     conservation_programme = models.ForeignKey(ConservationProgramme, models.CASCADE, db_column='sohjelmaid')
 
     class Meta:
-        managed = False
         db_table = 'suojelu_sohjelma'
         unique_together = (('protection', 'conservation_programme'),)
 
@@ -534,7 +518,6 @@ class Criterion(models.Model):
     subcriterion = models.CharField(max_length=50, blank=True, null=True, db_column='alaperuste')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'suoperuste'
 
@@ -548,7 +531,6 @@ class EventRegulation(models.Model):
     regulation = models.ForeignKey(Regulation, models.CASCADE, db_column='saaid')
 
     class Meta:
-        managed = False
         db_table = 'tap_saados'
         unique_together = (('event', 'regulation'),)
 
@@ -566,7 +548,6 @@ class Event(models.Model):
     protection_level = models.ForeignKey('ProtectionLevel', models.PROTECT, db_column='suojaustasoid')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'tapahtuma'
 
@@ -580,7 +561,6 @@ class EventFeature(models.Model):
     event = models.ForeignKey(Event, models.CASCADE, db_column='tapid')
 
     class Meta:
-        managed = False
         db_table = 'tapahtuma_kohde'
         unique_together = (('feature', 'event'),)
 
@@ -589,7 +569,6 @@ class EventType(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'tapahtumatyyppi'
 
@@ -603,7 +582,6 @@ class Frequency(models.Model):
     value = models.CharField(max_length=5, blank=True, null=True, db_column='arvo')
 
     class Meta:
-        managed = False
         ordering = ['id']
         db_table = 'yleisyys'
 
