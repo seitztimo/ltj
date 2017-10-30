@@ -3,8 +3,17 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
 from munigeo.api import GeoModelSerializer
-from nature.models import ProtectionLevel, Permission, PERMISSIONS, PROTECTED_FEATURE_CLASSES
-from nature.models import *
+
+from nature.models import (
+    ProtectionLevelMixin,
+    ConservationProgramme, Criterion, Square, Protection,
+    Feature, FeatureClass, Value, Publication, Species,
+    Abundance, Frequency, Mobility, Origin, BreedingDegree,
+    Observation, ObservationSeries, EventType, Event, Person,
+    Regulation, HabitatType, HabitatTypeObservation,
+)
+
+PROTECTED_FEATURE_CLASSES = ['PM']
 
 # the abstract serializers
 
@@ -15,7 +24,7 @@ class ProtectedManyRelatedField(relations.ManyRelatedField):
     """
     def to_representation(self, iterable):
         try:
-            iterable = iterable.filter(protection_level=Permission.PUBLIC)
+            iterable = iterable.filter(protection_level=ProtectionLevelMixin.PUBLIC)
             iterable = iterable.exclude(feature_class__in=PROTECTED_FEATURE_CLASSES)
         except FieldError:
             # this allows the field to be used even with non-protected models or those without feature class
@@ -39,7 +48,7 @@ class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
     def get_url(self, obj, view_name, request, format):
         # prevents revealing ids of non-permitted objects in one-to-one relations
         if hasattr(obj, 'protection_level'):
-            if not getattr(obj, 'protection_level') == Permission.PUBLIC:
+            if not getattr(obj, 'protection_level') == ProtectionLevelMixin.PUBLIC:
                 return None
         return super().get_url(obj, view_name, request, format)
 
@@ -70,7 +79,7 @@ class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         try:
-            qs = qs.filter(protection_level=Permission.PUBLIC)
+            qs = qs.filter(protection_level=ProtectionLevelMixin.PUBLIC)
             qs = qs.exclude(feature_class__in=PROTECTED_FEATURE_CLASSES)
         except FieldError:
             # this allows the viewset to be used even with non-protected models or those without feature class

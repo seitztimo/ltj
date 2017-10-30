@@ -11,23 +11,6 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
 
 
-class Permission:
-    ADMIN_ONLY = 1
-    ADMIN_AND_STAFF = 2
-    PUBLIC = 3
-
-
-PERMISSIONS = (
-    (Permission.ADMIN_ONLY, "Administrators only"),
-    (Permission.ADMIN_AND_STAFF, "Administrators and staff"),
-    (Permission.PUBLIC, "Public"),
-)
-
-PROTECTED_FEATURE_CLASSES = [
-    'PM'
-]
-
-
 class ProtectionLevelMixin(models.Model):
     ADMIN_ONLY = 1
     ADMIN_AND_STAFF = 2
