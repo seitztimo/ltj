@@ -23,6 +23,6 @@ before_script:
   - psql -U postgres -c 'create database ltj;'
 
 script:
-  - pytest --cov=.
+  - pytest -ra -vvv --cov
 
 after_success: codecov

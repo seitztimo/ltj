@@ -36,3 +36,15 @@ Run the utility script to fix the database so that it can be managed by django:
 Fake initial when first time run migrations on nature app:
     
     python manage.py migrate nature --fake-initial
+    
+### Tests
+
+Run tests
+
+    py.test
+
+Run tests with coverage report
+
+    py.test --cov-report html --cov .
+    
+Open htmlcov/index.html for the coverage report.
