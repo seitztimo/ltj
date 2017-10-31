@@ -131,14 +131,17 @@ class TestObservation(TestCase):
 class TestSpecies(TestCase):
 
     def setUp(self):
-        self.species = SpeciesFactory(name_fi='species')
+        self.species = SpeciesFactory(
+            name_fi='name_fi',
+            name_sci_1='name_sci',
+            name_subspecies_1='name_subspecies'
+        )
 
     def test__str__(self):
-        self.assertEqual(self.species.__str__(), 'species')
+        self.assertEqual(self.species.__str__(), 'name_fi, name_sci, name_subspecies')
 
-        self.species.id = 123
         self.species.name_fi = None
-        self.assertEqual(self.species.__str__(), 'Species 123')
+        self.assertEqual(self.species.__str__(), 'name_sci, name_subspecies')
 
 
 class TestMobility(TestCase):

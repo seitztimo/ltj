@@ -299,7 +299,8 @@ class Species(ProtectionLevelMixin, models.Model):
         db_table = 'lajirekisteri'
 
     def __str__(self):
-        return self.name_fi or 'Species {0}'.format(self.id)
+        name_list = [self.name_fi, self.name_sci_1, self.name_subspecies_1]
+        return ', '.join([name for name in name_list if name])
 
 
 class Mobility(models.Model):
