@@ -10,6 +10,8 @@ from __future__ import unicode_literals
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
 
+from .consts import SRID
+
 
 class ProtectionLevelMixin(models.Model):
     ADMIN_ONLY = 1
@@ -22,7 +24,7 @@ class ProtectionLevelMixin(models.Model):
         (PUBLIC, "Public"),
     )
 
-    protection_level = models.IntegerField(choices=PROTECTION_LEVEL_CHOICES, db_column='suojaustasoid')
+    protection_level = models.IntegerField(choices=PROTECTION_LEVEL_CHOICES, default=PUBLIC, db_column='suojaustasoid')
 
     class Meta:
         abstract = True
@@ -162,11 +164,11 @@ class PublicationType(models.Model):
 class Feature(ProtectionLevelMixin, models.Model):
     fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
-    geometry1 = PermissiveGeometryField()
+    geometry = PermissiveGeometryField(db_column='geometry1', srid=SRID)
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     notes = models.CharField(max_length=255, blank=True, null=True, db_column='huom')
-    active = models.BooleanField(db_column='voimassa')
+    active = models.BooleanField(db_column='voimassa', default=True)
     created_time = models.DateField(blank=True, null=True, auto_now_add=True, db_column='digipvm')
     number = models.IntegerField(blank=True, null=True, db_column='numero')
     created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')

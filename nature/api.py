@@ -139,7 +139,7 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer, GeoModelSerializer)
 
     class Meta:
         model = Feature
-        fields = ('url', 'name', 'fid', 'feature_class', 'geometry1', 'description', 'notes', 'active',
+        fields = ('url', 'name', 'fid', 'feature_class', 'geometry', 'description', 'notes', 'active',
                   'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
                   'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'events')
 

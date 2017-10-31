@@ -77,7 +77,7 @@ class FeatureClassFactory(factory.django.DjangoModelFactory):
 class FeatureFactory(factory.django.DjangoModelFactory):
     fid = factory.Sequence(lambda n: "f-{0}".format(n))
     feature_class = factory.SubFactory(FeatureClassFactory)
-    geometry1 = Point(1, 1)
+    geometry = Point(1, 1)
     name = factory.Faker('text', max_nb_chars=80)
     active = True
     protection_level = 3
@@ -105,7 +105,7 @@ class FeatureFactory(factory.django.DjangoModelFactory):
 class HistoricalFeatureFactory(factory.django.DjangoModelFactory):
     fid = factory.Sequence(lambda n: "hf-{0}".format(n))
     feature_class = factory.SubFactory(FeatureClassFactory)
-    geometry1 = Point(1, 1)
+    geometry = Point(1, 1)
     name = factory.Faker('text', max_nb_chars=80)
     active = True
     protection_level = 3
