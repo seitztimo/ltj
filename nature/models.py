@@ -109,7 +109,7 @@ class ObservationSeries(models.Model):
         db_table = 'havaintosarja'
 
     def __str__(self):
-        return self.name
+        return self.name or 'Observation series {0}'.format(self.id)
 
 
 class Person(models.Model):
@@ -265,7 +265,7 @@ class Observation(ProtectionLevelMixin, models.Model):
         db_table = 'lajihavainto'
 
     def __str__(self):
-        return self.code
+        return self.code or 'Observation {0}'.format(self.id)
 
 
 class Species(ProtectionLevelMixin, models.Model):
@@ -299,7 +299,7 @@ class Species(ProtectionLevelMixin, models.Model):
         db_table = 'lajirekisteri'
 
     def __str__(self):
-        return self.name_fi
+        return self.name_fi or 'Species {0}'.format(self.id)
 
 
 class Mobility(models.Model):

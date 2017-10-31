@@ -52,6 +52,10 @@ class TestObservationSeries(TestCase):
     def test__str__(self):
         self.assertEqual(self.observation_series.__str__(), 'observation series')
 
+        self.observation_series.id = 123
+        self.observation_series.name = None
+        self.assertEqual(self.observation_series.__str__(), 'Observation series 123')
+
 
 class TestPerson(TestCase):
 
@@ -119,6 +123,10 @@ class TestObservation(TestCase):
     def test__str__(self):
         self.assertEqual(self.observation.__str__(), '123')
 
+        self.observation.id = 321
+        self.observation.code = None
+        self.assertEqual(self.observation.__str__(), 'Observation 321')
+
 
 class TestSpecies(TestCase):
 
@@ -127,6 +135,10 @@ class TestSpecies(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.species.__str__(), 'species')
+
+        self.species.id = 123
+        self.species.name_fi = None
+        self.assertEqual(self.species.__str__(), 'Species 123')
 
 
 class TestMobility(TestCase):
@@ -271,9 +283,3 @@ class TestFrequency(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.frequency.__str__(), 'frequency')
-
-
-
-
-
-

@@ -24,7 +24,7 @@ class ValueFactory(factory.django.DjangoModelFactory):
 
 class OccurrenceFactory(factory.django.DjangoModelFactory):
     explanation = factory.Faker('text', max_nb_chars=50)
-    
+
     class Meta:
         model = 'nature.Occurrence'
 
