@@ -183,7 +183,7 @@ class Feature(ProtectionLevelMixin, models.Model):
         db_table = 'kohde'
 
     def __str__(self):
-        return self.name
+        return self.name or 'Feature {0}'.format(self.id)
 
 
 class HistoricalFeature(Feature):
@@ -384,7 +384,7 @@ class FeatureClass(models.Model):
         db_table = 'luokka'
 
     def __str__(self):
-        return self.name
+        return self.name or 'Feature class {0}'.format(self.id)
 
 
 class BreedingDegree(models.Model):

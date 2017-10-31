@@ -88,6 +88,10 @@ class TestFeature(TestCase):
     def test__str__(self):
         self.assertEqual(self.feature.__str__(), 'feature')
 
+        self.feature.id = 123
+        self.feature.name = None
+        self.assertEqual(self.feature.__str__(), 'Feature 123')
+
 
 class TestHistoricalFeature(TestCase):
 
@@ -173,6 +177,10 @@ class TestFeatureClass(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.feature_class.__str__(), 'feature class')
+
+        self.feature_class.id = 123
+        self.feature_class.name = None
+        self.assertEqual(self.feature_class.__str__(), 'Feature class 123')
 
 
 class TestBreedingDegree(TestCase):
