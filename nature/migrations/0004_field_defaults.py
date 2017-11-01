@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import nature.models
 
 
 class Migration(migrations.Migration):
@@ -22,16 +21,6 @@ class Migration(migrations.Migration):
             model_name='feature',
             name='active',
             field=models.BooleanField(db_column='voimassa', default=True),
-        ),
-        migrations.AlterField(
-            model_name='feature',
-            name='geometry1',
-            field=nature.models.PermissiveGeometryField(db_column='geometry1', srid=3879),
-        ),
-        migrations.RenameField(
-            model_name='feature',
-            old_name='geometry1',
-            new_name='geometry',
         ),
         migrations.AlterField(
             model_name='feature',

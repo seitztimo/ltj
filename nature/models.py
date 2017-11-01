@@ -7,10 +7,9 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
-
-from .consts import SRID
 
 
 class ProtectionLevelMixin(models.Model):
@@ -164,7 +163,7 @@ class PublicationType(models.Model):
 class Feature(ProtectionLevelMixin, models.Model):
     fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
-    geometry = PermissiveGeometryField(db_column='geometry1', srid=SRID)
+    geometry = PermissiveGeometryField(db_column='geometry1', srid=settings.SRID)
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
     notes = models.CharField(max_length=255, blank=True, null=True, db_column='huom')

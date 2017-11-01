@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('fid', models.CharField(blank=True, db_column='tunnus', max_length=10, null=True)),
-                ('geometry1', nature.models.PermissiveGeometryField(srid=4326)),
+                ('geometry', nature.models.PermissiveGeometryField(srid=3879, db_column='geometry1')),
                 ('name', models.CharField(blank=True, db_column='nimi', max_length=80, null=True)),
                 ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
                 ('notes', models.CharField(blank=True, db_column='huom', max_length=255, null=True)),
