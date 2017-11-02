@@ -1,12 +1,26 @@
 from django.contrib.gis import admin
 
-from .models import Feature, Observation
+from .models import Feature, Observation, ObservationSeries, Species
 from .forms import FeatureForm
+
+
+@admin.register(Species)
+class SpeciesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name_fi', 'name_sci_1', 'name_subspecies_1')
+    search_fields = ('name_fi', 'name_sci_1', 'name_subspecies_1')
+    list_filter = ('taxon', 'taxon_1')
+
+
+@admin.register(ObservationSeries)
+class ObservationSeriesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'valid')
+    search_fields = ('name',)
 
 
 class ObservationInline(admin.TabularInline):
     model = Observation
     fields = ('species', 'series', 'protection_level', 'created_time')
+    raw_id_fields = ('species',)
     readonly_fields = ('created_time', )
     extra = 1
 
@@ -18,7 +32,9 @@ class ObservationInline(admin.TabularInline):
 @admin.register(Feature)
 class FeatureAdmin(admin.OSMGeoAdmin):
     readonly_fields = ('created_by', 'created_time', 'last_modified_by', 'last_modified_time')
-    list_display = ('id', 'feature_class', 'name')
+    list_display = ('id', 'feature_class', 'name', 'active')
+    search_fields = ('feature_class', 'name')
+    list_filter = ('feature_class', 'active')
     form = FeatureForm
     inlines = [ObservationInline]
 
