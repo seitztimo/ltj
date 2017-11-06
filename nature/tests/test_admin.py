@@ -1,9 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase, RequestFactory
 
 
 from .factories import FeatureFactory, ObservationFactory, PublicationFactory
+from .utils import make_user
 from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin
 from ..models import Feature, Publication
 
@@ -11,8 +11,7 @@ from ..models import Feature, Publication
 class TestObservationInline(TestCase):
 
     def setUp(self):
-        user_model = get_user_model()
-        self.user = user_model.objects.create(username='testuser', is_staff=True, is_superuser=True)
+        self.user = make_user()
         self.site = AdminSite()
         self.factory = RequestFactory()
 
@@ -33,8 +32,7 @@ class TestObservationInline(TestCase):
 class TestFeatureAdmin(TestCase):
 
     def setUp(self):
-        user_model = get_user_model()
-        self.user = user_model.objects.create(username='testuser', is_staff=True, is_superuser=True)
+        self.user = make_user()
         self.feature = FeatureFactory()
         self.site = AdminSite()
         self.factory = RequestFactory()
@@ -67,8 +65,7 @@ class TestFeatureAdmin(TestCase):
 class TestPublicationAdmin(TestCase):
 
     def setUp(self):
-        user_model = get_user_model()
-        self.user = user_model.objects.create(username='testuser', is_staff=True, is_superuser=True)
+        self.user = make_user()
         self.publication = PublicationFactory()
         self.site = AdminSite()
         self.factory = RequestFactory()
