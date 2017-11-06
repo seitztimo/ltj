@@ -1,6 +1,10 @@
 from django.contrib.gis import admin
 
-from .models import Feature, Observation, ObservationSeries, Species
+from .models import (
+    Feature, FeatureClass, FeatureLink, FeaturePublication,
+    Observation, ObservationSeries, Publication,
+    Species, LinkType,
+)
 from .forms import FeatureForm
 
 
@@ -29,6 +33,39 @@ class ObservationInline(admin.TabularInline):
         return qs.select_related('species', 'series')
 
 
+@admin.register(LinkType)
+class LinkTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+class FeatureLinkInline(admin.TabularInline):
+    model = FeatureLink
+    fields = ('link', 'text', 'link_type', 'ordering')
+    extra = 1
+
+
+@admin.register(FeatureClass)
+class FeatureClassAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+@admin.register(Publication)
+class PublicationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'publication_type', 'name')
+    search_fields = ('name',)
+    list_filter = ('publication_type', 'year')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('publication_type')
+
+
+class FeaturePublicationInline(admin.TabularInline):
+    model = FeaturePublication
+    raw_id_fields = ('publication',)
+    extra = 1
+
+
 @admin.register(Feature)
 class FeatureAdmin(admin.OSMGeoAdmin):
     readonly_fields = ('created_by', 'created_time', 'last_modified_by', 'last_modified_time')
@@ -36,7 +73,7 @@ class FeatureAdmin(admin.OSMGeoAdmin):
     search_fields = ('feature_class', 'name')
     list_filter = ('feature_class', 'active')
     form = FeatureForm
-    inlines = [ObservationInline]
+    inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

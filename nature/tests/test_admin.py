@@ -3,9 +3,9 @@ from django.contrib.admin.sites import AdminSite
 from django.test import TestCase, RequestFactory
 
 
-from .factories import FeatureFactory, ObservationFactory
-from ..admin import FeatureAdmin, ObservationInline
-from ..models import Feature
+from .factories import FeatureFactory, ObservationFactory, PublicationFactory
+from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin
+from ..models import Feature, Publication
 
 
 class TestObservationInline(TestCase):
@@ -62,3 +62,22 @@ class TestFeatureAdmin(TestCase):
         fa.save_model(request, feature, None, None)
         self.assertEqual(feature.created_by, 'otheruser')
         self.assertEqual(feature.last_modified_by, 'testuser')
+
+
+class TestPublicationAdmin(TestCase):
+
+    def setUp(self):
+        user_model = get_user_model()
+        self.user = user_model.objects.create(username='testuser', is_staff=True, is_superuser=True)
+        self.publication = PublicationFactory()
+        self.site = AdminSite()
+        self.factory = RequestFactory()
+
+    def test_get_queryset(self):
+        pa = PublicationAdmin(Publication, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        # test select_related is used
+        publication = pa.get_queryset(request).first()
+        self.assertNumQueries(0, getattr, publication, 'publication_type')
