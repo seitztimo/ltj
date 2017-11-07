@@ -213,8 +213,12 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Observation
-        fields = ('url', 'feature', 'species', 'series', 'abundance', 'frequency', 'number', 'local_or_migrating', 'origin',
-                  'breeding_degree', 'description', 'notes', 'date', 'occurrence', 'created_time', 'last_modified_time')
+        fields = (
+            'url', 'feature', 'species', 'series', 'abundance',
+            'frequency', 'number', 'local_or_migrating', 'origin',
+            'breeding_degree', 'description', 'notes', 'date',
+            'occurrence', 'created_time', 'last_modified_time',
+        )
 
 
 class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
@@ -352,6 +356,7 @@ class ProtectionCriterionViewSet(ProtectedViewSet):
 class ConservationProgrammeViewSet(ProtectedViewSet):
     queryset = ConservationProgramme.objects.all()
     serializer_class = ConservationProgrammeSerializer
+
 
 router = routers.DefaultRouter()
 router.register(r'feature', FeatureViewSet)
