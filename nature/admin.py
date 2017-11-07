@@ -70,7 +70,7 @@ class FeaturePublicationInline(admin.TabularInline):
 class FeatureAdmin(admin.OSMGeoAdmin):
     readonly_fields = ('created_by', 'created_time', 'last_modified_by', 'last_modified_time')
     list_display = ('id', 'feature_class', 'name', 'active')
-    search_fields = ('feature_class', 'name')
+    search_fields = ('feature_class__name', 'name',)
     list_filter = ('feature_class', 'active')
     form = FeatureForm
     inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
