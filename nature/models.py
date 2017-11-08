@@ -160,9 +160,10 @@ class PublicationType(models.Model):
         return self.name
 
 
-class Feature(ProtectionLevelMixin, models.Model):
+class AbstractFeature(ProtectionLevelMixin, models.Model):
+    """AbstractFeature model that provides common fields for Feature and HistoricalFeature """
     fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
-    feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
+    feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus')
     geometry = PermissiveGeometryField(db_column='geometry1', srid=settings.SRID)
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
@@ -176,6 +177,12 @@ class Feature(ProtectionLevelMixin, models.Model):
     area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
+
+    class Meta:
+        abstract = True
+
+
+class Feature(AbstractFeature):
     values = models.ManyToManyField('Value', through=ValueFeature, related_name='features')
     publications = models.ManyToManyField('Publication', through='FeaturePublication', related_name='features')
 
@@ -187,7 +194,7 @@ class Feature(ProtectionLevelMixin, models.Model):
         return self.name or 'Feature {0}'.format(self.id)
 
 
-class HistoricalFeature(Feature):
+class HistoricalFeature(AbstractFeature):
     archived_time = models.DateTimeField(db_column='historia_pvm')
     feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True,
                                 related_name='historical_features')
@@ -195,6 +202,9 @@ class HistoricalFeature(Feature):
     class Meta:
         ordering = ['id']
         db_table = 'kohde_historia'
+
+    def __str__(self):
+        return self.name or 'Historical feature {0}'.format(self.id)
 
 
 class FeaturePublication(models.Model):

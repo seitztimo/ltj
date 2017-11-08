@@ -105,6 +105,10 @@ class TestHistoricalFeature(TestCase):
     def test__str__(self):
         self.assertEqual(self.historical_feature.__str__(), 'historical feature')
 
+        self.historical_feature.id = 123
+        self.historical_feature.name = None
+        self.assertEqual(self.historical_feature.__str__(), 'Historical feature 123')
+
 
 class TestFeatureLink(TestCase):
 
