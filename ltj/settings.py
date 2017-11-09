@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'ckeditor',
     'rest_framework',
+    'rest_framework_gis',
     'nature',
-    'munigeo'
 ]
 
 MIDDLEWARE_CLASSES = [

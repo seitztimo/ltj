@@ -2,7 +2,6 @@ from django.core.exceptions import FieldError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
-from munigeo.api import GeoModelSerializer
 
 from nature.models import (
     ProtectionLevelMixin,
@@ -125,7 +124,7 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
                   'criteria', 'conservation_programmes')
 
 
-class FeatureSerializer(ProtectedHyperlinkedModelSerializer, GeoModelSerializer):
+class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
     square = SquareSerializer()
     protection = ProtectionSerializer()
     text = SerializerMethodField()
