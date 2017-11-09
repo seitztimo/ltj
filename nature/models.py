@@ -163,7 +163,6 @@ class PublicationType(models.Model):
 class AbstractFeature(ProtectionLevelMixin, models.Model):
     """AbstractFeature model that provides common fields for Feature and HistoricalFeature """
     fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
-    feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus')
     geometry = PermissiveGeometryField(db_column='geometry1', srid=settings.SRID)
     name = models.CharField(max_length=80, blank=True, null=True, db_column='nimi')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
@@ -183,6 +182,7 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
 
 
 class Feature(AbstractFeature):
+    feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
     values = models.ManyToManyField('Value', through=ValueFeature, related_name='features')
     publications = models.ManyToManyField('Publication', through='FeaturePublication', related_name='features')
 
@@ -195,6 +195,8 @@ class Feature(AbstractFeature):
 
 
 class HistoricalFeature(AbstractFeature):
+    feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus',
+                                      related_name='historical_features')
     archived_time = models.DateTimeField(db_column='historia_pvm')
     feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True,
                                 related_name='historical_features')
