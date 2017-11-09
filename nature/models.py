@@ -52,7 +52,7 @@ class Origin(models.Model):
         db_table = 'alkupera'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class Value(models.Model):
@@ -67,7 +67,7 @@ class Value(models.Model):
         db_table = 'arvo'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class ValueFeature(models.Model):
@@ -88,7 +88,7 @@ class Occurrence(models.Model):
         db_table = 'esiintyma'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class ObservationSeries(models.Model):
@@ -108,7 +108,7 @@ class ObservationSeries(models.Model):
         db_table = 'havaintosarja'
 
     def __str__(self):
-        return self.name or 'Observation series {0}'.format(self.id)
+        return str(self.name) or 'Observation series {0}'.format(self.id)
 
 
 class Person(models.Model):
@@ -146,7 +146,7 @@ class Publication(models.Model):
         db_table = 'julkaisu'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class PublicationType(models.Model):
@@ -157,7 +157,7 @@ class PublicationType(models.Model):
         db_table = 'julktyyppi'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class AbstractFeature(ProtectionLevelMixin, models.Model):
@@ -191,7 +191,7 @@ class Feature(AbstractFeature):
         db_table = 'kohde'
 
     def __str__(self):
-        return self.name or 'Feature {0}'.format(self.id)
+        return str(self.name) or 'Feature {0}'.format(self.id)
 
 
 class HistoricalFeature(AbstractFeature):
@@ -206,7 +206,7 @@ class HistoricalFeature(AbstractFeature):
         db_table = 'kohde_historia'
 
     def __str__(self):
-        return self.name or 'Historical feature {0}'.format(self.id)
+        return str(self.name) or 'Historical feature {0}'.format(self.id)
 
 
 class FeaturePublication(models.Model):
@@ -232,7 +232,7 @@ class FeatureLink(ProtectionLevelMixin, models.Model):
         db_table = 'kohdelinkki'
 
     def __str__(self):
-        return self.link
+        return str(self.link)
 
 
 class SpeciesRegulation(models.Model):
@@ -276,7 +276,7 @@ class Observation(ProtectionLevelMixin, models.Model):
         db_table = 'lajihavainto'
 
     def __str__(self):
-        return self.code or 'Observation {0}'.format(self.id)
+        return str(self.code) or 'Observation {0}'.format(self.id)
 
 
 class Species(ProtectionLevelMixin, models.Model):
@@ -324,7 +324,7 @@ class Mobility(models.Model):
         db_table = 'liikkumislk'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class LinkType(models.Model):
@@ -335,7 +335,7 @@ class LinkType(models.Model):
         db_table = 'linkkityyppi'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class HabitatTypeRegulation(models.Model):
@@ -380,7 +380,7 @@ class HabitatType(models.Model):
         db_table = 'ltyyppirekisteri'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class FeatureClass(models.Model):
@@ -398,7 +398,7 @@ class FeatureClass(models.Model):
         db_table = 'luokka'
 
     def __str__(self):
-        return self.name or 'Feature class {0}'.format(self.id)
+        return str(self.name) or 'Feature class {0}'.format(self.id)
 
 
 class BreedingDegree(models.Model):
@@ -411,7 +411,7 @@ class BreedingDegree(models.Model):
         db_table = 'pesimisvarmuus'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class Abundance(models.Model):
@@ -424,7 +424,7 @@ class Abundance(models.Model):
         db_table = 'runsaus'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class Square(models.Model):
@@ -438,7 +438,7 @@ class Square(models.Model):
         db_table = 'ruutu'
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 
 class Regulation(models.Model):
@@ -456,7 +456,7 @@ class Regulation(models.Model):
         db_table = 'saados'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class ConservationProgramme(models.Model):
@@ -467,7 +467,7 @@ class ConservationProgramme(models.Model):
         db_table = 'sohjelma'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class ProtectionCriterion(models.Model):
@@ -488,7 +488,7 @@ class ProtectionLevel(models.Model):
         db_table = 'suojaustaso'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
 
 
 class Protection(models.Model):
@@ -509,7 +509,7 @@ class Protection(models.Model):
         db_table = 'suojelu'
 
     def __str__(self):
-        return self.reported_area
+        return str(self.reported_area)
 
 
 class ProtectionConservationProgramme(models.Model):
@@ -532,7 +532,7 @@ class Criterion(models.Model):
         db_table = 'suoperuste'
 
     def __str__(self):
-        return self.criterion
+        return str(self.criterion)
 
 
 class EventRegulation(models.Model):
@@ -561,7 +561,7 @@ class Event(ProtectionLevelMixin, models.Model):
         db_table = 'tapahtuma'
 
     def __str__(self):
-        return self.register_id
+        return str(self.register_id)
 
 
 class EventFeature(models.Model):
@@ -582,7 +582,7 @@ class EventType(models.Model):
         db_table = 'tapahtumatyyppi'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Frequency(models.Model):
@@ -595,4 +595,4 @@ class Frequency(models.Model):
         db_table = 'yleisyys'
 
     def __str__(self):
-        return self.explanation
+        return str(self.explanation)
