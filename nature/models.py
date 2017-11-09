@@ -108,7 +108,7 @@ class ObservationSeries(models.Model):
         db_table = 'havaintosarja'
 
     def __str__(self):
-        return str(self.name) or 'Observation series {0}'.format(self.id)
+        return self.name or 'Observation series {0}'.format(self.id)
 
 
 class Person(models.Model):
@@ -191,7 +191,7 @@ class Feature(AbstractFeature):
         db_table = 'kohde'
 
     def __str__(self):
-        return str(self.name) or 'Feature {0}'.format(self.id)
+        return self.name or 'Feature {0}'.format(self.id)
 
 
 class HistoricalFeature(AbstractFeature):
@@ -206,7 +206,7 @@ class HistoricalFeature(AbstractFeature):
         db_table = 'kohde_historia'
 
     def __str__(self):
-        return str(self.name) or 'Historical feature {0}'.format(self.id)
+        return self.name or 'Historical feature {0}'.format(self.id)
 
 
 class FeaturePublication(models.Model):
@@ -276,7 +276,7 @@ class Observation(ProtectionLevelMixin, models.Model):
         db_table = 'lajihavainto'
 
     def __str__(self):
-        return str(self.code) or 'Observation {0}'.format(self.id)
+        return self.code or 'Observation {0}'.format(self.id)
 
 
 class Species(ProtectionLevelMixin, models.Model):
@@ -398,7 +398,7 @@ class FeatureClass(models.Model):
         db_table = 'luokka'
 
     def __str__(self):
-        return str(self.name) or 'Feature class {0}'.format(self.id)
+        return self.name or 'Feature class {0}'.format(self.id)
 
 
 class BreedingDegree(models.Model):
