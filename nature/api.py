@@ -1,7 +1,9 @@
+from django.contrib.gis.db.models.functions import Transform
 from django.core.exceptions import FieldError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.reverse import reverse
 from rest_framework import serializers, viewsets, routers, relations
+from rest_framework_gis.fields import GeometryField
 
 from nature.models import (
     ProtectionLevelMixin,
@@ -128,6 +130,7 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
     square = SquareSerializer()
     protection = ProtectionSerializer()
     text = SerializerMethodField()
+    geometry = GeometryField(source='geom')  # using transformed geometry
 
     def get_text(self, obj):
         # now this is a silly feature: text should not be public if text_www exists
@@ -268,7 +271,7 @@ class HabitatTypeObservationSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class FeatureViewSet(ProtectedViewSet):
-    queryset = Feature.objects.all()
+    queryset = Feature.objects.all().annotate(geom=Transform('geometry', 4326))  # display coordinates in WGS84
     serializer_class = FeatureSerializer
 
 
