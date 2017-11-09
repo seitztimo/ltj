@@ -226,7 +226,7 @@ class TestSquare(TestCase):
         self.square = SquareFactory(number=2)
 
     def test__str__(self):
-        self.assertEqual(self.square.__str__(), 2)
+        self.assertEqual(self.square.__str__(), '2')
 
 
 class TestRegulation(TestCase):
