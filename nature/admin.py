@@ -75,6 +75,15 @@ class FeatureAdmin(admin.OSMGeoAdmin):
     form = FeatureForm
     inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
 
+    # map configs
+    map_width = 800
+    map_height = 600
+
+    # OSMGeoAdmin uses web mercator projection (EPSG:3857)
+    default_lon = 2776541.611259
+    default_lat = 8437840.556572
+    default_zoom = 12
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.select_related('feature_class')
