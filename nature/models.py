@@ -173,12 +173,19 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
     created_by = models.CharField(max_length=50, blank=True, null=True, db_column='digitoija')
     last_modified_time = models.DateTimeField(blank=True, null=True, auto_now=True, db_column='pvm_editoitu')
     last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
-    area = models.FloatField(blank=True, null=True, db_column='pinta_ala')
+    area = models.FloatField(verbose_name='Area (ha)', blank=True, null=True, editable=False, db_column='pinta_ala')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
 
     class Meta:
         abstract = True
+
+    def save(self, *args, **kwargs):
+        if self.geometry and self.geometry.dims == 2:
+            # save area for Polygon, MultiPolygon or GeometryCollection with Polygon
+            # or MultiPolygon
+            self.area = self.geometry.area / 10000  # area in hectare
+        super().save(*args, **kwargs)
 
 
 class Feature(AbstractFeature):

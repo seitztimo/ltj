@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.gis.geos import Point, Polygon
 
 from .factories import (
     OriginFactory, ValueFactory, OccurrenceFactory,
@@ -96,6 +97,15 @@ class TestFeature(TestCase):
         self.feature.name = None
         self.assertEqual(self.feature.__str__(), 'Feature 123')
 
+    def test_save(self):
+        self.feature.geometry = Point(1, 1)
+        self.feature.save()
+        self.assertIsNone(self.feature.area)
+
+        self.feature.geometry = Polygon([(0, 0), (2, 0), (2, 2), (0, 2), (0, 0)])
+        self.feature.save()
+        self.assertAlmostEqual(self.feature.area, 4 / 10000)
+
 
 class TestHistoricalFeature(TestCase):
 
@@ -108,6 +118,15 @@ class TestHistoricalFeature(TestCase):
         self.historical_feature.id = 123
         self.historical_feature.name = None
         self.assertEqual(self.historical_feature.__str__(), 'Historical feature 123')
+
+    def test_save(self):
+        self.historical_feature.geometry = Point(1, 1)
+        self.historical_feature.save()
+        self.assertIsNone(self.historical_feature.area)
+
+        self.historical_feature.geometry = Polygon([(0, 0), (2, 0), (2, 2), (0, 2), (0, 0)])
+        self.historical_feature.save()
+        self.assertAlmostEqual(self.historical_feature.area, 4 / 10000)
 
 
 class TestFeatureLink(TestCase):
