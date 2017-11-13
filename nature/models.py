@@ -247,6 +247,9 @@ class SpeciesRegulation(models.Model):
 
 class Observation(ProtectionLevelMixin, models.Model):
     code = models.CharField(max_length=100, blank=True, null=True, db_column='hav_koodi')
+    # This field should be filled and unique, but we do not know the values yet, see details
+    # in https://github.com/City-of-Helsinki/ltj/issues/4
+    uri = models.URLField(blank=True)
     feature = models.ForeignKey(Feature, models.PROTECT, db_column='kohdeid', related_name='observations')
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations')
     series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', blank=True, null=True,
