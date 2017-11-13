@@ -607,7 +607,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='historicalfeature',
             name='feature_class',
-            field=models.ForeignKey(db_column='luokkatunnus', on_delete=django.db.models.deletion.PROTECT, to='nature.FeatureClass'),
+            field=models.ForeignKey(db_column='luokkatunnus', on_delete=django.db.models.deletion.PROTECT, related_name='historical_features', to='nature.FeatureClass'),
         ),
         migrations.AddField(
             model_name='habitattyperegulation',
@@ -657,7 +657,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='feature',
             name='feature_class',
-            field=models.ForeignKey(db_column='luokkatunnus', on_delete=django.db.models.deletion.PROTECT, to='nature.FeatureClass'),
+            field=models.ForeignKey(db_column='luokkatunnus', on_delete=django.db.models.deletion.PROTECT, related_name='features', to='nature.FeatureClass'),
         ),
         migrations.AddField(
             model_name='feature',
