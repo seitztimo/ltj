@@ -12,6 +12,7 @@ from nature.models import (
     Abundance, Frequency, Mobility, Origin, BreedingDegree,
     Observation, ObservationSeries, EventType, Event, Person,
     Regulation, HabitatType, HabitatTypeObservation,
+    FeatureLink,
 )
 
 PROTECTED_FEATURE_CLASSES = ['PM']
@@ -126,11 +127,20 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
                   'criteria', 'conservation_programmes')
 
 
+class FeatureLinkSerializer(serializers.ModelSerializer):
+    link_type = serializers.StringRelatedField()
+
+    class Meta:
+        model = FeatureLink
+        fields = ('link', 'text', 'link_type', 'ordering', 'link_text')
+
+
 class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
     square = SquareSerializer()
     protection = ProtectionSerializer()
     text = SerializerMethodField()
     geometry = GeometryField(source='geom')  # using transformed geometry
+    links = FeatureLinkSerializer(many=True)
 
     def get_text(self, obj):
         # now this is a silly feature: text should not be public if text_www exists
