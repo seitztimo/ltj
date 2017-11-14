@@ -106,6 +106,8 @@ class ObservationSeries(models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'havaintosarja'
+        verbose_name = 'observation series'
+        verbose_name_plural = 'observation series'
 
     def __str__(self):
         return self.name or 'Observation series {0}'.format(self.id)
@@ -144,6 +146,8 @@ class Publication(models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'julkaisu'
+        verbose_name = 'publication'
+        verbose_name_plural = 'publications'
 
     def __str__(self):
         return str(self.name)
@@ -196,6 +200,8 @@ class Feature(AbstractFeature):
     class Meta:
         ordering = ['id']
         db_table = 'kohde'
+        verbose_name = 'feature'
+        verbose_name_plural = 'features'
 
     def __str__(self):
         return self.name or 'Feature {0}'.format(self.id)
@@ -318,6 +324,8 @@ class Species(ProtectionLevelMixin, models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'lajirekisteri'
+        verbose_name = 'species'
+        verbose_name_plural = 'species'
 
     def __str__(self):
         name_list = [self.name_fi, self.name_sci_1, self.name_subspecies_1]
@@ -343,6 +351,8 @@ class LinkType(models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'linkkityyppi'
+        verbose_name = 'link type'
+        verbose_name_plural = 'link types'
 
     def __str__(self):
         return str(self.name)
@@ -406,6 +416,8 @@ class FeatureClass(models.Model):
     class Meta:
         ordering = ['id']
         db_table = 'luokka'
+        verbose_name = 'feature class'
+        verbose_name_plural = 'feature classes'
 
     def __str__(self):
         return self.name or 'Feature class {0}'.format(self.id)

@@ -135,6 +135,8 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'kohde',
                 'ordering': ['id'],
+                'verbose_name': 'feature',
+                'verbose_name_plural': 'features',
             },
         ),
         migrations.CreateModel(
@@ -151,6 +153,8 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'luokka',
                 'ordering': ['id'],
+                'verbose_name': 'feature class',
+                'verbose_name_plural': 'feature classes',
             },
         ),
         migrations.CreateModel(
@@ -264,6 +268,8 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'linkkityyppi',
                 'ordering': ['id'],
+                'verbose_name': 'link type',
+                'verbose_name_plural': 'link types',
             },
         ),
         migrations.CreateModel(
@@ -315,6 +321,8 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'havaintosarja',
                 'ordering': ['id'],
+                'verbose_name': 'observation series',
+                'verbose_name_plural': 'observation series',
             },
         ),
         migrations.CreateModel(
@@ -405,6 +413,8 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'julkaisu',
                 'ordering': ['id'],
+                'verbose_name': 'publication',
+                'verbose_name_plural': 'publications',
             },
         ),
         migrations.CreateModel(
@@ -468,6 +478,8 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'lajirekisteri',
                 'ordering': ['id'],
+                'verbose_name': 'species',
+                'verbose_name_plural': 'species',
             },
         ),
         migrations.CreateModel(
