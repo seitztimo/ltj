@@ -12,6 +12,22 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
 
 
+class ProtectionLevelEnabledQuerySet(models.QuerySet):
+    """Custom queryset to filter protection level enabled queryset based on user roles"""
+
+    def for_admin(self):
+        """ADMIN have access to all objects"""
+        return self
+
+    def for_admin_and_staff(self):
+        """ADMIN_AND_STAFF have access to objects of which the protection level is PUBLIC or ADMIN_AND_STAFF"""
+        return self.filter(protection_level__in=[ProtectionLevelMixin.PUBLIC, ProtectionLevelMixin.ADMIN_AND_STAFF])
+
+    def for_public(self):
+        """PUBLIC have access to objects of which the protection level is PUBLIC"""
+        return self.filter(protection_level=ProtectionLevelMixin.PUBLIC)
+
+
 class ProtectionLevelMixin(models.Model):
     ADMIN_ONLY = 1
     ADMIN_AND_STAFF = 2
@@ -24,6 +40,8 @@ class ProtectionLevelMixin(models.Model):
     )
 
     protection_level = models.IntegerField(choices=PROTECTION_LEVEL_CHOICES, default=PUBLIC, db_column='suojaustasoid')
+
+    objects = ProtectionLevelEnabledQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -164,6 +182,12 @@ class PublicationType(models.Model):
         return str(self.name)
 
 
+class ProtectedFeatureQueryset(ProtectionLevelEnabledQuerySet):
+
+    def open_data(self):
+        return self.filter(feature_class__open_data=True)
+
+
 class AbstractFeature(ProtectionLevelMixin, models.Model):
     """AbstractFeature model that provides common fields for Feature and HistoricalFeature """
     fid = models.CharField(max_length=10, blank=True, null=True, db_column='tunnus')
@@ -180,6 +204,8 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
     area = models.FloatField(verbose_name='Area (ha)', blank=True, null=True, editable=False, db_column='pinta_ala')
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
+
+    objects = ProtectedFeatureQueryset.as_manager()
 
     class Meta:
         abstract = True
@@ -403,6 +429,12 @@ class HabitatType(models.Model):
         return str(self.name)
 
 
+class ProtectedFeatureClassQueryset(models.QuerySet):
+
+    def open_data(self):
+        return self.filter(open_data=True)
+
+
 class FeatureClass(models.Model):
     id = models.CharField(primary_key=True, max_length=10, db_column='tunnus')
     name = models.CharField(max_length=50, blank=True, null=True, db_column='nimi')
@@ -410,8 +442,11 @@ class FeatureClass(models.Model):
     super_class = models.ForeignKey('FeatureClass', models.PROTECT, blank=True, null=True, db_column='paatunnus',
                                     related_name='subclasses')
     reporting = models.BooleanField(db_column='raportointi')
+    open_data = models.BooleanField(db_column='avoin_data', default=False)
     www = models.BooleanField()
     metadata = models.CharField(max_length=4000, blank=True, null=True)
+
+    objects = ProtectedFeatureClassQueryset.as_manager()
 
     class Meta:
         ordering = ['id']

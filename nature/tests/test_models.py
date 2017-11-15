@@ -17,6 +17,43 @@ from .factories import (
     EventTypeFactory, FrequencyFactory,
 )
 
+from ..models import Feature, FeatureClass, ProtectionLevelMixin
+
+
+class TestProtectionLevelEnabledQuerySet(TestCase):
+
+    def setUp(self):
+        self.feature_admin = FeatureFactory(
+            name='admin',
+            protection_level=ProtectionLevelMixin.ADMIN_ONLY,
+        )
+        self.feature_admin_and_staff = FeatureFactory(
+            name='admin_and_staff',
+            protection_level=ProtectionLevelMixin.ADMIN_AND_STAFF,
+        )
+        self.feature_public = FeatureFactory(
+            name='public',
+            protection_level=ProtectionLevelMixin.PUBLIC,
+        )
+
+    def test_for_admin(self):
+        qs = Feature.objects.for_admin()
+        self.assertIn(self.feature_admin, qs)
+        self.assertIn(self.feature_admin_and_staff, qs)
+        self.assertIn(self.feature_public, qs)
+
+    def test_for_admin_and_staff(self):
+        qs = Feature.objects.for_admin_and_staff()
+        self.assertNotIn(self.feature_admin, qs)
+        self.assertIn(self.feature_admin_and_staff, qs)
+        self.assertIn(self.feature_public, qs)
+
+    def test_for_public(self):
+        qs = Feature.objects.for_public()
+        self.assertNotIn(self.feature_admin, qs)
+        self.assertNotIn(self.feature_admin_and_staff, qs)
+        self.assertIn(self.feature_public, qs)
+
 
 class TestOrigin(TestCase):
 
@@ -83,6 +120,21 @@ class TestPublicationType(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.publication_type.__str__(), 'publication type')
+
+
+class TestProtectedFeatureQueryset(TestCase):
+
+    def setUp(self):
+        open_data_feature_class = FeatureClassFactory(open_data=True)
+        self.open_data_feature = FeatureFactory(feature_class=open_data_feature_class)
+
+        not_open_data_feature_class = FeatureClassFactory(open_data=False)
+        self.not_open_data_feature = FeatureFactory(feature_class=not_open_data_feature_class)
+
+    def test_open_data(self):
+        qs = Feature.objects.open_data()
+        self.assertIn(self.open_data_feature, qs)
+        self.assertNotIn(self.not_open_data_feature, qs)
 
 
 class TestFeature(TestCase):
@@ -206,6 +258,18 @@ class TestHabitatType(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.habitat_type.__str__(), 'habitat type')
+
+
+class TestProtectedFeatureClassQueryset(TestCase):
+
+    def setUp(self):
+        self.open_data_feature_class = FeatureClassFactory(open_data=True)
+        self.not_open_data_feature_class = FeatureClassFactory(open_data=False)
+
+    def test_open_data(self):
+        qs = FeatureClass.objects.open_data()
+        self.assertIn(self.open_data_feature_class, qs)
+        self.assertNotIn(self.not_open_data_feature_class, qs)
 
 
 class TestFeatureClass(TestCase):
