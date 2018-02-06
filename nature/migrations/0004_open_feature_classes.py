@@ -18,7 +18,6 @@ open_feature_classes = [
     'LK',
     'LVK',
     'MUU',
-    'PM',
     'PPM',
     'PPO',
     'PPV',
