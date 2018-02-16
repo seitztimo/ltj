@@ -46,7 +46,7 @@ class FeatureLinkInline(admin.TabularInline):
 @admin.register(FeatureClass)
 class FeatureClassAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'www', 'open_data')
-    search_fields = ('name')
+    search_fields = ('name',)
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
