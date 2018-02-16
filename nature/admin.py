@@ -23,7 +23,8 @@ class ObservationSeriesAdmin(admin.ModelAdmin):
 
 class ObservationInline(admin.TabularInline):
     model = Observation
-    fields = ('species', 'series', 'date', 'observer', 'number', 'description', 'notes', 'protection_level', 'local_or_migrating', 'occurrence', 'origin')
+    fields = ('species', 'series', 'date', 'observer', 'number', 'description', 'notes',
+              'protection_level', 'local_or_migrating', 'occurrence', 'origin')
     raw_id_fields = ('species',)
     extra = 1
 
@@ -47,6 +48,7 @@ class FeatureLinkInline(admin.TabularInline):
 class FeatureClassAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'www', 'open_data')
     search_fields = ('name',)
+
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
