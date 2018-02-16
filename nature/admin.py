@@ -10,8 +10,8 @@ from .forms import FeatureForm
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name_fi', 'name_sci_1', 'name_subspecies_1')
-    search_fields = ('name_fi', 'name_sci_1', 'name_subspecies_1')
+    list_display = ('id', 'name_fi', 'name_sci_1', 'name_subspecies_1', 'code')
+    search_fields = ('name_fi', 'name_sci_1', 'name_subspecies_1', 'code', 'id')
     list_filter = ('taxon', 'taxon_1')
 
 
@@ -23,9 +23,8 @@ class ObservationSeriesAdmin(admin.ModelAdmin):
 
 class ObservationInline(admin.TabularInline):
     model = Observation
-    fields = ('species', 'series', 'protection_level', 'created_time')
+    fields = ('species', 'series', 'date', 'observer', 'number', 'description', 'notes', 'protection_level', 'local_or_migrating', 'occurrence', 'origin')
     raw_id_fields = ('species',)
-    readonly_fields = ('created_time', )
     extra = 1
 
     def get_queryset(self, request):
@@ -40,18 +39,18 @@ class LinkTypeAdmin(admin.ModelAdmin):
 
 class FeatureLinkInline(admin.TabularInline):
     model = FeatureLink
-    fields = ('link', 'text', 'link_type', 'ordering')
+    fields = ('link', 'text', 'link_text', 'link_type', 'ordering', 'protection_level')
     extra = 1
 
 
 @admin.register(FeatureClass)
 class FeatureClassAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-
+    list_display = ('id', 'name', 'www', 'open_data')
+    search_fields = ('name')
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'publication_type', 'name')
+    list_display = ('id', 'publication_type', 'name', 'year')
     search_fields = ('name',)
     list_filter = ('publication_type', 'year')
 
@@ -69,8 +68,8 @@ class FeaturePublicationInline(admin.TabularInline):
 @admin.register(Feature)
 class FeatureAdmin(admin.OSMGeoAdmin):
     readonly_fields = ('area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
-    list_display = ('id', 'feature_class', 'name', 'active')
-    search_fields = ('feature_class__name', 'name',)
+    list_display = ('id', 'feature_class', 'fid', 'name', 'active')
+    search_fields = ('feature_class__name', 'name', 'fid', 'id')
     list_filter = ('feature_class', 'active')
     form = FeatureForm
     inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
