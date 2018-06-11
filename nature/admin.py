@@ -99,3 +99,10 @@ class FeatureAdmin(admin.OSMGeoAdmin):
             obj.created_by = request.user.username
         obj.last_modified_by = request.user.username
         obj.save()
+
+    def get_fields(self, request, obj=None):
+        form = self.get_form(request, obj, fields=None)
+        # Move the feature class field to the beginning of the ordered dict
+        if 'feature_class' in form.base_fields:
+            form.base_fields.move_to_end('feature_class', last=False)
+        return list(form.base_fields) + list(self.get_readonly_fields(request, obj))
