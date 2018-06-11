@@ -598,26 +598,26 @@ class Criterion(models.Model):
         return str(self.criterion)
 
 
-class EventRegulation(models.Model):
-    """Through model for Event & Regulation m2m relation"""
-    event = models.ForeignKey('Event', models.CASCADE, db_column='tapid')
+class TransactionRegulation(models.Model):
+    """Through model for Transaction & Regulation m2m relation"""
+    transaction = models.ForeignKey('Transaction', models.CASCADE, db_column='tapid')
     regulation = models.ForeignKey(Regulation, models.CASCADE, db_column='saaid')
 
     class Meta:
         db_table = 'tap_saados'
-        unique_together = (('event', 'regulation'),)
+        unique_together = (('transaction', 'regulation'),)
 
 
-class Event(ProtectionLevelMixin, models.Model):
+class Transaction(ProtectionLevelMixin, models.Model):
     register_id = models.CharField(max_length=20, blank=True, null=True, db_column='diaarinro')
     description = models.CharField(max_length=255, blank=True, null=True, db_column='kuvaus')
-    event_type = models.ForeignKey('EventType', models.PROTECT, db_column='tapahtumatyyppiid')
+    transaction_type = models.ForeignKey('TransactionType', models.PROTECT, db_column='tapahtumatyyppiid')
     last_modified_by = models.CharField(max_length=20, blank=True, null=True, db_column='paivittaja')
     date = models.DateField(blank=True, null=True, db_column='pvm')
     person = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True)
     link = models.CharField(max_length=4000, blank=True, null=True, db_column='linkki')
-    features = models.ManyToManyField(Feature, through='EventFeature', related_name='events')
-    regulations = models.ManyToManyField(Regulation, through='EventRegulation', related_name='events')
+    features = models.ManyToManyField(Feature, through='TransactionFeature', related_name='transactions')
+    regulations = models.ManyToManyField(Regulation, through='TransactionRegulation', related_name='transactions')
 
     class Meta:
         ordering = ['id']
@@ -627,17 +627,17 @@ class Event(ProtectionLevelMixin, models.Model):
         return str(self.register_id)
 
 
-class EventFeature(models.Model):
-    """Through model for Event & Feature m2m relation"""
+class TransactionFeature(models.Model):
+    """Through model for Transaction & Feature m2m relation"""
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid')
-    event = models.ForeignKey(Event, models.CASCADE, db_column='tapid')
+    transaction = models.ForeignKey(Transaction, models.CASCADE, db_column='tapid')
 
     class Meta:
         db_table = 'tapahtuma_kohde'
-        unique_together = (('feature', 'event'),)
+        unique_together = (('feature', 'transaction'),)
 
 
-class EventType(models.Model):
+class TransactionType(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True, db_column='nimi')
 
     class Meta:

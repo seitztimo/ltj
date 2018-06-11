@@ -269,20 +269,20 @@ class ProtectionFactory(factory.django.DjangoModelFactory):
             self.conservation_programmes.add(*extracted)
 
 
-class EventTypeFactory(factory.django.DjangoModelFactory):
+class TransactionTypeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=20)
 
     class Meta:
-        model = 'nature.EventType'
+        model = 'nature.TransactionType'
 
 
-class EventFactory(factory.django.DjangoModelFactory):
+class TransactionFactory(factory.django.DjangoModelFactory):
     register_id = factory.Faker('text', max_nb_chars=20)
-    event_type = factory.SubFactory(EventTypeFactory)
+    transaction_type = factory.SubFactory(TransactionTypeFactory)
     protection_level = 3
 
     class Meta:
-        model = 'nature.Event'
+        model = 'nature.Transaction'
 
     @factory.post_generation
     def features(self, create, extracted, **kwargs):
