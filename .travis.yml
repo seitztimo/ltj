@@ -26,6 +26,11 @@ before_script:
   - psql -U postgres template1 -c 'create extension postgis;'
   - psql -U postgres -c 'create database ltj;'
 
+env:
+  global:
+    - DEBUG=True
+    - SECRET_KEY="t*CRj!:?{O!C~SsIix5w?Vc%ki[VODDp5vjim97)XQMJY\+d8Gud%qTY/$B>taz"
+
 script:
   - flake8
   - pytest -ra -vvv --cov
