@@ -13,12 +13,14 @@ class SpeciesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_fi', 'name_sci_1', 'name_subspecies_1', 'code')
     search_fields = ('name_fi', 'name_sci_1', 'name_subspecies_1', 'code', 'id')
     list_filter = ('taxon', 'taxon_1')
+    actions = None
 
 
 @admin.register(ObservationSeries)
 class ObservationSeriesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'valid')
     search_fields = ('name',)
+    actions = None
 
 
 class ObservationInline(admin.TabularInline):
@@ -48,6 +50,7 @@ class FeatureLinkInline(admin.TabularInline):
 class FeatureClassAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'www', 'open_data')
     search_fields = ('name',)
+    actions = None
 
 
 @admin.register(Publication)
@@ -55,6 +58,7 @@ class PublicationAdmin(admin.ModelAdmin):
     list_display = ('id', 'publication_type', 'name', 'year')
     search_fields = ('name',)
     list_filter = ('publication_type', 'year')
+    actions = None
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -75,6 +79,7 @@ class FeatureAdmin(admin.OSMGeoAdmin):
     list_filter = ('feature_class', 'active')
     form = FeatureForm
     inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
+    actions = None
 
     # map configs
     map_width = 800
