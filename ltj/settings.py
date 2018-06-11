@@ -1,5 +1,3 @@
-import os
-
 import environ
 
 root = environ.Path(__file__) - 2
