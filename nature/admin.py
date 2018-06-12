@@ -73,7 +73,7 @@ class FeaturePublicationInline(admin.TabularInline):
 
 @admin.register(Feature)
 class FeatureAdmin(admin.OSMGeoAdmin):
-    readonly_fields = ('area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
+    readonly_fields = ('_area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
     list_display = ('id', 'feature_class', 'fid', 'name', 'active')
     search_fields = ('feature_class__name', 'name', 'fid', 'id')
     list_filter = ('feature_class', 'active')
@@ -106,3 +106,8 @@ class FeatureAdmin(admin.OSMGeoAdmin):
         if 'feature_class' in form.base_fields:
             form.base_fields.move_to_end('feature_class', last=False)
         return list(form.base_fields) + list(self.get_readonly_fields(request, obj))
+
+    # Return formatted area as area
+    def _area(self, obj):
+        return obj.formatted_area
+    _area.short_description = Feature._meta.get_field('area').verbose_name
