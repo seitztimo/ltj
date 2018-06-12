@@ -1,4 +1,5 @@
 from django.contrib.gis import admin
+from django.conf import settings
 
 from .models import (
     Feature, FeatureClass, FeatureLink, FeaturePublication,
@@ -6,6 +7,7 @@ from .models import (
     Species, LinkType,
 )
 from .forms import FeatureForm
+from .widgets import NatureOLWidget
 
 
 @admin.register(Species)
@@ -72,7 +74,7 @@ class FeaturePublicationInline(admin.TabularInline):
 
 
 @admin.register(Feature)
-class FeatureAdmin(admin.OSMGeoAdmin):
+class FeatureAdmin(admin.GeoModelAdmin):
     readonly_fields = ('_area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
     list_display = ('id', 'feature_class', 'fid', 'name', 'active')
     search_fields = ('feature_class__name', 'name', 'fid', 'id')
@@ -80,15 +82,20 @@ class FeatureAdmin(admin.OSMGeoAdmin):
     form = FeatureForm
     inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
     actions = None
+    widget = NatureOLWidget
+    map_template = 'nature/openlayers-nature.html'
+    openlayers_url = 'https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js'
 
     # map configs
     map_width = 800
     map_height = 600
 
     # OSMGeoAdmin uses web mercator projection (EPSG:3857)
-    default_lon = 2776541.611259
-    default_lat = 8437840.556572
+    default_lon = 25496731.185709
+    default_lat = 6672620.498890
     default_zoom = 12
+
+    map_srid = settings.SRID
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
