@@ -217,6 +217,12 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
             self.area = self.geometry.area / 10000  # area in hectare
         super().save(*args, **kwargs)
 
+    @property
+    def formatted_area(self):
+        if not self.area:
+            return 0.0
+        return float("{0:.2f}".format(self.area))
+
 
 class Feature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
