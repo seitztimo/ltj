@@ -114,11 +114,20 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     }
 
     MapWidget.prototype.createMap = function() {
+        var projection = new ol.proj.Projection({
+            code: 'EPSG:3879',
+            extent: [21531406.93, 4503686.78, 25664437.76, 9371843.41],
+            units: 'm'
+        });
+        ol.proj.addProjection(projection);
+
         var map = new ol.Map({
             target: this.options.map_id,
             layers: [this.options.base_layer],
             view: new ol.View({
-                zoom: this.options.default_zoom
+                projection: projection,
+                zoom: this.options.default_zoom,
+                extent: [25440000.0, 6630000.0, 25571072.0, 6761072.0]
             })
         });
         return map;
