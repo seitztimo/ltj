@@ -82,20 +82,10 @@ class FeatureAdmin(admin.GeoModelAdmin):
     form = FeatureForm
     inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
     actions = None
+
     widget = NatureOLWidget
     map_template = 'nature/openlayers-nature.html'
     openlayers_url = 'https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js'
-
-    # map configs
-    map_width = 800
-    map_height = 600
-
-    # OSMGeoAdmin uses web mercator projection (EPSG:3857)
-    default_lon = 25496731.185709
-    default_lat = 6672620.498890
-    default_zoom = 12
-
-    map_srid = settings.SRID
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
