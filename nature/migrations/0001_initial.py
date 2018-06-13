@@ -129,8 +129,8 @@ class Migration(migrations.Migration):
                 ('last_modified_time', models.DateTimeField(auto_now=True, db_column='pvm_editoitu', null=True)),
                 ('last_modified_by', models.CharField(blank=True, db_column='muokkaaja', max_length=10, null=True)),
                 ('area', models.FloatField(verbose_name='Area (ha)', editable=False, blank=True, db_column='pinta_ala', null=True)),
-                ('text', models.CharField(blank=True, db_column='teksti', max_length=4000, null=True)),
-                ('text_www', models.CharField(blank=True, db_column='teksti_www', max_length=4000, null=True)),
+                ('text', models.CharField(blank=True, db_column='teksti', max_length=40000, null=True)),
+                ('text_www', models.CharField(blank=True, db_column='teksti_www', max_length=40000, null=True)),
             ],
             options={
                 'db_table': 'kohde',
