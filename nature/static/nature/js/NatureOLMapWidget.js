@@ -1,4 +1,10 @@
-/* global ol */
+/**
+ * @file This is a modified version of OLMapWidget.js provided by Django
+ * to support the needs of feature geometry editing.
+ *
+ * List of modifications:
+ * - Set map projection to EPSG:3879
+ */
 
 var GeometryTypeControl = function(opt_options) {
     'use strict';
@@ -37,7 +43,6 @@ var GeometryTypeControl = function(opt_options) {
 };
 ol.inherits(GeometryTypeControl, ol.control.Control);
 
-// TODO: allow deleting individual features (#8972)
 (function() {
     'use strict';
     var jsonFormat = new ol.format.GeoJSON();
