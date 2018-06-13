@@ -6,8 +6,8 @@ class NatureOLWidget(OpenLayersWidget):
     template_name = 'nature/openlayers-nature.html'
     map_width = 800
     map_height = 600
-    default_lon = 25496615.87
-    default_lat = 6672343.32
+    default_x = 25496615.87
+    default_y = 6672343.32
     default_zoom = 12
     map_srid = settings.SRID
 
@@ -26,7 +26,7 @@ class NatureOLWidget(OpenLayersWidget):
 
     def __init__(self, attrs=None):
         super().__init__()
-        for key in ('default_lon', 'default_lat', 'default_zoom'):
+        for key in ('default_x', 'default_y', 'default_zoom'):
             self.attrs[key] = getattr(self, key)
         if attrs:
             self.attrs.update(attrs)

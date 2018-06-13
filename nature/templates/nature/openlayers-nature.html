@@ -2,8 +2,8 @@
 {% load l10n %}
 
 {% block options %}{{ block.super }}
-options['default_lon'] = {{ default_lon|unlocalize }};
-options['default_lat'] = {{ default_lat|unlocalize }};
+options['default_x'] = {{ default_x|unlocalize }};
+options['default_y'] = {{ default_y|unlocalize }};
 options['default_zoom'] = {{ default_zoom|unlocalize }};
 {% endblock %}
 

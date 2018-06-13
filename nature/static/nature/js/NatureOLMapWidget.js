@@ -55,8 +55,8 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
 
         // Default options
         this.options = {
-            default_lat: 0,
-            default_lon: 0,
+            default_y: 0,
+            default_x: 0,
             default_zoom: 12,
             is_collection: options.geom_name.indexOf('Multi') > -1 || options.geom_name.indexOf('Collection') > -1
         };
@@ -169,10 +169,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     };
 
     MapWidget.prototype.defaultCenter = function() {
-        var center = [this.options.default_lon, this.options.default_lat];
-        if (this.options.map_srid) {
-            return ol.proj.transform(center, 'EPSG:4326', this.map.getView().getProjection());
-        }
+        var center = [this.options.default_x, this.options.default_y];
         return center;
     };
 
