@@ -264,7 +264,7 @@ class FeatureLink(ProtectionLevelMixin, models.Model):
     text = models.CharField(max_length=4000, blank=True, null=True, db_column='linkkiteksti')
     link_type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid')
     ordering = models.IntegerField(blank=True, null=True, db_column='jarjestys')
-    link_text = models.CharField(max_length=1000, blank=True, null=True, db_column='linkin_teksti')
+    link_text = models.CharField(max_length=100, blank=True, null=True, db_column='linkin_teksti')
 
     class Meta:
         ordering = ['id']
