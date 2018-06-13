@@ -8,4 +8,7 @@ class FeatureForm(forms.ModelForm):
         widgets = {
             'text': CKEditorWidget,
             'text_www': CKEditorWidget,
+            'description': forms.Textarea,
+            'notes': forms.Textarea,
+            'name': forms.TextInput(attrs={'size': '80'})
         }
