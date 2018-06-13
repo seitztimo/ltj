@@ -158,6 +158,25 @@ class TestFeature(TestCase):
         self.feature.save()
         self.assertAlmostEqual(self.feature.area, 4 / 10000)
 
+    def test_formatted_area(self):
+        # No area
+        self.assertIsNone(self.feature.area)
+        self.assertEqual(self.feature.formatted_area, 0.0)
+
+        # Rounded up
+        round_up_area = 57.83757384
+        self.feature.area = round_up_area
+        self.feature.save()
+        self.assertEqual(self.feature.area, round_up_area)
+        self.assertEqual(self.feature.formatted_area, 57.84)
+
+        # Rounded down
+        round_down_area = 57.833
+        self.feature.area = round_down_area
+        self.feature.save()
+        self.assertEqual(self.feature.area, round_down_area)
+        self.assertEqual(self.feature.formatted_area, 57.83)
+
 
 class TestHistoricalFeature(TestCase):
 
