@@ -13,8 +13,8 @@ from .factories import (
     BreedingDegreeFactory, AbundanceFactory,
     SquareFactory, RegulationFactory,
     ConservationProgrammeFactory, ProtectionFactory,
-    CriterionFactory, EventFactory,
-    EventTypeFactory, FrequencyFactory,
+    CriterionFactory, TransactionFactory,
+    TransactionTypeFactory, FrequencyFactory,
 )
 
 from ..models import Feature, FeatureClass, ProtectionLevelMixin
@@ -367,22 +367,22 @@ class TestCriterion(TestCase):
         self.assertEqual(self.criterion.__str__(), 'criterion')
 
 
-class TestEvent(TestCase):
+class TestTransaction(TestCase):
 
     def setUp(self):
-        self.event = EventFactory(register_id='event')
+        self.transaction = TransactionFactory(register_id='transaction')
 
     def test__str__(self):
-        self.assertEqual(self.event.__str__(), 'event')
+        self.assertEqual(self.transaction.__str__(), 'transaction')
 
 
-class TestEventType(TestCase):
+class TestTransactionType(TestCase):
 
     def setUp(self):
-        self.event_type = EventTypeFactory(name='event type')
+        self.transaction_type = TransactionTypeFactory(name='transaction type')
 
     def test__str__(self):
-        self.assertEqual(self.event_type.__str__(), 'event type')
+        self.assertEqual(self.transaction_type.__str__(), 'transaction type')
 
 
 class TestFrequency(TestCase):

@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Event',
+            name='Transaction',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
@@ -82,27 +82,27 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='EventFeature',
+            name='TransactionFeature',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event', models.ForeignKey(db_column='tapid', on_delete=django.db.models.deletion.CASCADE, to='nature.Event')),
+                ('transaction', models.ForeignKey(db_column='tapid', on_delete=django.db.models.deletion.CASCADE, to='nature.Transaction')),
             ],
             options={
                 'db_table': 'tapahtuma_kohde',
             },
         ),
         migrations.CreateModel(
-            name='EventRegulation',
+            name='TransactionRegulation',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event', models.ForeignKey(db_column='tapid', on_delete=django.db.models.deletion.CASCADE, to='nature.Event')),
+                ('transaction', models.ForeignKey(db_column='tapid', on_delete=django.db.models.deletion.CASCADE, to='nature.Transaction')),
             ],
             options={
                 'db_table': 'tap_saados',
             },
         ),
         migrations.CreateModel(
-            name='EventType',
+            name='TransactionType',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, db_column='nimi', max_length=20, null=True)),
@@ -682,34 +682,34 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(related_name='features', through='nature.ValueFeature', to='nature.Value'),
         ),
         migrations.AddField(
-            model_name='eventregulation',
+            model_name='transactionregulation',
             name='regulation',
             field=models.ForeignKey(db_column='saaid', on_delete=django.db.models.deletion.CASCADE, to='nature.Regulation'),
         ),
         migrations.AddField(
-            model_name='eventfeature',
+            model_name='transactionfeature',
             name='feature',
             field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.CASCADE, to='nature.Feature'),
         ),
         migrations.AddField(
-            model_name='event',
-            name='event_type',
-            field=models.ForeignKey(db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.EventType'),
+            model_name='transaction',
+            name='transaction_type',
+            field=models.ForeignKey(db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.TransactionType'),
         ),
         migrations.AddField(
-            model_name='event',
+            model_name='transaction',
             name='features',
-            field=models.ManyToManyField(related_name='events', through='nature.EventFeature', to='nature.Feature'),
+            field=models.ManyToManyField(related_name='transactions', through='nature.TransactionFeature', to='nature.Feature'),
         ),
         migrations.AddField(
-            model_name='event',
+            model_name='transaction',
             name='person',
             field=models.ForeignKey(blank=True, db_column='hloid', null=True, on_delete=django.db.models.deletion.PROTECT, to='nature.Person'),
         ),
         migrations.AddField(
-            model_name='event',
+            model_name='transaction',
             name='regulations',
-            field=models.ManyToManyField(related_name='events', through='nature.EventRegulation', to='nature.Regulation'),
+            field=models.ManyToManyField(related_name='transactions', through='nature.TransactionRegulation', to='nature.Regulation'),
         ),
         migrations.AlterUniqueTogether(
             name='valuefeature',
@@ -748,12 +748,12 @@ class Migration(migrations.Migration):
             unique_together=set([('feature', 'publication')]),
         ),
         migrations.AlterUniqueTogether(
-            name='eventregulation',
-            unique_together=set([('event', 'regulation')]),
+            name='transactionregulation',
+            unique_together=set([('transaction', 'regulation')]),
         ),
         migrations.AlterUniqueTogether(
-            name='eventfeature',
-            unique_together=set([('feature', 'event')]),
+            name='transactionfeature',
+            unique_together=set([('feature', 'transaction')]),
         ),
         migrations.AlterUniqueTogether(
             name='protectioncriterion',

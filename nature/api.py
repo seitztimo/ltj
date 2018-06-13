@@ -8,7 +8,7 @@ from nature.models import (
     ConservationProgramme, Criterion, Square, Protection,
     Feature, FeatureClass, Value, Publication, Species,
     Abundance, Frequency, Mobility, Origin, BreedingDegree,
-    Observation, ObservationSeries, EventType, Event, Person,
+    Observation, ObservationSeries, TransactionType, Transaction, Person,
     Regulation, HabitatType, HabitatTypeObservation,
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
     ProtectedFeatureClassQueryset,
@@ -152,7 +152,7 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
         model = Feature
         fields = ('url', 'name', 'fid', 'feature_class', 'geometry', 'description', 'notes', 'active',
                   'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
-                  'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'events')
+                  'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'transactions')
 
 
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
@@ -239,18 +239,18 @@ class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
                   'valid', 'observations', 'habitat_type_observations')
 
 
-class EventTypeSerializer(ProtectedHyperlinkedModelSerializer):
+class TransactionTypeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
-        model = EventType
+        model = TransactionType
         fields = ('id', 'name')
 
 
-class EventSerializer(ProtectedHyperlinkedModelSerializer):
-    event_type = EventTypeSerializer()
+class TransactionSerializer(ProtectedHyperlinkedModelSerializer):
+    transaction_type = TransactionTypeSerializer()
 
     class Meta:
-        model = Event
-        fields = ('url', 'register_id', 'description', 'event_type', 'date', 'link', 'features', 'regulations')
+        model = Transaction
+        fields = ('url', 'register_id', 'description', 'transaction_type', 'date', 'link', 'features', 'regulations')
 
 
 class PersonSerializer(ProtectedHyperlinkedModelSerializer):
@@ -262,7 +262,7 @@ class RegulationSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Regulation
         fields = ('url', 'name', 'paragraph', 'additional_info', 'value', 'value_explanation', 'valid',
-                  'date_of_entry', 'link', 'species', 'events', 'habitat_types')
+                  'date_of_entry', 'link', 'species', 'transactions', 'habitat_types')
 
 
 class HabitatTypeSerializer(ProtectedHyperlinkedModelSerializer):
@@ -329,9 +329,9 @@ class HabitatTypeObservationViewSet(ProtectedViewSet):
     serializer_class = HabitatTypeObservationSerializer
 
 
-class EventViewSet(ProtectedViewSet):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
+class TransactionViewSet(ProtectedViewSet):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
 
 
 class AbundanceViewSet(ProtectedViewSet):
@@ -380,6 +380,6 @@ router.register(r'habitat_type', HabitatTypeViewSet)
 router.register(r'habitat_type_observation', HabitatTypeObservationViewSet)
 router.register(r'publication', PublicationViewSet)
 router.register(r'regulation', RegulationViewSet)
-router.register(r'event', EventViewSet)
+router.register(r'transaction', TransactionViewSet)
 router.register(r'protection_criterion', ProtectionCriterionViewSet)
 router.register(r'conservation_programme', ConservationProgrammeViewSet)
