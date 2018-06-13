@@ -202,8 +202,8 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
     last_modified_time = models.DateTimeField(blank=True, null=True, auto_now=True, db_column='pvm_editoitu')
     last_modified_by = models.CharField(max_length=10, blank=True, null=True, db_column='muokkaaja')
     area = models.FloatField(verbose_name='Area (ha)', blank=True, null=True, editable=False, db_column='pinta_ala')
-    text = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti')
-    text_www = models.CharField(max_length=4000, blank=True, null=True, db_column='teksti_www')
+    text = models.CharField(max_length=40000, blank=True, null=True, db_column='teksti')
+    text_www = models.CharField(max_length=40000, blank=True, null=True, db_column='teksti_www')
 
     objects = ProtectedFeatureQueryset.as_manager()
 
