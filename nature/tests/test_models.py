@@ -7,7 +7,7 @@ from .factories import (
     PublicationFactory, PublicationTypeFactory,
     FeatureFactory, HistoricalFeatureFactory,
     FeatureLinkFactory, ObservationFactory,
-    SpeciesFactory, MobilityFactory,
+    SpeciesFactory, MigrationClassFactory,
     LinkTypeFactory, HabitatTypeFactory,
     HabitatTypeObservationFactory, FeatureClassFactory,
     BreedingDegreeFactory, AbundanceFactory,
@@ -238,13 +238,13 @@ class TestSpecies(TestCase):
         self.assertEqual(self.species.__str__(), 'name_sci, name_subspecies')
 
 
-class TestMobility(TestCase):
+class TestMigrationClass(TestCase):
 
     def setUp(self):
-        self.mobility = MobilityFactory(explanation='mobility')
+        self.migrationclass = MigrationClassFactory(explanation='migrationclass')
 
     def test__str__(self):
-        self.assertEqual(self.mobility.__str__(), 'mobility')
+        self.assertEqual(self.migrationclass.__str__(), 'migrationclass')
 
 
 class TestLinkType(TestCase):

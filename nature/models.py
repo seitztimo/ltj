@@ -306,8 +306,9 @@ class Observation(ProtectionLevelMixin, models.Model):
     observer = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True,
                                  related_name='observations')
     number = models.CharField(max_length=30, blank=True, null=True, db_column='lkm')
-    local_or_migrating = models.ForeignKey('Mobility', models.PROTECT, db_column='liikkumislkid', blank=True, null=True,
-                                           related_name='observations')
+    migration_class = models.ForeignKey('MigrationClass', models.PROTECT, db_column='liikkumislkid', blank=True,
+                                        null=True,
+                                        related_name='observations')
     origin = models.ForeignKey(Origin, models.PROTECT, db_column='alkuperaid', blank=True, null=True,
                                related_name='observations')
     breeding_degree = models.ForeignKey('BreedingDegree', models.PROTECT, db_column='pesimisvarmuusid', blank=True,
@@ -364,7 +365,7 @@ class Species(ProtectionLevelMixin, models.Model):
         return ', '.join([name for name in name_list if name])
 
 
-class Mobility(models.Model):
+class MigrationClass(models.Model):
     explanation = models.CharField(max_length=50, blank=True, null=True, db_column='selitys')
     source = models.CharField(max_length=50, blank=True, null=True, db_column='lahde')
     value = models.IntegerField(blank=True, null=True, db_column='arvo')
