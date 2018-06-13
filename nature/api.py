@@ -7,7 +7,7 @@ from rest_framework_gis.fields import GeometryField
 from nature.models import (
     ConservationProgramme, Criterion, Square, Protection,
     Feature, FeatureClass, Value, Publication, Species,
-    Abundance, Frequency, Mobility, Origin, BreedingDegree,
+    Abundance, Frequency, MigrationClass, Origin, BreedingDegree,
     Observation, ObservationSeries, TransactionType, Transaction, Person,
     Regulation, HabitatType, HabitatTypeObservation,
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
@@ -196,9 +196,9 @@ class FrequencySerializer(ProtectedHyperlinkedModelSerializer):
         fields = ('id', 'value', 'explanation', 'source')
 
 
-class MobilitySerializer(ProtectedHyperlinkedModelSerializer):
+class MigrationClassSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
-        model = Mobility
+        model = MigrationClass
         fields = ('id', 'value', 'explanation', 'source')
 
 
@@ -218,7 +218,7 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
     occurrence = serializers.StringRelatedField()
     abundance = AbundanceSerializer()
     frequency = FrequencySerializer()
-    local_or_migrating = MobilitySerializer()
+    migration_class = MigrationClassSerializer()
     origin = OriginSerializer()
     breeding_degree = BreedingDegreeSerializer()
 
@@ -226,7 +226,7 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
         model = Observation
         fields = (
             'url', 'feature', 'species', 'series', 'abundance',
-            'frequency', 'number', 'local_or_migrating', 'origin',
+            'frequency', 'number', 'migration_class', 'origin',
             'breeding_degree', 'description', 'notes', 'date',
             'occurrence', 'created_time', 'last_modified_time',
         )
@@ -344,9 +344,9 @@ class FrequencyViewSet(ProtectedViewSet):
     serializer_class = FrequencySerializer
 
 
-class MobilityViewSet(ProtectedViewSet):
-    queryset = Mobility.objects.all()
-    serializer_class = MobilitySerializer
+class MigrationClassViewSet(ProtectedViewSet):
+    queryset = MigrationClass.objects.all()
+    serializer_class = MigrationClassSerializer
 
 
 class OriginViewSet(ProtectedViewSet):

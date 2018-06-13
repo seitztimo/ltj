@@ -164,13 +164,13 @@ class ObservationFactory(factory.django.DjangoModelFactory):
         model = 'nature.Observation'
 
 
-class MobilityFactory(factory.django.DjangoModelFactory):
+class MigrationClassFactory(factory.django.DjangoModelFactory):
     explanation = factory.Faker('text', max_nb_chars=50)
     source = factory.Faker('text', max_nb_chars=50)
     value = 1
 
     class Meta:
-        model = 'nature.Mobility'
+        model = 'nature.MigrationClass'
 
 
 class HabitatTypeFactory(factory.django.DjangoModelFactory):
