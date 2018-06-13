@@ -26,6 +26,10 @@ DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 ADMINS = env('ADMINS')
 
+STATIC_URL = env('STATIC_URL')
+MEDIA_URL = env('MEDIA_URL')
+STATIC_ROOT = env('STATIC_ROOT')
+MEDIA_ROOT = env('MEDIA_ROOT')
 
 # Application definition
 
