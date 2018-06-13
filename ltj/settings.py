@@ -11,29 +11,7 @@ env = environ.Env(
     DATABASE_URL=(str, 'postgis:///ltj'),
     MEDIA_ROOT=(environ.Path(), root('media')),
     STATIC_ROOT=(environ.Path(), root('static')),
-    MEDIA_URL=(str, '/media/
-               # log to stderr, at level INFO and add timestamps
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'timestamped': {
-            'format': '%(asctime)s %(levelname)s %(module)s: %(message)s',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'timestamped',
-            'level': 'INFO',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': env('LOG_LEVEL'),
-    },
-}
-               '),
+    MEDIA_URL=(str, '/media/'),
     STATIC_URL=(str, '/static/'),
     LOG_LEVEL=(str, 'INFO'),
 )
