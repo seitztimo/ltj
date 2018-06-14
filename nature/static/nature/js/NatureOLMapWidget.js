@@ -70,6 +70,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             'avoindata:Ortoilmakuva': 'image/jpeg'
         };
         this.wmtsOptions = {
+            attributions: ['Helsingin kaupungin avoimen datan WMTS-palvelu, CC BY 4.0'],
             url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
             matrixSet: 'ETRS-GK25',
             tileSize: [256, 256],
@@ -201,6 +202,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
                 type: 'base',
                 title: layerName,
                 source: new ol.source.WMTS({
+                    attributions: this.wmtsOptions.attributions,
                     url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
                     layer: layerName,
                     format: this.wmtsLayerImageFormat[layerName] || 'image/png',
