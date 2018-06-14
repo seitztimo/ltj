@@ -5,6 +5,7 @@
  * List of modifications:
  * - Set map projection to EPSG:3879
  * - Add custom base maps (WMTS)
+ * - Coordinates at mouse
  */
 
 var GeometryTypeControl = function(opt_options) {
@@ -171,6 +172,15 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             tipLabel: 'Layers'
         });
         map.addControl(layerSwitcher);
+
+
+        // Add mouse position coordiantes
+        var mousePositionControl = new ol.control.MousePosition({
+            coordinateFormat: ol.coordinate.createStringXY(4),
+            projection: 'EPSG:3879',
+            className: 'nature-mouse-position'
+        });
+        map.addControl(mousePositionControl);
 
         return map;
     };
