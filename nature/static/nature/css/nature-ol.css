@@ -2,3 +2,10 @@
     margin-left: 0;
     padding-left: 1em;
 }
+
+.nature-mouse-position {
+    bottom: 35px;
+    right: 8px;
+    font-size: 12px;
+    position: absolute;
+}
