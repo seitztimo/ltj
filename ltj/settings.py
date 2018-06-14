@@ -135,8 +135,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = env('STATIC_URL')
-
 # Custom settings
 
 SRID = 3879  # Spatial reference system identifier used for geometry fields
