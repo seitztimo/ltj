@@ -4,6 +4,7 @@
  *
  * List of modifications:
  * - Set map projection to EPSG:3879
+ * - Add custom base maps (WMTS)
  */
 
 var GeometryTypeControl = function(opt_options) {
@@ -52,6 +53,35 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         this.interactions = {draw: null, modify: null};
         this.typeChoices = false;
         this.ready = false;
+
+        // WMTS layers and options
+        this.wmtsLayerNames = [
+            'avoindata:Ortoilmakuva',
+            'avoindata:Opaskartta_PKS',
+            'avoindata:Kiinteistokartan_maastotiedot',
+            'avoindata:Kiinteistokartta',
+            'avoindata:Kantakartan_maastotiedot',
+            'avoindata:Kantakartta',
+            'avoindata:Opaskartta_Helsinki'
+        ];
+        this.wmtsLayerImageFormat = {
+            'avoindata:Ortoilmakuva': 'image/jpeg'
+        };
+        this.wmtsOptions = {
+            url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
+            matrixSet: 'ETRS-GK25',
+            tileSize: [256, 256],
+            extent: [25440000, 6630000, 25571072, 6761072],
+            origin: [25440000, 6761072],
+            resolutions: [256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.125, 0.0625],
+            matrixIds: [
+                'ETRS-GK25:0', 'ETRS-GK25:1', 'ETRS-GK25:2',
+                'ETRS-GK25:3', 'ETRS-GK25:4', 'ETRS-GK25:5',
+                'ETRS-GK25:6', 'ETRS-GK25:7', 'ETRS-GK25:8',
+                'ETRS-GK25:9', 'ETRS-GK25:10', 'ETRS-GK25:11',
+                'ETRS-GK25:12'
+            ]
+        };
 
         // Default options
         this.options = {
@@ -126,16 +156,53 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         });
         ol.proj.addProjection(projection);
 
+        var baseLayerGroup = this.getBaseLayerGroup();
         var map = new ol.Map({
             target: this.options.map_id,
-            layers: [this.options.base_layer],
+            layers: [baseLayerGroup],
             view: new ol.View({
                 projection: projection,
                 zoom: this.options.default_zoom,
-                extent: [25440000.0, 6630000.0, 25571072.0, 6761072.0]
+                extent: projection.getExtent()
             })
         });
+
+        var layerSwitcher = new ol.control.LayerSwitcher({
+            tipLabel: 'Layers'
+        });
+        map.addControl(layerSwitcher);
+
         return map;
+    };
+
+    MapWidget.prototype.getBaseLayerGroup = function() {
+        var baseLayers = [];
+        for (var i=0; i<this.wmtsLayerNames.length; i++) {
+            var layerName = this.wmtsLayerNames[i];
+            var layer = new ol.layer.Tile({
+                type: 'base',
+                title: layerName,
+                source: new ol.source.WMTS({
+                    url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
+                    layer: layerName,
+                    format: this.wmtsLayerImageFormat[layerName] || 'image/png',
+                    matrixSet: this.wmtsOptions.matrixSet,
+                    tileGrid: new ol.tilegrid.WMTS({
+                        tileSize: this.wmtsOptions.tileSize,
+                        extent: this.wmtsOptions.extent,
+                        origin: this.wmtsOptions.origin,
+                        resolutions: this.wmtsOptions.resolutions,
+                        matrixIds: this.wmtsOptions.matrixIds
+                    }),
+                    wrapX: true
+                })
+            });
+            baseLayers.push(layer);
+        }
+        return new ol.layer.Group({
+            title: 'Base maps',
+            layers: baseLayers
+        });
     };
 
     MapWidget.prototype.createInteractions = function() {

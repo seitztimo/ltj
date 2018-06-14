@@ -16,11 +16,14 @@ class NatureOLWidget(OpenLayersWidget):
         css = {
             'all': (
                 'https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.css',
+                'https://cdn.jsdelivr.net/npm/ol-layerswitcher@2.0.0/src/ol-layerswitcher.min.css',
                 'gis/css/ol3.css',
+                'nature/css/nature-ol.css',
             )
         }
         js = (
             'https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js',
+            'https://cdn.jsdelivr.net/npm/ol-layerswitcher@2.0.0/dist/ol-layerswitcher.min.js',
             'nature/js/NatureOLMapWidget.js',
         )
 
