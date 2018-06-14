@@ -3,8 +3,8 @@ from django.contrib.gis import admin
 from .models import (
     Feature, FeatureClass, FeatureLink, FeaturePublication,
     Observation, ObservationSeries, Publication,
-    Species, LinkType,
-)
+    Species, LinkType, HabitatType,
+    Regulation, Value, Transaction, Person)
 from .forms import FeatureForm
 from .widgets import NatureOLWidget
 
@@ -107,3 +107,41 @@ class FeatureAdmin(admin.GeoModelAdmin):
     def _area(self, obj):
         return obj.formatted_area
     _area.short_description = Feature._meta.get_field('area').verbose_name
+
+
+@admin.register(HabitatType)
+class HabitatTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'code', 'group')
+    search_fields = ('id', 'name', 'code', 'group', 'lisatieto')
+    list_filter = ('group',)
+    actions = None
+
+
+@admin.register(Regulation)
+class RegulationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'paragraph', 'value', 'value_explanation', 'valid')
+    search_fields = ('id', 'name', 'value', 'value_explanation')
+    list_filter = ('valid', 'name')
+    actions = None
+
+
+@admin.register(Value)
+class ValueAdmin(admin.ModelAdmin):
+    list_display = ('id', 'value_type', 'explanation')
+    search_fields = ('id', 'value_type', 'explanation')
+    actions = None
+
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'transaction_type', 'description', 'protection_level')
+    search_fields = ('id', 'description')
+    list_filter = ('protection_level',)
+    actions = None
+
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ('id', 'surname', 'first_name')
+    search_fields = ('id', 'surname', 'first_name')
+    actions = None
