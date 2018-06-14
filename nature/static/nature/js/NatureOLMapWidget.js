@@ -169,6 +169,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             })
         });
 
+        // Add layer switcher
         var layerSwitcher = new ol.control.LayerSwitcher({
             tipLabel: 'Layers'
         });
