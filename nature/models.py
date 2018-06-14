@@ -10,6 +10,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
+from django.utils.translation import ugettext as _
 
 
 class ProtectionLevelEnabledQuerySet(models.QuerySet):
@@ -88,7 +89,7 @@ class Value(models.Model):
         return str(self.explanation)
 
 
-class ValueFeature(models.Model):
+class FeatureValue(models.Model):
     """Through model for Value & Feature m2m relation"""
     value = models.ForeignKey(Value, models.CASCADE, db_column='arvoid')
     feature = models.ForeignKey('Feature', models.CASCADE, db_column='kohdeid')
@@ -226,7 +227,7 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
 
 class Feature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
-    values = models.ManyToManyField('Value', through=ValueFeature, related_name='features')
+    values = models.ManyToManyField('Value', through=FeatureValue, related_name='features')
     publications = models.ManyToManyField('Publication', through='FeaturePublication', related_name='features')
 
     class Meta:
@@ -625,7 +626,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
         db_table = 'tapahtuma'
 
     def __str__(self):
-        return str(self.register_id)
+        return _('Transaction #{0}').format(self.id)
 
 
 class TransactionFeature(models.Model):
@@ -636,6 +637,9 @@ class TransactionFeature(models.Model):
     class Meta:
         db_table = 'tapahtuma_kohde'
         unique_together = (('feature', 'transaction'),)
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.feature, self.transaction)
 
 
 class TransactionType(models.Model):

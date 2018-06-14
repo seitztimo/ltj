@@ -301,6 +301,14 @@ class TransactionFactory(factory.django.DjangoModelFactory):
             self.regulations.add(*extracted)
 
 
+class TransactionFeatureFactory(factory.django.DjangoModelFactory):
+    feature = factory.SubFactory(FeatureFactory)
+    transaction = factory.SubFactory(TransactionFactory)
+
+    class Meta:
+        model = 'nature.TransactionFeature'
+
+
 class FrequencyFactory(factory.django.DjangoModelFactory):
     explanation = factory.Faker('text', max_nb_chars=50)
     source = factory.Faker('text', max_nb_chars=50)

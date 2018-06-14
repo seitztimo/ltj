@@ -1,11 +1,12 @@
 from django.contrib.gis import admin
+from django.utils.translation import ugettext_lazy as _
 
 from .models import (
     Feature, FeatureClass, FeatureLink, FeaturePublication,
     Observation, ObservationSeries, Publication,
     Species, LinkType, HabitatType,
-    Regulation, Value, Transaction, Person)
-from .forms import FeatureForm
+    Regulation, Value, Transaction, Person, FeatureValue, TransactionFeature, HabitatTypeObservation)
+from .forms import FeatureForm, HabitatTypeObservationInlineForm
 from .widgets import NatureOLWidget
 
 
@@ -72,6 +73,27 @@ class FeaturePublicationInline(admin.TabularInline):
     extra = 1
 
 
+class FeatureValueInline(admin.TabularInline):
+    model = FeatureValue
+    raw_id_fields = ('value',)
+    extra = 1
+
+
+class TransactionFeatureInline(admin.TabularInline):
+    verbose_name = _('Feature transaction')
+    verbose_name_plural = _('Feature transactions')
+    model = TransactionFeature
+    raw_id_fields = ('transaction',)
+    extra = 1
+
+
+class HabitatTypeObservationInline(admin.TabularInline):
+    model = HabitatTypeObservation
+    form = HabitatTypeObservationInlineForm
+    fields = ('habitat_type', 'group_fraction', 'observation_series', 'additional_info')
+    extra = 1
+
+
 @admin.register(Feature)
 class FeatureAdmin(admin.GeoModelAdmin):
     readonly_fields = ('_area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
@@ -79,7 +101,10 @@ class FeatureAdmin(admin.GeoModelAdmin):
     search_fields = ('feature_class__name', 'name', 'fid', 'id')
     list_filter = ('feature_class', 'active')
     form = FeatureForm
-    inlines = [ObservationInline, FeatureLinkInline, FeaturePublicationInline]
+    inlines = [
+        ObservationInline, FeatureLinkInline, FeaturePublicationInline,
+        FeatureValueInline, TransactionFeatureInline, HabitatTypeObservationInline,
+    ]
     actions = None
 
     widget = NatureOLWidget
