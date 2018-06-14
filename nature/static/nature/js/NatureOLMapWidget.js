@@ -5,6 +5,7 @@
  * List of modifications:
  * - Set map projection to EPSG:3879
  * - Add custom base maps (WMTS)
+ * - Scale bar
  * - Coordinates at mouse
  */
 
@@ -181,6 +182,12 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             className: 'nature-mouse-position'
         });
         map.addControl(mousePositionControl);
+
+        // Add scale line
+        var scaleLineControl = new ol.control.ScaleLine({
+            units: 'metric',
+        });
+        map.addControl(scaleLineControl);
 
         return map;
     };
