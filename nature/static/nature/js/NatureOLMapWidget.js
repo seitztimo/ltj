@@ -19,6 +19,7 @@ var GeometryTypeControl = function(opt_options) {
     if (options.active) {
         element.className += " type-active";
     }
+    element.title = options.title;
 
     var self = this;
     var switchType = function(e) {
@@ -238,10 +239,25 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         if (geomType === "Unknown" || geomType === "GeometryCollection") {
             // Default to Point, but create icons to switch type
             geomType = "Point";
-            this.currentGeometryType = new GeometryTypeControl({widget: this, type: "Point", active: true});
+            this.currentGeometryType = new GeometryTypeControl({
+                widget: this,
+                type: "Point",
+                active: true,
+                title: "Piste"
+            });
             this.map.addControl(this.currentGeometryType);
-            this.map.addControl(new GeometryTypeControl({widget: this, type: "LineString", active: false}));
-            this.map.addControl(new GeometryTypeControl({widget: this, type: "Polygon", active: false}));
+            this.map.addControl(new GeometryTypeControl({
+                widget: this,
+                type: "LineString",
+                active: false,
+                title: "Viiva"
+            }));
+            this.map.addControl(new GeometryTypeControl({
+                widget: this,
+                type: "Polygon",
+                active: false,
+                title: "Monikulmio"
+            }));
             this.typeChoices = true;
         }
         this.interactions.draw = new ol.interaction.Draw({
