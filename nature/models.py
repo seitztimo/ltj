@@ -625,7 +625,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
         db_table = 'tapahtuma'
 
     def __str__(self):
-        return str(self.register_id)
+        return 'Transaction #{0}'.format(self.id)
 
 
 class TransactionFeature(models.Model):
@@ -636,6 +636,9 @@ class TransactionFeature(models.Model):
     class Meta:
         db_table = 'tapahtuma_kohde'
         unique_together = (('feature', 'transaction'),)
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.feature, self.transaction)
 
 
 class TransactionType(models.Model):

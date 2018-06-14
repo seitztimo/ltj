@@ -15,3 +15,11 @@ class FeatureForm(forms.ModelForm):
             'notes': forms.Textarea,
             'name': forms.TextInput(attrs={'size': '80'})
         }
+
+
+class HabitatTypeObservationInlineForm(forms.ModelForm):
+
+    class Meta:
+        widgets = {
+            'additional_info': forms.Textarea(attrs={'rows': '5'}),
+        }

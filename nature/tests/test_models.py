@@ -15,7 +15,7 @@ from .factories import (
     ConservationProgrammeFactory, ProtectionFactory,
     CriterionFactory, TransactionFactory,
     TransactionTypeFactory, FrequencyFactory,
-)
+    TransactionFeatureFactory)
 
 from ..models import Feature, FeatureClass, ProtectionLevelMixin
 
@@ -373,7 +373,19 @@ class TestTransaction(TestCase):
         self.transaction = TransactionFactory(register_id='transaction')
 
     def test__str__(self):
-        self.assertEqual(self.transaction.__str__(), 'transaction')
+        self.assertEqual(self.transaction.__str__(), 'Transaction #{0}'.format(self.transaction.id))
+
+
+class TestTransactionFeature(TestCase):
+
+    def setUp(self):
+        self.transaction_feature = TransactionFeatureFactory()
+
+    def test__str__(self):
+        self.assertEqual(
+            self.transaction_feature.__str__(),
+            '{0} - {1}'.format(self.transaction_feature.feature, self.transaction_feature.transaction)
+        )
 
 
 class TestTransactionType(TestCase):
