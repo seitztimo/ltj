@@ -88,7 +88,7 @@ class Value(models.Model):
         return str(self.explanation)
 
 
-class ValueFeature(models.Model):
+class FeatureValue(models.Model):
     """Through model for Value & Feature m2m relation"""
     value = models.ForeignKey(Value, models.CASCADE, db_column='arvoid')
     feature = models.ForeignKey('Feature', models.CASCADE, db_column='kohdeid')
@@ -226,7 +226,7 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
 
 class Feature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features')
-    values = models.ManyToManyField('Value', through=ValueFeature, related_name='features')
+    values = models.ManyToManyField('Value', through=FeatureValue, related_name='features')
     publications = models.ManyToManyField('Publication', through='FeaturePublication', related_name='features')
 
     class Meta:

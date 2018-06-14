@@ -509,7 +509,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='ValueFeature',
+            name='FeatureValue',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
             ],
@@ -547,12 +547,12 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddField(
-            model_name='valuefeature',
+            model_name='featurevalue',
             name='feature',
             field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.CASCADE, to='nature.Feature'),
         ),
         migrations.AddField(
-            model_name='valuefeature',
+            model_name='featurevalue',
             name='value',
             field=models.ForeignKey(db_column='arvoid', on_delete=django.db.models.deletion.CASCADE, to='nature.Value'),
         ),
@@ -679,7 +679,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='feature',
             name='values',
-            field=models.ManyToManyField(related_name='features', through='nature.ValueFeature', to='nature.Value'),
+            field=models.ManyToManyField(related_name='features', through='nature.FeatureValue', to='nature.Value'),
         ),
         migrations.AddField(
             model_name='transactionregulation',
@@ -712,7 +712,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(related_name='transactions', through='nature.TransactionRegulation', to='nature.Regulation'),
         ),
         migrations.AlterUniqueTogether(
-            name='valuefeature',
+            name='featurevalue',
             unique_together=set([('value', 'feature')]),
         ),
         migrations.AlterUniqueTogether(
