@@ -1,4 +1,5 @@
 from django.contrib.gis import admin
+from django.utils.translation import ugettext_lazy as _
 
 from .models import (
     Feature, FeatureClass, FeatureLink, FeaturePublication,
@@ -79,8 +80,8 @@ class FeatureValueInline(admin.TabularInline):
 
 
 class TransactionFeatureInline(admin.TabularInline):
-    verbose_name = 'Feature transaction'
-    verbose_name_plural = 'Feature transactions'
+    verbose_name = _('Feature transaction')
+    verbose_name_plural = _('Feature transactions')
     model = TransactionFeature
     raw_id_fields = ('transaction',)
     extra = 1

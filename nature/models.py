@@ -10,6 +10,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
+from django.utils.translation import ugettext as _
 
 
 class ProtectionLevelEnabledQuerySet(models.QuerySet):
@@ -625,7 +626,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
         db_table = 'tapahtuma'
 
     def __str__(self):
-        return 'Transaction #{0}'.format(self.id)
+        return _('Transaction #{0}').format(self.id)
 
 
 class TransactionFeature(models.Model):
