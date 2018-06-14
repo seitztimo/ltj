@@ -13,6 +13,7 @@ env = environ.Env(
     STATIC_ROOT=(environ.Path(), root('static')),
     MEDIA_URL=(str, '/media/'),
     STATIC_URL=(str, '/static/'),
+    LOG_LEVEL=(str, 'INFO'),
 )
 
 # .env file, should load only in development environment
@@ -30,6 +31,28 @@ STATIC_URL = env('STATIC_URL')
 MEDIA_URL = env('MEDIA_URL')
 STATIC_ROOT = env('STATIC_ROOT')
 MEDIA_ROOT = env('MEDIA_ROOT')
+
+# log to stderr, at level specified by LOG_LEVEL and add metadata
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'metadata': {
+            'format': '%(asctime)s %(levelname)s %(module)s: %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'metadata',
+            'level': env('LOG_LEVEL'),
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': env('LOG_LEVEL'),
+    },
+}
 
 # Application definition
 
