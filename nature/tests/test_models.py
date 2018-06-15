@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.gis.geos import Point, Polygon
+from django.utils.translation import activate
 
 from .factories import (
     OriginFactory, ValueFactory, OccurrenceFactory,
@@ -373,6 +374,7 @@ class TestTransaction(TestCase):
         self.transaction = TransactionFactory(register_id='transaction')
 
     def test__str__(self):
+        activate('en')
         self.assertEqual(self.transaction.__str__(), 'Transaction #{0}'.format(self.transaction.id))
 
 
