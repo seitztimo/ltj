@@ -1,3 +1,5 @@
+from unittest.mock import patch, MagicMock
+
 from django.test import TestCase
 from django.contrib.gis.geos import Point, Polygon
 from django.utils.translation import activate
@@ -178,6 +180,14 @@ class TestFeature(TestCase):
         self.assertEqual(self.feature.area, round_down_area)
         self.assertEqual(self.feature.formatted_area, 57.83)
 
+    def test_feature_is_protected(self):
+        with patch('nature.models.FeatureClass.is_protected', new_callable=MagicMock(return_value=True)):
+            self.assertTrue(self.feature.is_protected)
+
+    def test_feature_is_not_protected(self):
+        with patch('nature.models.FeatureClass.is_protected', new_callable=MagicMock(return_value=False)):
+            self.assertFalse(self.feature.is_protected)
+
 
 class TestHistoricalFeature(TestCase):
 
@@ -303,6 +313,16 @@ class TestFeatureClass(TestCase):
         self.feature_class.id = 123
         self.feature_class.name = None
         self.assertEqual(self.feature_class.__str__(), 'Feature class 123')
+
+    def test_feature_class_is_protected(self):
+        self.feature_class.super_class = FeatureClassFactory(id=FeatureClass.PROTECTED_FEATURE_CLASS_ID)
+        self.assertTrue(self.feature_class.is_protected)
+
+    def test_feature_class_is_not_protected(self):
+        self.assertFalse(self.feature_class.is_protected)
+
+        self.feature_class.super_class = FeatureClassFactory()
+        self.assertFalse(self.feature_class.is_protected)
 
 
 class TestBreedingDegree(TestCase):
