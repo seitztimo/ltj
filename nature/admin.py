@@ -98,6 +98,8 @@ class HabitatTypeObservationInline(admin.TabularInline):
 
 
 class ProtectionInline(admin.StackedInline):
+    verbose_name = _('protection')
+    verbose_name_plural = _('protection')  # protection has one to one relationship to feature
     model = Protection
     form = ProtectionInlineForm
     max_num = 1
