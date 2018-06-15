@@ -1,3 +1,4 @@
+import os
 import environ
 
 root = environ.Path(__file__) - 2
@@ -126,6 +127,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'fi'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, "locale"),
+)
 
 TIME_ZONE = 'Europe/Helsinki'
 

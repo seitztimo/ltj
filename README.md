@@ -50,3 +50,10 @@ Run tests with coverage report
     py.test --cov-report html --cov .
     
 Open htmlcov/index.html for the coverage report.
+
+
+## Translations
+
+To compile the Finnish translations run
+
+    python manage.py compilemessages
