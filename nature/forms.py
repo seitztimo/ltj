@@ -5,7 +5,10 @@ from nature.models import FeatureClass
 
 
 class FeatureForm(forms.ModelForm):
-    feature_class = forms.ModelChoiceField(queryset=FeatureClass.objects.order_by('name'))
+    feature_class = forms.ModelChoiceField(
+        queryset=FeatureClass.objects.order_by('name'),
+        label=FeatureClass._meta.verbose_name.capitalize(),
+    )
 
     class Meta:
         widgets = {
