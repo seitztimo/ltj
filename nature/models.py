@@ -696,7 +696,8 @@ class Criterion(models.Model):
         verbose_name_plural = _('cirteria')
 
     def __str__(self):
-        return str(self.criterion)
+        values = [self.criterion, self.specific_criterion, self.subcriterion]
+        return ', '.join([value for value in values if value is not None])
 
 
 class TransactionRegulation(models.Model):
