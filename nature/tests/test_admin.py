@@ -5,7 +5,7 @@ from django.test import TestCase, RequestFactory
 
 from .factories import FeatureFactory, ObservationFactory, PublicationFactory
 from .utils import make_user
-from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin, ProtectionInline
+from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin, ProtectionInline, SquareInline
 from ..models import Feature, Publication
 
 
@@ -72,23 +72,32 @@ class TestFeatureAdmin(TestCase):
             inline_instances = fa.get_inline_instances(request, feature)
             self.assertTrue(isinstance(inline_instances[-1], ProtectionInline))
 
-    def test_inline_instances_does_not_include_protection_inline_if_feature_is_not_protected(self):
+    def test_inline_instances_include_square_inline_if_feature_is_square(self):
         fa = FeatureAdmin(Feature, self.site)
         request = self.factory.get('/fake-url/')
         request.user = self.user
 
-        with patch('nature.models.Feature.is_protected', new_callable=MagicMock(return_value=False)):
+        with patch('nature.models.Feature.is_square', new_callable=MagicMock(return_value=True)):
             feature = FeatureFactory()
             inline_instances = fa.get_inline_instances(request, feature)
-            self.assertFalse(isinstance(inline_instances[-1], ProtectionInline))
+            self.assertTrue(isinstance(inline_instances[-1], SquareInline))
 
-    def test_get_inline_instances_does_not_include_protection_inline_on_add(self):
+    def test_no_additional_inline_instances_for_normal_feature(self):
+        fa = FeatureAdmin(Feature, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        feature = FeatureFactory()
+        inline_instances = fa.get_inline_instances(request, feature)
+        self.assertFalse(isinstance(inline_instances[-1], (ProtectionInline, SquareInline)))
+
+    def test_no_additional_inline_instances_on_add(self):
         fa = FeatureAdmin(Feature, self.site)
         request = self.factory.get('/fake-url/')
         request.user = self.user
 
         inline_instances = fa.get_inline_instances(request)
-        self.assertFalse(isinstance(inline_instances[-1], ProtectionInline))
+        self.assertFalse(isinstance(inline_instances[-1], (ProtectionInline, SquareInline)))
 
 
 class TestPublicationAdmin(TestCase):
