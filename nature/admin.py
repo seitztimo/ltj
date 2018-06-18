@@ -5,8 +5,11 @@ from .models import (
     Feature, FeatureClass, FeatureLink, FeaturePublication,
     Observation, ObservationSeries, Publication,
     Species, LinkType, HabitatType,
-    Regulation, Value, Transaction, Person, FeatureValue, TransactionFeature, HabitatTypeObservation)
-from .forms import FeatureForm, HabitatTypeObservationInlineForm
+    Regulation, Value, Transaction,
+    Person, FeatureValue, TransactionFeature,
+    HabitatTypeObservation, Protection,
+)
+from .forms import FeatureForm, HabitatTypeObservationInlineForm, ProtectionInlineForm
 from .widgets import NatureOLWidget
 
 
@@ -94,6 +97,14 @@ class HabitatTypeObservationInline(admin.TabularInline):
     extra = 1
 
 
+class ProtectionInline(admin.StackedInline):
+    verbose_name = _('protection')
+    verbose_name_plural = _('protection')  # protection has one to one relationship to feature
+    model = Protection
+    form = ProtectionInlineForm
+    max_num = 1
+
+
 @admin.register(Feature)
 class FeatureAdmin(admin.GeoModelAdmin):
     readonly_fields = ('_area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
@@ -104,6 +115,7 @@ class FeatureAdmin(admin.GeoModelAdmin):
     inlines = [
         ObservationInline, FeatureLinkInline, FeaturePublicationInline,
         FeatureValueInline, TransactionFeatureInline, HabitatTypeObservationInline,
+        ProtectionInline,
     ]
     actions = None
 
@@ -120,6 +132,16 @@ class FeatureAdmin(admin.GeoModelAdmin):
             obj.created_by = request.user.username
         obj.last_modified_by = request.user.username
         obj.save()
+
+    def get_inline_instances(self, request, obj=None):
+        inline_instances = super().get_inline_instances(request, obj)
+        # We add the protection inline by default, and pop the inline
+        # if there's no object or the object is not protected. This is
+        # because we want the protection inline to go through the
+        # standard permission processing which is done in base class.
+        if not (obj and obj.is_protected):
+            inline_instances.pop()
+        return inline_instances
 
     def get_fields(self, request, obj=None):
         form = self.get_form(request, obj, fields=None)

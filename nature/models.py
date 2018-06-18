@@ -260,6 +260,10 @@ class Feature(AbstractFeature):
     def __str__(self):
         return self.name or 'Feature {0}'.format(self.id)
 
+    @property
+    def is_protected(self):
+        return self.feature_class.is_protected
+
 
 class HistoricalFeature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus',
@@ -500,6 +504,8 @@ class ProtectedFeatureClassQueryset(models.QuerySet):
 
 
 class FeatureClass(models.Model):
+    PROTECTED_FEATURE_CLASS_ID = 'SK'
+
     id = models.CharField(_('id'), primary_key=True, max_length=10, db_column='tunnus')
     name = models.CharField(_('name'), max_length=50, blank=True, null=True, db_column='nimi')
     additional_info = models.CharField(_('additional info'), max_length=255, blank=True, null=True,
@@ -521,6 +527,10 @@ class FeatureClass(models.Model):
 
     def __str__(self):
         return self.name or 'Feature class {0}'.format(self.id)
+
+    @property
+    def is_protected(self):
+        return self.super_class_id == self.PROTECTED_FEATURE_CLASS_ID
 
 
 class BreedingDegree(models.Model):

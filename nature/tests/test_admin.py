@@ -1,10 +1,11 @@
+from unittest.mock import patch, MagicMock
+
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase, RequestFactory
 
-
 from .factories import FeatureFactory, ObservationFactory, PublicationFactory
 from .utils import make_user
-from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin
+from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin, ProtectionInline
 from ..models import Feature, Publication
 
 
@@ -60,6 +61,34 @@ class TestFeatureAdmin(TestCase):
         fa.save_model(request, feature, None, None)
         self.assertEqual(feature.created_by, 'otheruser')
         self.assertEqual(feature.last_modified_by, 'testuser')
+
+    def test_inline_instances_include_protection_inline_if_feature_is_protected(self):
+        fa = FeatureAdmin(Feature, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        with patch('nature.models.Feature.is_protected', new_callable=MagicMock(return_value=True)):
+            feature = FeatureFactory()
+            inline_instances = fa.get_inline_instances(request, feature)
+            self.assertTrue(isinstance(inline_instances[-1], ProtectionInline))
+
+    def test_inline_instances_does_not_include_protection_inline_if_feature_is_not_protected(self):
+        fa = FeatureAdmin(Feature, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        with patch('nature.models.Feature.is_protected', new_callable=MagicMock(return_value=False)):
+            feature = FeatureFactory()
+            inline_instances = fa.get_inline_instances(request, feature)
+            self.assertFalse(isinstance(inline_instances[-1], ProtectionInline))
+
+    def test_get_inline_instances_does_not_include_protection_inline_on_add(self):
+        fa = FeatureAdmin(Feature, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        inline_instances = fa.get_inline_instances(request)
+        self.assertFalse(isinstance(inline_instances[-1], ProtectionInline))
 
 
 class TestPublicationAdmin(TestCase):
