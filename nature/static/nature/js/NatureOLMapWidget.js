@@ -177,7 +177,6 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         });
         map.addControl(layerSwitcher);
 
-
         // Add mouse position coordiantes
         var mousePositionControl = new ol.control.MousePosition({
             coordinateFormat: ol.coordinate.createStringXY(4),
@@ -187,9 +186,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         map.addControl(mousePositionControl);
 
         // Add scale line
-        var scaleLineControl = new ol.control.ScaleLine({
-            units: 'metric',
-        });
+        var scaleLineControl = new ol.control.ScaleLine();
         map.addControl(scaleLineControl);
 
         return map;
