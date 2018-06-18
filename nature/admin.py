@@ -53,6 +53,7 @@ class FeatureLinkInline(admin.TabularInline):
 
 @admin.register(FeatureClass)
 class FeatureClassAdmin(admin.ModelAdmin):
+    readonly_fields = ('super_class',)
     list_display = ('id', 'name', 'www', 'open_data')
     search_fields = ('name',)
     actions = None
