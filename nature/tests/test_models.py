@@ -188,6 +188,14 @@ class TestFeature(TestCase):
         with patch('nature.models.FeatureClass.is_protected', new_callable=MagicMock(return_value=False)):
             self.assertFalse(self.feature.is_protected)
 
+    def test_feature_is_square(self):
+        with patch('nature.models.FeatureClass.is_square', new_callable=MagicMock(return_value=True)):
+            self.assertTrue(self.feature.is_square)
+
+    def test_feature_is_not_square(self):
+        with patch('nature.models.FeatureClass.is_square', new_callable=MagicMock(return_value=False)):
+            self.assertFalse(self.feature.is_square)
+
 
 class TestHistoricalFeature(TestCase):
 
@@ -323,6 +331,16 @@ class TestFeatureClass(TestCase):
 
         self.feature_class.super_class = FeatureClassFactory()
         self.assertFalse(self.feature_class.is_protected)
+
+    def test_feature_class_is_square(self):
+        self.feature_class.super_class = FeatureClassFactory(id=FeatureClass.SQUARE_SUPER_CLASS_ID)
+        self.assertTrue(self.feature_class.is_square)
+
+    def test_feature_class_is_not_square(self):
+        self.assertFalse(self.feature_class.is_square)
+
+        self.feature_class.super_class = FeatureClassFactory()
+        self.assertFalse(self.feature_class.is_square)
 
 
 class TestBreedingDegree(TestCase):
