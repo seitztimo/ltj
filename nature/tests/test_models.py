@@ -387,6 +387,12 @@ class TestCriterion(TestCase):
     def test__str__(self):
         self.assertEqual(self.criterion.__str__(), 'criterion')
 
+        self.criterion.subcriterion = 'subcriterion'
+        self.assertEqual(self.criterion.__str__(), 'criterion, subcriterion')
+
+        self.criterion.specific_criterion = 'specific_criterion'
+        self.assertEqual(self.criterion.__str__(), 'criterion, specific_criterion, subcriterion')
+
 
 class TestTransaction(TestCase):
 
