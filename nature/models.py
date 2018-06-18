@@ -504,7 +504,7 @@ class ProtectedFeatureClassQueryset(models.QuerySet):
 
 
 class FeatureClass(models.Model):
-    PROTECTED_FEATURE_CLASS_ID = 'SK'
+    PROTECTED_SUPER_CLASS_ID = 'SK'
 
     id = models.CharField(_('id'), primary_key=True, max_length=10, db_column='tunnus')
     name = models.CharField(_('name'), max_length=50, blank=True, null=True, db_column='nimi')
@@ -530,7 +530,7 @@ class FeatureClass(models.Model):
 
     @property
     def is_protected(self):
-        return self.super_class_id == self.PROTECTED_FEATURE_CLASS_ID
+        return self.super_class_id == self.PROTECTED_SUPER_CLASS_ID
 
 
 class BreedingDegree(models.Model):

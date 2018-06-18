@@ -315,7 +315,7 @@ class TestFeatureClass(TestCase):
         self.assertEqual(self.feature_class.__str__(), 'Feature class 123')
 
     def test_feature_class_is_protected(self):
-        self.feature_class.super_class = FeatureClassFactory(id=FeatureClass.PROTECTED_FEATURE_CLASS_ID)
+        self.feature_class.super_class = FeatureClassFactory(id=FeatureClass.PROTECTED_SUPER_CLASS_ID)
         self.assertTrue(self.feature_class.is_protected)
 
     def test_feature_class_is_not_protected(self):
