@@ -1,5 +1,6 @@
 import os
 import environ
+import raven
 
 root = environ.Path(__file__) - 2
 BASE_DIR = root()
@@ -15,6 +16,8 @@ env = environ.Env(
     MEDIA_URL=(str, '/media/'),
     STATIC_URL=(str, '/static/'),
     LOG_LEVEL=(str, 'INFO'),
+    SENTRY_DSN=(str, ''),
+    SENTRY_ENVIRONMENT=(str, 'unconfigured'),
 )
 
 # .env file, should load only in development environment
@@ -70,6 +73,15 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'nature',
 ]
+
+# Sentry
+if env('SENTRY_DSN'):
+    RAVEN_CONFIG = {
+        'dsn': env('SENTRY_DSN'),
+        'environment': env('SENTRY_ENVIRONMENT'),
+        'release': raven.fetch_git_sha(BASE_DIR),
+    }
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
