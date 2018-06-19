@@ -663,11 +663,12 @@ class Protection(models.Model):
     additional_info = models.CharField(_('additional info'), max_length=255, blank=True, null=True,
                                        db_column='lisatieto')
     criteria = models.ManyToManyField('Criterion', through=ProtectionCriterion, related_name='protections',
-                                      verbose_name=_('criteria'))
+                                      verbose_name=_('criteria'), blank=True)
     conservation_programmes = models.ManyToManyField('ConservationProgramme',
                                                      through='ProtectionConservationProgramme',
                                                      related_name='protections',
-                                                     verbose_name=_('conservation programmes'))
+                                                     verbose_name=_('conservation programmes'),
+                                                     blank=True)
 
     class Meta:
         ordering = ['id']

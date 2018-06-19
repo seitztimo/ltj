@@ -732,12 +732,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='protection',
             name='conservation_programmes',
-            field=models.ManyToManyField(related_name='protections', through='nature.ProtectionConservationProgramme', to='nature.ConservationProgramme'),
+            field=models.ManyToManyField(blank=True, related_name='protections', through='nature.ProtectionConservationProgramme', to='nature.ConservationProgramme'),
         ),
         migrations.AddField(
             model_name='protection',
             name='criteria',
-            field=models.ManyToManyField(related_name='protections', through='nature.ProtectionCriterion', to='nature.Criterion'),
+            field=models.ManyToManyField(blank=True, related_name='protections', through='nature.ProtectionCriterion', to='nature.Criterion'),
         ),
         migrations.AlterUniqueTogether(
             name='habitattyperegulation',
