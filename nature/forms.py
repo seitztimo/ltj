@@ -48,32 +48,33 @@ class ProtectionInlineForm(forms.ModelForm):
         model = Protection
         fields = '__all__'
 
+    def _save_m2m(self):
+        # django does not allow saving m2m with manually specified m2m intermediate
+        # tables, so use intermediate model manager instead.
+        ProtectionCriterion.objects.filter(protection=self.instance).delete()
+        protection_criteria = [
+            ProtectionCriterion(
+                protection=self.instance,
+                criterion=criterion,
+            ) for criterion in self.cleaned_data['criteria']
+        ]
+        ProtectionCriterion.objects.bulk_create(protection_criteria)
+
+        ProtectionConservationProgramme.objects.filter(protection=self.instance).delete()
+        protection_conservation_programmes = [
+            ProtectionConservationProgramme(
+                protection=self.instance,
+                conservation_programme=conservation_programme,
+            ) for conservation_programme in self.cleaned_data['conservation_programmes']
+        ]
+        ProtectionConservationProgramme.objects.bulk_create(protection_conservation_programmes)
+
     @transaction.atomic
     def save(self, commit=True):
         protection = super().save(commit=False)
         if commit:
             protection.save()
-
-        if protection.pk:
-            # django does not allow saving m2m with manually specified m2m intermediate
-            # tables, so use intermediate model manager instead.
-            ProtectionCriterion.objects.filter(protection=protection).delete()
-            protection_criteria = [
-                ProtectionCriterion(
-                    protection=protection,
-                    criterion=criterion,
-                ) for criterion in self.cleaned_data['criteria']
-            ]
-            ProtectionCriterion.objects.bulk_create(protection_criteria)
-
-            ProtectionConservationProgramme.objects.filter(protection=protection).delete()
-            protection_conservation_programmes = [
-                ProtectionConservationProgramme(
-                    protection=protection,
-                    conservation_programme=conservation_programme,
-                ) for conservation_programme in self.cleaned_data['conservation_programmes']
-            ]
-            ProtectionConservationProgramme.objects.bulk_create(protection_conservation_programmes)
+            self._save_m2m()
 
         return protection
 
