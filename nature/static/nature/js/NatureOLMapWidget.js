@@ -156,7 +156,10 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         var projection = new ol.proj.Projection({
             code: 'EPSG:3879',
             extent: [21531406.93, 4503686.78, 25664437.76, 9371843.41],
-            units: 'm'
+            units: 'm',
+            getPointResolution: function(r) {
+                return r;
+            }
         });
         ol.proj.addProjection(projection);
 
