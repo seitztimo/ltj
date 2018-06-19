@@ -12,3 +12,6 @@ htmlcov/
 
 # environment file
 .env
+
+# translation binaries
+django.mo

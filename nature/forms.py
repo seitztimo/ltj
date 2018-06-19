@@ -5,7 +5,7 @@ from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 
 from nature.models import FeatureClass, Criterion, ConservationProgramme, Protection, ProtectionCriterion, \
-    ProtectionConservationProgramme
+    ProtectionConservationProgramme, Square
 
 
 class FeatureForm(forms.ModelForm):
@@ -75,3 +75,13 @@ class ProtectionInlineForm(forms.ModelForm):
             ProtectionConservationProgramme.objects.bulk_create(protection_conservation_programmes)
 
         return protection
+
+
+class SquareInlineForm(forms.ModelForm):
+
+    class Meta:
+        model = Square
+        fields = '__all__'
+        widgets = {
+            'additional_info': forms.Textarea(attrs={'rows': '5'}),
+        }

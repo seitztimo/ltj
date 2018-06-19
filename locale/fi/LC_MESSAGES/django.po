@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-15 15:11+0300\n"
+"POT-Creation-Date: 2018-06-18 16:25+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Frank Wickström <frank.wickstrom@anders.fi>\n"
 "Language-Team: \n"
@@ -17,30 +17,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: nature/admin.py:83
+#: nature/admin.py:86
 msgid "Feature transaction"
 msgstr "Tapahtuma kohde"
 
-#: nature/admin.py:84
+#: nature/admin.py:87
 msgid "Feature transactions"
 msgstr "Tapahtuma kohde"
 
-#: nature/models.py:43 nature/models.py:628
+#: nature/admin.py:101 nature/admin.py:102 nature/models.py:632
+#: nature/models.py:675 nature/models.py:684
+msgid "protection"
+msgstr "suojaus"
+
+#: nature/admin.py:109 nature/admin.py:110 nature/models.py:587
+msgid "square"
+msgstr "ruutu"
+
+#: nature/forms.py:38
+msgid "Criteria"
+msgstr "Peruste"
+
+#: nature/forms.py:42
+msgid "Conservation programmes"
+msgstr "Suojeluohjelmat"
+
+#: nature/models.py:43 nature/models.py:647
 msgid "protection level"
 msgstr "suojaustaso"
 
 #: nature/models.py:67 nature/models.py:81 nature/models.py:110
-#: nature/models.py:411 nature/models.py:527 nature/models.py:542
-#: nature/models.py:623 nature/models.py:759
+#: nature/models.py:419 nature/models.py:546 nature/models.py:561
+#: nature/models.py:642 nature/models.py:779
 msgid "explanation"
 msgstr "selitys"
 
-#: nature/models.py:68 nature/models.py:412 nature/models.py:528
-#: nature/models.py:543 nature/models.py:760
+#: nature/models.py:68 nature/models.py:420 nature/models.py:547
+#: nature/models.py:562 nature/models.py:780
 msgid "source"
 msgstr "lähde"
 
-#: nature/models.py:73 nature/models.py:347
+#: nature/models.py:73 nature/models.py:355
 msgid "origin"
 msgstr "alkuperä"
 
@@ -56,18 +73,18 @@ msgstr "luokka"
 msgid "valuator"
 msgstr "arvottaja"
 
-#: nature/models.py:84 nature/models.py:352 nature/models.py:711
+#: nature/models.py:84 nature/models.py:360 nature/models.py:731
 msgid "date"
 msgstr "pvm"
 
-#: nature/models.py:85 nature/models.py:178 nature/models.py:296
-#: nature/models.py:395 nature/models.py:585 nature/models.py:714
+#: nature/models.py:85 nature/models.py:178 nature/models.py:304
+#: nature/models.py:403 nature/models.py:604 nature/models.py:734
 msgid "link"
 msgstr "linkki"
 
-#: nature/models.py:90 nature/models.py:99 nature/models.py:413
-#: nature/models.py:529 nature/models.py:544 nature/models.py:580
-#: nature/models.py:761
+#: nature/models.py:90 nature/models.py:99 nature/models.py:421
+#: nature/models.py:548 nature/models.py:563 nature/models.py:599
+#: nature/models.py:781
 msgid "value"
 msgstr "arvo"
 
@@ -75,9 +92,9 @@ msgstr "arvo"
 msgid "values"
 msgstr "arvot"
 
-#: nature/models.py:100 nature/models.py:257 nature/models.py:269
-#: nature/models.py:283 nature/models.py:295 nature/models.py:330
-#: nature/models.py:453 nature/models.py:732
+#: nature/models.py:100 nature/models.py:257 nature/models.py:277
+#: nature/models.py:291 nature/models.py:303 nature/models.py:338
+#: nature/models.py:461 nature/models.py:752
 msgid "feature"
 msgstr "kohde"
 
@@ -89,7 +106,7 @@ msgstr "arvokohde"
 msgid "value features"
 msgstr "arvokohdteet"
 
-#: nature/models.py:115 nature/models.py:354
+#: nature/models.py:115 nature/models.py:362
 msgid "occurrence"
 msgstr "esiintymä"
 
@@ -98,18 +115,18 @@ msgid "occurrences"
 msgstr "esiintymät"
 
 #: nature/models.py:123 nature/models.py:168 nature/models.py:191
-#: nature/models.py:213 nature/models.py:426 nature/models.py:477
-#: nature/models.py:504 nature/models.py:576 nature/models.py:598
-#: nature/models.py:746
+#: nature/models.py:213 nature/models.py:434 nature/models.py:485
+#: nature/models.py:515 nature/models.py:595 nature/models.py:617
+#: nature/models.py:766
 msgid "name"
 msgstr "nimi"
 
-#: nature/models.py:125 nature/models.py:160 nature/models.py:713
+#: nature/models.py:125 nature/models.py:160 nature/models.py:733
 msgid "person"
 msgstr "henkilö"
 
-#: nature/models.py:126 nature/models.py:214 nature/models.py:350
-#: nature/models.py:479 nature/models.py:706
+#: nature/models.py:126 nature/models.py:214 nature/models.py:358
+#: nature/models.py:487 nature/models.py:726
 msgid "description"
 msgstr "kuvaus"
 
@@ -126,21 +143,21 @@ msgid "method"
 msgstr "menetelmä"
 
 #: nature/models.py:130 nature/models.py:149 nature/models.py:215
-#: nature/models.py:351
+#: nature/models.py:359
 msgid "notes"
 msgstr "huomioitavaa"
 
-#: nature/models.py:131 nature/models.py:392 nature/models.py:457
-#: nature/models.py:480 nature/models.py:505 nature/models.py:562
-#: nature/models.py:578 nature/models.py:644
+#: nature/models.py:131 nature/models.py:400 nature/models.py:465
+#: nature/models.py:488 nature/models.py:516 nature/models.py:581
+#: nature/models.py:597 nature/models.py:663
 msgid "additional info"
 msgstr "lisatieto"
 
-#: nature/models.py:133 nature/models.py:583
+#: nature/models.py:133 nature/models.py:602
 msgid "valid"
 msgstr "voimassa"
 
-#: nature/models.py:138 nature/models.py:139 nature/models.py:461
+#: nature/models.py:138 nature/models.py:139 nature/models.py:469
 msgid "observation series"
 msgstr "havainto-sarjat"
 
@@ -172,8 +189,8 @@ msgstr "puhnro"
 msgid "email"
 msgstr "sähköposti"
 
-#: nature/models.py:154 nature/models.py:217 nature/models.py:355
-#: nature/models.py:462
+#: nature/models.py:154 nature/models.py:217 nature/models.py:363
+#: nature/models.py:470
 msgid "created time"
 msgstr "lisaysaika"
 
@@ -185,7 +202,7 @@ msgstr "henkilöt"
 msgid "author"
 msgstr "tekija"
 
-#: nature/models.py:170 nature/models.py:334
+#: nature/models.py:170 nature/models.py:342
 msgid "series"
 msgstr "sarja"
 
@@ -205,7 +222,7 @@ msgstr "lisatieto"
 msgid "publication type"
 msgstr "julktyyppi"
 
-#: nature/models.py:183 nature/models.py:284
+#: nature/models.py:183 nature/models.py:292
 msgid "publication"
 msgstr "julkaisu"
 
@@ -229,7 +246,7 @@ msgstr "geometria"
 msgid "active"
 msgstr "voimassa"
 
-#: nature/models.py:218 nature/models.py:341 nature/models.py:559
+#: nature/models.py:218 nature/models.py:349 nature/models.py:578
 msgid "number"
 msgstr "numero"
 
@@ -237,11 +254,11 @@ msgstr "numero"
 msgid "created by"
 msgstr "digitoija"
 
-#: nature/models.py:220 nature/models.py:356 nature/models.py:463
+#: nature/models.py:220 nature/models.py:364 nature/models.py:471
 msgid "last modified time"
 msgstr "pvm editoitu"
 
-#: nature/models.py:222 nature/models.py:709
+#: nature/models.py:222 nature/models.py:729
 msgid "last modified by"
 msgstr "muokkaaja"
 
@@ -249,7 +266,7 @@ msgstr "muokkaaja"
 msgid "area (ha)"
 msgstr "pinta ala"
 
-#: nature/models.py:225 nature/models.py:297
+#: nature/models.py:225 nature/models.py:305
 msgid "text"
 msgstr "teksti"
 
@@ -257,403 +274,395 @@ msgstr "teksti"
 msgid "text www"
 msgstr "teksti www"
 
-#: nature/models.py:249 nature/models.py:266 nature/models.py:519
+#: nature/models.py:249 nature/models.py:274 nature/models.py:530
 msgid "feature class"
 msgstr "luokkatunnus"
 
-#: nature/models.py:258 nature/models.py:716
+#: nature/models.py:258 nature/models.py:736
 msgid "features"
 msgstr "tapahtuma kohteet"
 
-#: nature/models.py:267
+#: nature/models.py:275
 msgid "archived time"
 msgstr "historia pvm"
 
-#: nature/models.py:274
+#: nature/models.py:282
 msgid "historical feature"
 msgstr "kohdehistoria"
 
-#: nature/models.py:275
+#: nature/models.py:283
 msgid "historical features"
 msgstr "kohdehistoria"
 
-#: nature/models.py:289
+#: nature/models.py:297
 msgid "feature publication"
 msgstr "kohde julkaisu"
 
-#: nature/models.py:290
+#: nature/models.py:298
 msgid "feature publications"
 msgstr "kohde julkaisut"
 
-#: nature/models.py:298 nature/models.py:431
+#: nature/models.py:306 nature/models.py:439
 msgid "link type"
 msgstr "linkkityyppi"
 
-#: nature/models.py:299
+#: nature/models.py:307
 msgid "ordering"
 msgstr "järjestys"
 
-#: nature/models.py:300
+#: nature/models.py:308
 msgid "link text"
 msgstr "linkin teksti"
 
-#: nature/models.py:305
+#: nature/models.py:313
 msgid "feature link"
 msgstr "kohdelinkki"
 
-#: nature/models.py:306
+#: nature/models.py:314
 msgid "feature links"
 msgstr "kohdelinkkit"
 
-#: nature/models.py:314 nature/models.py:332 nature/models.py:402
-#: nature/models.py:403
+#: nature/models.py:322 nature/models.py:340 nature/models.py:410
+#: nature/models.py:411
 msgid "species"
 msgstr "lajeja"
 
-#: nature/models.py:315 nature/models.py:442 nature/models.py:590
-#: nature/models.py:695
+#: nature/models.py:323 nature/models.py:450 nature/models.py:609
+#: nature/models.py:715
 msgid "regulation"
 msgstr "säätö"
 
-#: nature/models.py:320
+#: nature/models.py:328
 msgid "species regulation"
 msgstr "lajien sääntely"
 
-#: nature/models.py:321
+#: nature/models.py:329
 msgid "species regulations"
 msgstr "lajin säännöksiä"
 
-#: nature/models.py:325 nature/models.py:394 nature/models.py:478
+#: nature/models.py:333 nature/models.py:402 nature/models.py:486
 msgid "code"
 msgstr "havaintokoodi"
 
-#: nature/models.py:328
+#: nature/models.py:336
 msgid "uri"
 msgstr "uri"
 
-#: nature/models.py:336 nature/models.py:549 nature/models.py:550
+#: nature/models.py:344 nature/models.py:568 nature/models.py:569
 msgid "abundance"
 msgstr "runsaus"
 
-#: nature/models.py:338
+#: nature/models.py:346
 msgid "frequence"
 msgstr "yleisyys"
 
-#: nature/models.py:340
+#: nature/models.py:348
 msgid "observer"
 msgstr "havainnoija"
 
-#: nature/models.py:345 nature/models.py:418 nature/models.py:419
+#: nature/models.py:353 nature/models.py:426 nature/models.py:427
 msgid "migration class"
 msgstr "liikkumisluokka"
 
-#: nature/models.py:349 nature/models.py:534
+#: nature/models.py:357 nature/models.py:553
 msgid "breeding degree"
 msgstr "pesimisvarmuus"
 
-#: nature/models.py:362
+#: nature/models.py:370
 msgid "observation"
 msgstr "lajihavainto"
 
-#: nature/models.py:363
+#: nature/models.py:371
 msgid "observations"
 msgstr "lajihavainnot"
 
-#: nature/models.py:370
+#: nature/models.py:378
 msgid "taxon"
 msgstr "ryhma"
 
-#: nature/models.py:371
+#: nature/models.py:379
 msgid "taxon 1"
 msgstr "eliöryhmä 1"
 
-#: nature/models.py:372
+#: nature/models.py:380
 msgid "taxon 2"
 msgstr "eliöryhmä 2"
 
-#: nature/models.py:373
+#: nature/models.py:381
 msgid "order (fi)"
 msgstr "lahko (suomi)"
 
-#: nature/models.py:374
+#: nature/models.py:382
 msgid "order (la)"
 msgstr "lahko (tieteellinen)"
 
-#: nature/models.py:375
+#: nature/models.py:383
 msgid "family (fi)"
 msgstr "heimo (suomi)"
 
-#: nature/models.py:376
+#: nature/models.py:384
 msgid "family (la)"
 msgstr "heimo (tieteellinen)"
 
-#: nature/models.py:377
+#: nature/models.py:385
 msgid "name (fi)"
 msgstr "nimi (suomi)"
 
-#: nature/models.py:378
+#: nature/models.py:386
 msgid "name 2 (fi)"
 msgstr "nimi 2 (suomi)"
 
-#: nature/models.py:379
+#: nature/models.py:387
 msgid "scientific name 1"
 msgstr "tieteellinen nimi 1"
 
-#: nature/models.py:380
+#: nature/models.py:388
 msgid "scientific name 2"
 msgstr "tieteellinen nimi 2"
 
-#: nature/models.py:381
+#: nature/models.py:389
 msgid "subspecies 1"
 msgstr "alalaji 1"
 
-#: nature/models.py:382
+#: nature/models.py:390
 msgid "subscecies 2"
 msgstr "alalaji 2"
 
-#: nature/models.py:383
+#: nature/models.py:391
 msgid "author 1"
 msgstr "auktori 1"
 
-#: nature/models.py:384
+#: nature/models.py:392
 msgid "author 2"
 msgstr "auktori 2"
 
-#: nature/models.py:385
+#: nature/models.py:393
 msgid "name abbreviated 1"
 msgstr "nimilyhennys 1"
 
-#: nature/models.py:387
+#: nature/models.py:395
 msgid "name abbreviated 2"
 msgstr "nimilyhennys 2"
 
-#: nature/models.py:389
+#: nature/models.py:397
 msgid "name (sv)"
 msgstr "nimi (ruotsi)"
 
-#: nature/models.py:390
+#: nature/models.py:398
 msgid "name (en)"
 msgstr "nimi (englanti)"
 
-#: nature/models.py:391
+#: nature/models.py:399
 msgid "registry date"
 msgstr "rekisteri pvm"
 
-#: nature/models.py:397 nature/models.py:484 nature/models.py:591
-#: nature/models.py:643 nature/models.py:718
+#: nature/models.py:405 nature/models.py:492 nature/models.py:610
+#: nature/models.py:662 nature/models.py:738
 msgid "regulations"
 msgstr "säädökset"
 
-#: nature/models.py:432
+#: nature/models.py:440
 msgid "link types"
 msgstr "linkkityyppit"
 
-#: nature/models.py:441 nature/models.py:455 nature/models.py:489
+#: nature/models.py:449 nature/models.py:463 nature/models.py:497
 msgid "habitat type"
 msgstr "luontotyyppi"
 
-#: nature/models.py:447
+#: nature/models.py:455
 msgid "habitat type regulation"
 msgstr "luontotyyppisäätö"
 
-#: nature/models.py:448
+#: nature/models.py:456
 msgid "habitat type regulations"
 msgstr "luontotyyppisäädökset"
 
-#: nature/models.py:456
+#: nature/models.py:464
 msgid "group fraction"
 msgstr "osuus kuviosta"
 
-#: nature/models.py:469
+#: nature/models.py:477
 msgid "habitat type observation"
 msgstr "luontotyyppihavainto"
 
-#: nature/models.py:470
+#: nature/models.py:478
 msgid "habitat type observations"
 msgstr "luontotyyppihavainnot"
 
-#: nature/models.py:482
+#: nature/models.py:490
 msgid "group"
 msgstr "luontotyyppiryhmä"
 
-#: nature/models.py:490
+#: nature/models.py:498
 msgid "habitat types"
 msgstr "luontotyyppit"
 
-#: nature/models.py:503 nature/models.py:558 nature/models.py:637
+#: nature/models.py:514 nature/models.py:577 nature/models.py:656
 msgid "id"
 msgstr "id"
 
-#: nature/models.py:508
+#: nature/models.py:519
 msgid "super class"
 msgstr "päätunnus"
 
-#: nature/models.py:509
+#: nature/models.py:520
 msgid "reporting"
 msgstr "raportointi"
 
-#: nature/models.py:510
+#: nature/models.py:521
 msgid "open data"
 msgstr "avoin data"
 
-#: nature/models.py:511
+#: nature/models.py:522
 msgid "www"
 msgstr "www"
 
-#: nature/models.py:512
+#: nature/models.py:523
 msgid "metadata"
 msgstr "metadata"
 
-#: nature/models.py:520
+#: nature/models.py:531
 msgid "feature classes"
 msgstr "luokkatunnukset"
 
-#: nature/models.py:535
+#: nature/models.py:554
 msgid "breeding degrees"
 msgstr "pesimisvarmuudet"
 
-#: nature/models.py:560
+#: nature/models.py:579
 msgid "degree of determination"
 msgstr "selvitysaste"
 
-#: nature/models.py:568
-msgid "square"
-msgstr "ruutu"
-
-#: nature/models.py:569
+#: nature/models.py:588
 msgid "squares"
 msgstr "ruudut"
 
-#: nature/models.py:577
+#: nature/models.py:596
 msgid "paragraph"
 msgstr "pykälä"
 
-#: nature/models.py:581
+#: nature/models.py:600
 msgid "value explanation"
 msgstr "arvon selitys"
 
-#: nature/models.py:584
+#: nature/models.py:603
 msgid "date of entry"
 msgstr "voimaantulo"
 
-#: nature/models.py:603 nature/models.py:667
+#: nature/models.py:622 nature/models.py:686
 msgid "conservation programme"
 msgstr "suojeluohjelma"
 
-#: nature/models.py:604 nature/models.py:651
+#: nature/models.py:623 nature/models.py:670
 msgid "conservation programmes"
 msgstr "suojeluohjelmat"
 
-#: nature/models.py:612 nature/models.py:677 nature/models.py:685
+#: nature/models.py:631 nature/models.py:696 nature/models.py:704
 msgid "criterion"
 msgstr "peruste"
 
-#: nature/models.py:613 nature/models.py:656 nature/models.py:665
-msgid "protection"
-msgstr "suojaus"
-
-#: nature/models.py:618
+#: nature/models.py:637
 msgid "protection criterion"
 msgstr "suojausperuste"
 
-#: nature/models.py:619
+#: nature/models.py:638
 msgid "protection criteria"
 msgstr "suojausperusteet"
 
-#: nature/models.py:629
+#: nature/models.py:648
 msgid "protection levels"
 msgstr "suojaustaso"
 
-#: nature/models.py:638
+#: nature/models.py:657
 msgid "reported area"
 msgstr "ilmoitettu pinta-ala"
 
-#: nature/models.py:640
+#: nature/models.py:659
 msgid "land area"
 msgstr "maapinta-ala"
 
-#: nature/models.py:641
+#: nature/models.py:660
 msgid "water area"
 msgstr "vesipinta-ala"
 
-#: nature/models.py:642
+#: nature/models.py:661
 msgid "hiking"
 msgstr "liikkuminen"
 
-#: nature/models.py:647
+#: nature/models.py:666
 msgid "criteria"
 msgstr "peruste"
 
-#: nature/models.py:657
+#: nature/models.py:676
 msgid "protections"
 msgstr "suojelu"
 
-#: nature/models.py:672
+#: nature/models.py:691
 msgid "protection conservation programme"
 msgstr "suojeluohjelma"
 
-#: nature/models.py:673
+#: nature/models.py:692
 msgid "protection conservation programmes"
 msgstr "suojeluohjelmia"
 
-#: nature/models.py:678
+#: nature/models.py:697
 msgid "specific criterion"
 msgstr "tarkka peruste"
 
-#: nature/models.py:680
+#: nature/models.py:699
 msgid "subscriterion"
 msgstr "alaperuste"
 
-#: nature/models.py:686
+#: nature/models.py:705
 msgid "cirteria"
 msgstr "peruste"
 
-#: nature/models.py:694 nature/models.py:723 nature/models.py:733
+#: nature/models.py:714 nature/models.py:743 nature/models.py:753
 msgid "transaction"
 msgstr "tapahtuma"
 
-#: nature/models.py:700
+#: nature/models.py:720
 msgid "transaction regulation"
 msgstr "tapahtumasäätö"
 
-#: nature/models.py:701
+#: nature/models.py:721
 msgid "transaction regulations"
 msgstr "tapahtumasäätökset"
 
-#: nature/models.py:705
+#: nature/models.py:725
 msgid "register id"
 msgstr "diaari nro"
 
-#: nature/models.py:708 nature/models.py:751
+#: nature/models.py:728 nature/models.py:771
 msgid "transaction type"
 msgstr "tapahtumatyyppi"
 
-#: nature/models.py:724
+#: nature/models.py:744
 msgid "transactions"
 msgstr "tapahtumat"
 
-#: nature/models.py:727
+#: nature/models.py:747
 #, python-brace-format
 msgid "Transaction #{0}"
 msgstr "Tapahtuma #{0}"
 
-#: nature/models.py:738
+#: nature/models.py:758
 msgid "transaction feature"
 msgstr "tapahtumakohde"
 
-#: nature/models.py:739
+#: nature/models.py:759
 msgid "transaction features"
 msgstr "tapahtumakohteed"
 
-#: nature/models.py:752
+#: nature/models.py:772
 msgid "transaction types"
 msgstr "tapahtumatyyppi"
 
-#: nature/models.py:766
+#: nature/models.py:786
 msgid "frequency"
 msgstr "yleisyys"
 
-#: nature/models.py:767
+#: nature/models.py:787
 msgid "frequencies"
 msgstr "yleisyydet"
 

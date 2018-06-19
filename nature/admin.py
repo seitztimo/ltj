@@ -8,8 +8,8 @@ from .models import (
     Regulation, Value, Transaction,
     Person, FeatureValue, TransactionFeature,
     HabitatTypeObservation, Protection,
-)
-from .forms import FeatureForm, HabitatTypeObservationInlineForm, ProtectionInlineForm
+    Square)
+from .forms import FeatureForm, HabitatTypeObservationInlineForm, ProtectionInlineForm, SquareInlineForm
 from .widgets import NatureOLWidget
 
 
@@ -106,6 +106,14 @@ class ProtectionInline(admin.StackedInline):
     max_num = 1
 
 
+class SquareInline(admin.StackedInline):
+    verbose_name = _('square')
+    verbose_name_plural = _('square')
+    model = Square
+    form = SquareInlineForm
+    max_num = 1
+
+
 @admin.register(Feature)
 class FeatureAdmin(admin.GeoModelAdmin):
     readonly_fields = ('_area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
@@ -116,7 +124,7 @@ class FeatureAdmin(admin.GeoModelAdmin):
     inlines = [
         ObservationInline, FeatureLinkInline, FeaturePublicationInline,
         FeatureValueInline, TransactionFeatureInline, HabitatTypeObservationInline,
-        ProtectionInline,
+        ProtectionInline, SquareInline
     ]
     actions = None
 
@@ -136,12 +144,15 @@ class FeatureAdmin(admin.GeoModelAdmin):
 
     def get_inline_instances(self, request, obj=None):
         inline_instances = super().get_inline_instances(request, obj)
-        # We add the protection inline by default, and pop the inline
-        # if there's no object or the object is not protected. This is
-        # because we want the protection inline to go through the
-        # standard permission processing which is done in base class.
-        if not (obj and obj.is_protected):
-            inline_instances.pop()
+        # Add all possible inlines by default and pop the ones that
+        # are not required by type of the features. This way we makes
+        # that all inlines can go through the processing done in base
+        # class.
+        *inline_instances, protection_inline, square_inline = inline_instances
+        if obj and obj.is_protected:
+            inline_instances.append(protection_inline)
+        if obj and obj.is_square:
+            inline_instances.append(square_inline)
         return inline_instances
 
     def get_fields(self, request, obj=None):
