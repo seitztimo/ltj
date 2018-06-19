@@ -43,6 +43,7 @@ class ObservationInline(admin.TabularInline):
 @admin.register(LinkType)
 class LinkTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
+    actions = None
 
 
 class FeatureLinkInline(admin.TabularInline):
