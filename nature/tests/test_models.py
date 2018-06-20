@@ -421,6 +421,9 @@ class TestTransaction(TestCase):
         activate('en')
         self.assertEqual(self.transaction.__str__(), 'Transaction #{0}'.format(self.transaction.id))
 
+        self.transaction.description = 'test description'
+        self.assertEqual(self.transaction.__str__(), 'test description')
+
 
 class TestTransactionFeature(TestCase):
 

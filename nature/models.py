@@ -745,7 +745,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
         verbose_name_plural = _('transactions')
 
     def __str__(self):
-        return _('Transaction #{0}').format(self.id)
+        return self.description or _('Transaction #{0}').format(self.id)
 
 
 class TransactionFeature(models.Model):
