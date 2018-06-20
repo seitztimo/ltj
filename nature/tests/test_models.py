@@ -391,10 +391,10 @@ class TestConservationProgramme(TestCase):
 class TestProtection(TestCase):
 
     def setUp(self):
-        self.protection = ProtectionFactory(reported_area='protection')
+        self.protection = ProtectionFactory()
 
     def test__str__(self):
-        self.assertEqual(self.protection.__str__(), 'protection')
+        self.assertEqual(self.protection.__str__(), str(self.protection.id))
 
 
 class TestCriterion(TestCase):

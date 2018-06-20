@@ -677,7 +677,7 @@ class Protection(models.Model):
         verbose_name_plural = _('protections')
 
     def __str__(self):
-        return str(self.reported_area)
+        return str(self.id)
 
 
 class ProtectionConservationProgramme(models.Model):
