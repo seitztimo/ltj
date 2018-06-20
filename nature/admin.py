@@ -196,7 +196,7 @@ class ValueAdmin(admin.ModelAdmin):
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'transaction_type', 'description', 'protection_level')
     search_fields = ('id', 'description')
-    list_filter = ('protection_level',)
+    list_filter = ('protection_level', 'transaction_type')
     actions = None
 
 
