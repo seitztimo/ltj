@@ -9,3 +9,19 @@
     font-size: 12px;
     position: absolute;
 }
+
+.type-MultiLineString {
+    background-image: url("../img/draw_multiline_off.svg");
+    right: 80px;
+}
+.type-MultiLineString.type-active {
+    background-image: url("../img/draw_multiline_on.svg");
+}
+
+.type-MultiPolygon {
+    background-image: url("../img/draw_multipolygon_off.svg");
+    right: 105px;
+}
+.type-MultiPolygon.type-active {
+    background-image: url("../img/draw_multipolygon_on.svg");
+}
