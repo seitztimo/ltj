@@ -391,10 +391,10 @@ class TestConservationProgramme(TestCase):
 class TestProtection(TestCase):
 
     def setUp(self):
-        self.protection = ProtectionFactory(reported_area='protection')
+        self.protection = ProtectionFactory()
 
     def test__str__(self):
-        self.assertEqual(self.protection.__str__(), 'protection')
+        self.assertEqual(self.protection.__str__(), str(self.protection.id))
 
 
 class TestCriterion(TestCase):
@@ -420,6 +420,9 @@ class TestTransaction(TestCase):
     def test__str__(self):
         activate('en')
         self.assertEqual(self.transaction.__str__(), 'Transaction #{0}'.format(self.transaction.id))
+
+        self.transaction.description = 'test description'
+        self.assertEqual(self.transaction.__str__(), 'test description')
 
 
 class TestTransactionFeature(TestCase):
