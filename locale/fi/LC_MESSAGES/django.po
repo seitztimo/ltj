@@ -18,10 +18,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Feature transaction"
-msgstr "Tapahtuma kohde"
+msgstr "Tapahtuma"
 
 msgid "Feature transactions"
-msgstr "Tapahtuma kohde"
+msgstr "Tapahtumat"
 
 msgid "protection"
 msgstr "suojaus"
@@ -105,13 +105,13 @@ msgid "notes"
 msgstr "huomioitavaa"
 
 msgid "additional info"
-msgstr "lisatieto"
+msgstr "lisätieto"
 
 msgid "valid"
 msgstr "voimassa"
 
 msgid "observation series"
-msgstr "havainto-sarjat"
+msgstr "havaintosarjat"
 
 msgid "surname"
 msgstr "sukunimi"
@@ -135,7 +135,7 @@ msgid "email"
 msgstr "sähköposti"
 
 msgid "created time"
-msgstr "lisaysaika"
+msgstr "lisäysaika"
 
 msgid "persons"
 msgstr "henkilöt"
@@ -153,7 +153,7 @@ msgid "year"
 msgstr "vuosi"
 
 msgid "additional information"
-msgstr "lisatieto"
+msgstr "lisätieto"
 
 msgid "publication type"
 msgstr "julktyyppi"
@@ -189,7 +189,7 @@ msgid "last modified by"
 msgstr "muokkaaja"
 
 msgid "area (ha)"
-msgstr "pinta ala"
+msgstr "pinta-ala"
 
 msgid "text"
 msgstr "teksti"
@@ -201,7 +201,7 @@ msgid "feature class"
 msgstr "luokkatunnus"
 
 msgid "features"
-msgstr "tapahtuma kohteet"
+msgstr "kohteet"
 
 msgid "archived time"
 msgstr "historia pvm"
@@ -213,10 +213,10 @@ msgid "historical features"
 msgstr "kohdehistoria"
 
 msgid "feature publication"
-msgstr "kohde julkaisu"
+msgstr "julkaisu"
 
 msgid "feature publications"
-msgstr "kohde julkaisut"
+msgstr "julkaisut"
 
 msgid "link type"
 msgstr "linkkityyppi"
@@ -234,7 +234,7 @@ msgid "feature links"
 msgstr "kohdelinkkit"
 
 msgid "species"
-msgstr "lajeja"
+msgstr "lajit"
 
 msgid "regulation"
 msgstr "säätö"
@@ -342,7 +342,7 @@ msgid "habitat type"
 msgstr "luontotyyppi"
 
 msgid "habitat type regulation"
-msgstr "luontotyyppisäätö"
+msgstr "luontotyyppisäädös"
 
 msgid "habitat type regulations"
 msgstr "luontotyyppisäädökset"
@@ -360,7 +360,7 @@ msgid "group"
 msgstr "luontotyyppiryhmä"
 
 msgid "habitat types"
-msgstr "luontotyyppit"
+msgstr "luontotyypit"
 
 msgid "id"
 msgstr "id"
@@ -381,7 +381,7 @@ msgid "metadata"
 msgstr "metadata"
 
 msgid "feature classes"
-msgstr "luokkatunnukset"
+msgstr "kohdeluokat"
 
 msgid "breeding degrees"
 msgstr "pesimisvarmuudet"
