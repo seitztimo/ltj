@@ -34,7 +34,10 @@ Run the utility script to fix the database so that it can be managed by django:
     psql -h localhost -U ltj -d ltj -a -f utility/add_alter_columns.sql
     psql -h localhost -U ltj -d ltj -a -f utility/add_id_seq.sql
     psql -h localhost -U ltj -d ltj -a -f utility/protection_level_comments.sql  # optional
-    
+
+    # convert columns with type `timestamp without time zone` to type `timestamp with time zone`
+    psql -h localhost -U ltj -d ltj -a -f utility/drop_views.sql -f utility/tz_aware_timestamps.sql -f utility/create_views.sql
+
 Fake initial when first time run migrations on nature app:
     
     python manage.py migrate nature --fake-initial
