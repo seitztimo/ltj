@@ -7,6 +7,7 @@
  * - Add custom base maps (WMTS)
  * - Scale bar
  * - Coordinates at mouse
+ * - Allow drawing MultiLineString and MultiPolygon
  */
 
 var GeometryTypeControl = function(opt_options) {
@@ -25,6 +26,8 @@ var GeometryTypeControl = function(opt_options) {
     var switchType = function(e) {
         e.preventDefault();
         if (options.widget.currentGeometryType !== self) {
+            var isMultiGeometry = options.type.indexOf('Multi') > -1;
+            options.widget.setIsDrawingMultiGeometry(isMultiGeometry);
             options.widget.map.removeInteraction(options.widget.interactions.draw);
             options.widget.interactions.draw = new ol.interaction.Draw({
                 features: options.widget.featureCollection,
@@ -126,15 +129,20 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             });
             if (self.ready) {
                 self.serializeFeatures();
-                if (!self.options.is_collection) {
+                if (self.isDrawingMultiGeometry()) {
+                    // Prevent switching geometry types but allow adding same type geometries
+                    self.hideGeomTypeIcons();
+                } else if (!self.options.is_collection) {
                     self.disableDrawing(); // Only allow one feature at a time
                 }
             }
         });
 
         var initial_value = document.getElementById(this.options.id).value;
+        var initialGeomType = '';
         if (initial_value) {
             var features = jsonFormat.readFeatures('{"type": "Feature", "geometry": ' + initial_value + '}');
+            initialGeomType = features[0].getGeometry().getType();
             var extent = ol.extent.createEmpty();
             features.forEach(function(feature) {
                 this.featureOverlay.getSource().addFeature(feature);
@@ -149,8 +157,25 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         if (initial_value && !this.options.is_collection) {
             this.disableDrawing();
         }
+
+        // Enable drawing if editing an existing multi-geometry feature
+        if (initialGeomType.indexOf('Multi') > -1) {
+            var controlElement = document.getElementsByClassName('type-' + initialGeomType)[0];
+            controlElement.click();
+        } else {
+            this.setIsDrawingMultiGeometry(false);
+        }
+
         this.ready = true;
     }
+
+    MapWidget.prototype.isDrawingMultiGeometry = function() {
+        return this._isDrawingMultiGeometry;
+    };
+
+    MapWidget.prototype.setIsDrawingMultiGeometry = function(isDrawingMultiGeometry) {
+        return this._isDrawingMultiGeometry = isDrawingMultiGeometry;
+    };
 
     MapWidget.prototype.createMap = function() {
         var projection = new ol.proj.Projection({
@@ -260,6 +285,18 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
                 active: false,
                 title: "Monikulmio"
             }));
+            this.map.addControl(new GeometryTypeControl({
+                widget: this,
+                type: "MultiLineString",
+                active: false,
+                title: "multi-linestring"
+            }));
+            this.map.addControl(new GeometryTypeControl({
+                widget: this,
+                type: "MultiPolygon",
+                active: false,
+                title: "multi-polygon"
+            }));
             this.typeChoices = true;
         }
         this.interactions.draw = new ol.interaction.Draw({
@@ -278,8 +315,11 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
 
     MapWidget.prototype.enableDrawing = function() {
         this.interactions.draw.setActive(true);
+        this.showGeomTypeIcons();
+    };
+
+    MapWidget.prototype.showGeomTypeIcons = function() {
         if (this.typeChoices) {
-            // Show geometry type icons
             var divs = document.getElementsByClassName("switch-type");
             for (var i = 0; i !== divs.length; i++) {
                 divs[i].style.visibility = "visible";
@@ -290,12 +330,15 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     MapWidget.prototype.disableDrawing = function() {
         if (this.interactions.draw) {
             this.interactions.draw.setActive(false);
-            if (this.typeChoices) {
-                // Hide geometry type icons
-                var divs = document.getElementsByClassName("switch-type");
-                for (var i = 0; i !== divs.length; i++) {
-                    divs[i].style.visibility = "hidden";
-                }
+            this.hideGeomTypeIcons();
+        }
+    };
+
+    MapWidget.prototype.hideGeomTypeIcons = function() {
+        if (this.typeChoices) {
+            var divs = document.getElementsByClassName("switch-type");
+            for (var i = 0; i !== divs.length; i++) {
+                divs[i].style.visibility = "hidden";
             }
         }
     };
@@ -311,7 +354,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         // Three use cases: GeometryCollection, multigeometries, and single geometry
         var geometry = null;
         var features = this.featureOverlay.getSource().getFeatures();
-        if (this.options.is_collection) {
+        if (this.options.is_collection || this.isDrawingMultiGeometry()) {
             if (this.options.geom_name === "GeometryCollection") {
                 var geometries = [];
                 for (var i = 0; i < features.length; i++) {
