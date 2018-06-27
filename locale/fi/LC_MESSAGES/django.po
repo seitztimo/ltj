@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR Frank Wickström <frank.wickstrom@anders.fi>, 2018.
 #
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-19 12:10+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
-"Last-Translator: Frank Wickström <frank.wickstrom@anders.fi>\n"
+"Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -30,10 +30,7 @@ msgid "square"
 msgstr "ruutu"
 
 msgid "Criteria"
-msgstr "Peruste"
-
-msgid "Conservation programmes"
-msgstr "Suojeluohjelmat"
+msgstr "Perusteet"
 
 msgid "protection level"
 msgstr "suojaustaso"
@@ -75,7 +72,13 @@ msgid "value feature"
 msgstr "arvokohde"
 
 msgid "value features"
-msgstr "arvokohdteet"
+msgstr "arvokohteet"
+
+msgid "feature value"
+msgstr "arvoluokka"
+
+msgid "features values"
+msgstr "arvoluokat"
 
 msgid "occurrence"
 msgstr "esiintymä"
@@ -231,19 +234,22 @@ msgid "feature link"
 msgstr "kohdelinkki"
 
 msgid "feature links"
-msgstr "kohdelinkkit"
+msgstr "kohdelinkit"
 
 msgid "species"
+msgstr "laji"
+
+msgid "species register"
 msgstr "lajit"
 
 msgid "regulation"
-msgstr "säätö"
+msgstr "säädös"
 
 msgid "species regulation"
-msgstr "lajien sääntely"
+msgstr "lajisäädös"
 
 msgid "species regulations"
-msgstr "lajin säännöksiä"
+msgstr "lajisäädökset"
 
 msgid "code"
 msgstr "havaintokoodi"
@@ -273,7 +279,7 @@ msgid "observations"
 msgstr "lajihavainnot"
 
 msgid "taxon"
-msgstr "ryhma"
+msgstr "ryhmä"
 
 msgid "taxon 1"
 msgstr "eliöryhmä 1"
@@ -336,7 +342,7 @@ msgid "regulations"
 msgstr "säädökset"
 
 msgid "link types"
-msgstr "linkkityyppit"
+msgstr "linkkityypit"
 
 msgid "habitat type"
 msgstr "luontotyyppi"
@@ -357,7 +363,7 @@ msgid "habitat type observations"
 msgstr "luontotyyppihavainnot"
 
 msgid "group"
-msgstr "luontotyyppiryhmä"
+msgstr "käyttöoikeusryhmä"
 
 msgid "habitat types"
 msgstr "luontotyypit"
@@ -432,7 +438,7 @@ msgid "hiking"
 msgstr "liikkuminen"
 
 msgid "criteria"
-msgstr "peruste"
+msgstr "perusteet"
 
 msgid "protections"
 msgstr "suojelu"
@@ -441,7 +447,7 @@ msgid "protection conservation programme"
 msgstr "suojeluohjelma"
 
 msgid "protection conservation programmes"
-msgstr "suojeluohjelmia"
+msgstr "suojeluohjelmat"
 
 msgid "specific criterion"
 msgstr "tarkka peruste"
@@ -449,17 +455,14 @@ msgstr "tarkka peruste"
 msgid "subscriterion"
 msgstr "alaperuste"
 
-msgid "cirteria"
-msgstr "peruste"
-
 msgid "transaction"
 msgstr "tapahtuma"
 
 msgid "transaction regulation"
-msgstr "tapahtumasäätö"
+msgstr "tapahtumasäädös"
 
 msgid "transaction regulations"
-msgstr "tapahtumasäätökset"
+msgstr "tapahtumasäädökset"
 
 msgid "register id"
 msgstr "diaari nro"
@@ -475,10 +478,10 @@ msgid "Transaction #{0}"
 msgstr "Tapahtuma #{0}"
 
 msgid "transaction feature"
-msgstr "tapahtumakohde"
+msgstr "kohteen tapahtuma"
 
 msgid "transaction features"
-msgstr "tapahtumakohteed"
+msgstr "kohteen tapahtumat"
 
 msgid "transaction types"
 msgstr "tapahtumatyyppi"
