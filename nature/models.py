@@ -703,7 +703,7 @@ class Criterion(models.Model):
         ordering = ['id']
         db_table = 'suoperuste'
         verbose_name = _('criterion')
-        verbose_name_plural = _('cirteria')
+        verbose_name_plural = _('criteria')
 
     def __str__(self):
         values = [self.criterion, self.specific_criterion, self.subcriterion]
