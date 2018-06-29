@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 12:10+0300\n"
+"POT-Creation-Date: 2018-06-29 15:36+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -16,6 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Luontotietojärjestelmä site admin"
+msgstr "Luontotietojärjestelmä-sivuston ylläpito"
+
+msgid "Luontotietojärjestelmä administration"
+msgstr "Luontotietojärjestelmä ylläpito"
 
 msgid "Feature transaction"
 msgstr "Tapahtuma"
@@ -31,6 +37,9 @@ msgstr "ruutu"
 
 msgid "Criteria"
 msgstr "Perusteet"
+
+msgid "Conservation programmes"
+msgstr "Suojeluohjelmat"
 
 msgid "protection level"
 msgstr "suojaustaso"
@@ -67,12 +76,6 @@ msgstr "arvot"
 
 msgid "feature"
 msgstr "kohde"
-
-msgid "value feature"
-msgstr "arvokohde"
-
-msgid "value features"
-msgstr "arvokohteet"
 
 msgid "feature value"
 msgstr "arvoluokka"
@@ -238,9 +241,6 @@ msgstr "kohdelinkit"
 
 msgid "species"
 msgstr "laji"
-
-msgid "species register"
-msgstr "lajit"
 
 msgid "regulation"
 msgstr "säädös"
@@ -497,3 +497,12 @@ msgstr "Poista kaikki geometriat"
 
 msgid "Debugging window (serialized value)"
 msgstr "Debuggausikkuna (sarjoitettu arvo)"
+
+msgid "Home"
+msgstr "Etusivu"
+
+msgid "You can send feedback by email to ltj.ymk@hel.fi"
+msgstr "Voit lähettää palautetta osoitteeseen ltj.ymk@hel.fi"
+
+msgid "Log in again"
+msgstr "Kirjaudu uudelleen sisään"
