@@ -219,7 +219,7 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
     created_by = models.CharField(_('created by'), max_length=50, blank=True, null=True, db_column='digitoija')
     last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True,
                                               db_column='pvm_editoitu')
-    last_modified_by = models.CharField(_('last modified by'), max_length=10, blank=True, null=True,
+    last_modified_by = models.CharField(_('last modified by'), max_length=150, blank=True, null=True,
                                         db_column='muokkaaja')
     area = models.FloatField(_('area (ha)'), blank=True, null=True, editable=False, db_column='pinta_ala')
     text = models.CharField(_('text'), max_length=40000, blank=True, null=True, db_column='teksti')
@@ -727,7 +727,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
     description = models.CharField(_('description'), max_length=255, blank=True, null=True, db_column='kuvaus')
     transaction_type = models.ForeignKey('TransactionType', models.PROTECT, db_column='tapahtumatyyppiid',
                                          verbose_name=_('transaction type'))
-    last_modified_by = models.CharField(_('last modified by'), max_length=20, blank=True, null=True,
+    last_modified_by = models.CharField(_('last modified by'), max_length=150, blank=True, null=True,
                                         db_column='paivittaja')
     date = models.DateField(_('date'), blank=True, null=True, db_column='pvm')
     person = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True,
