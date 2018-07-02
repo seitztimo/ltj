@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='criterion',
-            options={'ordering': ['id'], 'verbose_name': 'criterion', 'verbose_name_plural': 'cirteria'},
+            options={'ordering': ['id'], 'verbose_name': 'criterion', 'verbose_name_plural': 'criteria'},
         ),
         migrations.AlterModelOptions(
             name='featurelink',
