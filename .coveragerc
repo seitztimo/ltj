@@ -1,3 +1,2 @@
 [run]
-include = nature/*
-omit = *migrations*, *tests*
+omit = *migrations*, *tests*, *site-packages*
