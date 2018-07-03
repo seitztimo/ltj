@@ -167,7 +167,8 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = FeatureClass
-        fields = ('id', 'url', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
+        fields = ('id', 'url', 'name', 'additional_info', 'super_class',
+                  'reporting', 'www', 'metadata', 'features', 'open_data')
 
 
 class FeaturePublicationSerializer(ProtectedHyperlinkedModelSerializer):
