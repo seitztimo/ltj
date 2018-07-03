@@ -98,7 +98,7 @@ class ConservationProgrammeSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = ConservationProgramme
-        fields = ('id', 'name', 'protected_features')
+        fields = ('id', 'url', 'name', 'protected_features')
 
 
 class CriterionSerializer(ProtectedHyperlinkedModelSerializer):
@@ -109,20 +109,20 @@ class CriterionSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Criterion
-        fields = ('id', 'criterion', 'specific_criterion', 'subcriterion', 'protected_features')
+        fields = ('id', 'url', 'criterion', 'specific_criterion', 'subcriterion', 'protected_features')
 
 
 class SquareSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Square
-        fields = ('number', 'degree_of_determination', 'additional_info')
+        fields = ('url', 'number', 'degree_of_determination', 'additional_info')
 
 
 class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Protection
-        fields = ('reported_area', 'land_area', 'water_area', 'hiking', 'regulations', 'additional_info',
+        fields = ('url', 'reported_area', 'land_area', 'water_area', 'hiking', 'regulations', 'additional_info',
                   'criteria', 'conservation_programmes')
 
 
@@ -131,7 +131,7 @@ class FeatureLinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FeatureLink
-        fields = ('link', 'text', 'link_type', 'ordering', 'link_text')
+        fields = ('id', 'url', 'link', 'text', 'link_type', 'ordering', 'link_text')
 
 
 class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
@@ -150,7 +150,7 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Feature
-        fields = ('url', 'name', 'fid', 'feature_class', 'geometry', 'description', 'notes', 'active',
+        fields = ('id', 'url', 'name', 'fid', 'feature_class', 'geometry', 'description', 'notes', 'active',
                   'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
                   'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'transactions')
 
@@ -159,13 +159,13 @@ class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = FeatureClass
-        fields = ('url', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
+        fields = ('id', 'url', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
 
 
 class ValueSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Value
-        fields = ('url', 'explanation', 'value', 'date', 'link', 'features')
+        fields = ('id', 'url', 'explanation', 'value', 'date', 'link', 'features')
 
 
 class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
@@ -173,45 +173,45 @@ class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Publication
-        fields = ('url', 'publication_type', 'name', 'author', 'series', 'place_of_printing', 'year',
+        fields = ('id', 'url', 'publication_type', 'name', 'author', 'series', 'place_of_printing', 'year',
                   'additional_info', 'link', 'features')
 
 
 class SpeciesSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Species
-        fields = ('url', 'code', 'taxon', 'taxon_1', 'name_fi', 'name_sci_1', 'name_subspecies_1', 'registry_date',
-                  'regulations', 'observations')
+        fields = ('id', 'url', 'code', 'taxon', 'taxon_1', 'name_fi', 'name_sci_1',
+                  'name_subspecies_1', 'registry_date', 'regulations', 'observations')
 
 
 class AbundanceSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Abundance
-        fields = ('id', 'value', 'explanation', 'source')
+        fields = ('id', 'url', 'value', 'explanation', 'source')
 
 
 class FrequencySerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Frequency
-        fields = ('id', 'value', 'explanation', 'source')
+        fields = ('id', 'url', 'value', 'explanation', 'source')
 
 
 class MigrationClassSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = MigrationClass
-        fields = ('id', 'value', 'explanation', 'source')
+        fields = ('id', 'url', 'value', 'explanation', 'source')
 
 
 class OriginSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Origin
-        fields = ('id', 'explanation', 'source')
+        fields = ('id', 'url', 'explanation', 'source')
 
 
 class BreedingDegreeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = BreedingDegree
-        fields = ('id', 'value', 'explanation', 'source')
+        fields = ('id', 'url', 'value', 'explanation', 'source')
 
 
 class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
@@ -225,7 +225,7 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Observation
         fields = (
-            'url', 'feature', 'species', 'series', 'abundance',
+            'id', 'url', 'feature', 'species', 'series', 'abundance',
             'frequency', 'number', 'migration_class', 'origin',
             'breeding_degree', 'description', 'notes', 'date',
             'occurrence', 'created_time', 'last_modified_time',
@@ -235,14 +235,15 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
 class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = ObservationSeries
-        fields = ('url', 'name', 'description', 'start_date', 'end_date', 'method', 'notes', 'additional_info',
+        fields = ('id', 'url', 'name', 'description', 'start_date',
+                  'end_date', 'method', 'notes', 'additional_info',
                   'valid', 'observations', 'habitat_type_observations')
 
 
 class TransactionTypeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = TransactionType
-        fields = ('id', 'name')
+        fields = ('id', 'url', 'name')
 
 
 class TransactionSerializer(ProtectedHyperlinkedModelSerializer):
@@ -250,7 +251,8 @@ class TransactionSerializer(ProtectedHyperlinkedModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('url', 'register_id', 'description', 'transaction_type', 'date', 'link', 'features', 'regulations')
+        fields = ('id', 'url', 'register_id', 'description', 'transaction_type',
+                  'date', 'link', 'features', 'regulations')
 
 
 class PersonSerializer(ProtectedHyperlinkedModelSerializer):
@@ -261,22 +263,24 @@ class PersonSerializer(ProtectedHyperlinkedModelSerializer):
 class RegulationSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Regulation
-        fields = ('url', 'name', 'paragraph', 'additional_info', 'value', 'value_explanation', 'valid',
-                  'date_of_entry', 'link', 'species', 'transactions', 'habitat_types')
+        fields = ('id', 'url', 'name', 'paragraph', 'additional_info',
+                  'value', 'value_explanation', 'valid', 'date_of_entry',
+                  'link', 'species', 'transactions', 'habitat_types')
 
 
 class HabitatTypeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = HabitatType
-        fields = ('url', 'name', 'code', 'description', 'additional_info', 'group', 'regulations',
+        fields = ('id', 'url', 'name', 'code', 'description',
+                  'additional_info', 'group', 'regulations',
                   'habitat_type_observations')
 
 
 class HabitatTypeObservationSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = HabitatTypeObservation
-        fields = ('url', 'feature', 'habitat_type', 'group_fraction', 'additional_info', 'observation_series',
-                  'created_time', 'last_modified_time')
+        fields = ('id', 'url', 'feature', 'habitat_type', 'group_fraction',
+                  'additional_info', 'observation_series', 'created_time', 'last_modified_time')
 
 
 class FeatureViewSet(ProtectedViewSet):
