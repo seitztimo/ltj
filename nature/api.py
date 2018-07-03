@@ -12,7 +12,7 @@ from nature.models import (
     Regulation, HabitatType, HabitatTypeObservation,
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
     ProtectedFeatureClassQueryset,
-    FeatureValue, Occurrence, PublicationType)
+    FeatureValue, Occurrence, PublicationType, FeaturePublication)
 
 
 class ProtectedManyRelatedField(relations.ManyRelatedField):
@@ -166,6 +166,12 @@ class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
         fields = ('id', 'url', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
 
 
+class FeaturePublicationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = FeaturePublication
+        fields = ('id', 'url', 'feature', 'publication')
+
+
 class ValueSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Value
@@ -315,6 +321,11 @@ class FeatureClassViewSet(ProtectedViewSet):
     serializer_class = FeatureClassSerializer
 
 
+class FeaturePublicationViewSet(ProtectedViewSet):
+    queryset = FeaturePublication.objects.all()
+    serializer_class = FeaturePublicationSerializer
+
+
 class ValueViewSet(ProtectedViewSet):
     queryset = Value.objects.all()
     serializer_class = ValueSerializer
@@ -419,6 +430,7 @@ router = routers.DefaultRouter()
 router.register(r'feature', FeatureViewSet)
 router.register(r'feature_class', FeatureClassViewSet)
 router.register(r'feature_value', FeatureValueViewSet)
+router.register(r'feature_publication', FeaturePublicationViewSet)
 router.register(r'value', ValueViewSet)
 router.register(r'species', SpeciesViewSet)
 router.register(r'occurrence', OccurrenceViewSet)
