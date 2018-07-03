@@ -156,7 +156,8 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
         model = Feature
         fields = ('id', 'url', 'name', 'fid', 'feature_class', 'geometry', 'description', 'notes', 'active',
                   'created_time', 'last_modified_time', 'number', 'area', 'text', 'values', 'publications',
-                  'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'transactions')
+                  'observations', 'habitat_type_observations', 'links', 'square', 'protection', 'transactions',
+                  'protection_level')
 
 
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
