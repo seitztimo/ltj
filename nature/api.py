@@ -12,7 +12,7 @@ from nature.models import (
     Regulation, HabitatType, HabitatTypeObservation,
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
     ProtectedFeatureClassQueryset,
-)
+    FeatureValue)
 
 
 class ProtectedManyRelatedField(relations.ManyRelatedField):
@@ -168,6 +168,12 @@ class ValueSerializer(ProtectedHyperlinkedModelSerializer):
         fields = ('id', 'url', 'explanation', 'value', 'date', 'link', 'features')
 
 
+class FeatureValueSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = FeatureValue
+        fields = ('id', 'url', 'value', 'feature')
+
+
 class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
     publication_type = serializers.StringRelatedField()
 
@@ -298,6 +304,11 @@ class ValueViewSet(ProtectedViewSet):
     serializer_class = ValueSerializer
 
 
+class FeatureValueViewSet(ProtectedViewSet):
+    queryset = FeatureValue.objects.all()
+    serializer_class = FeatureValueSerializer
+
+
 class PublicationViewSet(ProtectedViewSet):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
@@ -376,6 +387,7 @@ class ConservationProgrammeViewSet(ProtectedViewSet):
 router = routers.DefaultRouter()
 router.register(r'feature', FeatureViewSet)
 router.register(r'feature_class', FeatureClassViewSet)
+router.register(r'feature_value', FeatureValueViewSet)
 router.register(r'value', ValueViewSet)
 router.register(r'species', SpeciesViewSet)
 router.register(r'observation', ObservationViewSet)
