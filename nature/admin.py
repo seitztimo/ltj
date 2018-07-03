@@ -9,7 +9,9 @@ from .models import (
     Person, FeatureValue, TransactionFeature,
     HabitatTypeObservation, Protection,
     Square)
-from .forms import FeatureForm, HabitatTypeObservationInlineForm, ProtectionInlineForm, SquareInlineForm
+from .forms import FeatureForm, HabitatTypeObservationInlineForm, ProtectionInlineForm, SquareInlineForm, \
+    ValueForm, ObservationSeriesForm, PersonForm, PublicationForm, FeatureLinkForm, ObservationForm, SpeciesForm, \
+    LinkTypeForm, HabitatTypeForm, RegulationForm, FeatureClassForm, TransactionForm
 from .widgets import NatureOLWidget
 
 
@@ -19,12 +21,14 @@ class SpeciesAdmin(admin.ModelAdmin):
     search_fields = ('name_fi', 'name_sci_1', 'name_subspecies_1', 'code', 'id')
     list_filter = ('taxon', 'taxon_1')
     actions = None
+    form = SpeciesForm
 
 
 @admin.register(ObservationSeries)
 class ObservationSeriesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'valid')
     search_fields = ('name',)
+    form = ObservationSeriesForm
     actions = None
 
 
@@ -34,6 +38,7 @@ class ObservationInline(admin.TabularInline):
               'protection_level', 'migration_class', 'occurrence', 'origin')
     raw_id_fields = ('species',)
     extra = 1
+    form = ObservationForm
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -44,12 +49,14 @@ class ObservationInline(admin.TabularInline):
 class LinkTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     actions = None
+    form = LinkTypeForm
 
 
 class FeatureLinkInline(admin.TabularInline):
     model = FeatureLink
     fields = ('link', 'text', 'link_text', 'link_type', 'ordering', 'protection_level')
     extra = 1
+    form = FeatureLinkForm
 
 
 @admin.register(FeatureClass)
@@ -58,6 +65,7 @@ class FeatureClassAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'www', 'open_data')
     search_fields = ('name',)
     actions = None
+    form = FeatureClassForm
 
 
 @admin.register(Publication)
@@ -66,6 +74,7 @@ class PublicationAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('publication_type', 'year')
     actions = None
+    form = PublicationForm
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -175,6 +184,7 @@ class HabitatTypeAdmin(admin.ModelAdmin):
     search_fields = ('id', 'name', 'code', 'group', 'lisatieto')
     list_filter = ('group',)
     actions = None
+    form = HabitatTypeForm
 
 
 @admin.register(Regulation)
@@ -183,12 +193,14 @@ class RegulationAdmin(admin.ModelAdmin):
     search_fields = ('id', 'name', 'value', 'value_explanation')
     list_filter = ('valid', 'name')
     actions = None
+    form = RegulationForm
 
 
 @admin.register(Value)
 class ValueAdmin(admin.ModelAdmin):
     list_display = ('id', 'value_type', 'explanation')
     search_fields = ('id', 'value_type', 'explanation')
+    form = ValueForm
     actions = None
 
 
@@ -198,6 +210,7 @@ class TransactionAdmin(admin.ModelAdmin):
     search_fields = ('id', 'description')
     list_filter = ('protection_level', 'transaction_type')
     actions = None
+    form = TransactionForm
 
 
 @admin.register(Person)
@@ -205,3 +218,4 @@ class PersonAdmin(admin.ModelAdmin):
     list_display = ('id', 'surname', 'first_name')
     search_fields = ('id', 'surname', 'first_name')
     actions = None
+    form = PersonForm
