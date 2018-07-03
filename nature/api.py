@@ -120,10 +120,14 @@ class SquareSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
+    feature = SpanOneToOneProtectedHyperlinkedRelatedField(source='id',
+                                                           view_name='feature-detail',
+                                                           queryset=Feature.objects.all())
+
     class Meta:
         model = Protection
         fields = ('url', 'reported_area', 'land_area', 'water_area', 'hiking', 'regulations', 'additional_info',
-                  'criteria', 'conservation_programmes')
+                  'criteria', 'conservation_programmes', 'feature')
 
 
 class FeatureLinkSerializer(serializers.ModelSerializer):
