@@ -334,6 +334,11 @@ class PublicationTypeViewSet(ProtectedViewSet):
     serializer_class = PublicationTypeSerializer
 
 
+class ProtectionViewSet(ProtectedViewSet):
+    queryset = Protection.objects.all()
+    serializer_class = ProtectionSerializer
+
+
 class RegulationViewSet(ProtectedViewSet):
     queryset = Regulation.objects.all()
     serializer_class = RegulationSerializer
@@ -422,6 +427,7 @@ router.register(r'habitat_type', HabitatTypeViewSet)
 router.register(r'habitat_type_observation', HabitatTypeObservationViewSet)
 router.register(r'publication', PublicationViewSet)
 router.register(r'publication_type', PublicationTypeViewSet)
+router.register(r'protection', ProtectionViewSet)
 router.register(r'regulation', RegulationViewSet)
 router.register(r'transaction', TransactionViewSet)
 router.register(r'protection_criterion', ProtectionCriterionViewSet)
