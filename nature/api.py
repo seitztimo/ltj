@@ -132,10 +132,14 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
 
 class FeatureLinkSerializer(serializers.ModelSerializer):
     link_type = serializers.StringRelatedField()
+    feature = SpanOneToOneProtectedHyperlinkedRelatedField(view_name='feature-detail',
+                                                           queryset=Feature.objects.all())
 
     class Meta:
         model = FeatureLink
-        fields = ('id', 'url', 'link', 'text', 'link_type', 'ordering', 'link_text')
+        fields = ('id', 'url', 'link', 'text', 'link_type',
+                  'ordering', 'link_text', 'protection_level',
+                  'feature')
 
 
 class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
@@ -326,6 +330,11 @@ class FeaturePublicationViewSet(ProtectedViewSet):
     serializer_class = FeaturePublicationSerializer
 
 
+class FeatureLinkViewSet(ProtectedViewSet):
+    queryset = FeatureLink.objects.all()
+    serializer_class = FeatureLinkSerializer
+
+
 class ValueViewSet(ProtectedViewSet):
     queryset = Value.objects.all()
     serializer_class = ValueSerializer
@@ -431,6 +440,7 @@ router.register(r'feature', FeatureViewSet)
 router.register(r'feature_class', FeatureClassViewSet)
 router.register(r'feature_value', FeatureValueViewSet)
 router.register(r'feature_publication', FeaturePublicationViewSet)
+router.register(r'feature_link', FeatureLinkViewSet)
 router.register(r'value', ValueViewSet)
 router.register(r'species', SpeciesViewSet)
 router.register(r'occurrence', OccurrenceViewSet)
