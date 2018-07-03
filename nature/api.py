@@ -301,7 +301,7 @@ class TransactionRegulationSerializer(ProtectedHyperlinkedModelSerializer):
 class TransactionTypeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = TransactionType
-        fields = ('id', 'url', 'transactions')
+        fields = ('id', 'url', 'name', 'transactions')
 
 
 class TransactionFeatureSerializer(ProtectedHyperlinkedModelSerializer):
