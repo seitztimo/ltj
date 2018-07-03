@@ -12,7 +12,7 @@ from nature.models import (
     Regulation, HabitatType, HabitatTypeObservation,
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
     ProtectedFeatureClassQueryset,
-    FeatureValue, Occurrence, PublicationType, FeaturePublication)
+    FeatureValue, Occurrence, PublicationType, FeaturePublication, SpeciesRegulation)
 
 
 class ProtectedManyRelatedField(relations.ManyRelatedField):
@@ -315,6 +315,12 @@ class HabitatTypeObservationSerializer(ProtectedHyperlinkedModelSerializer):
                   'additional_info', 'observation_series', 'created_time', 'last_modified_time')
 
 
+class SpeciesRegulationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = SpeciesRegulation
+        fields = ('id', 'url', 'species', 'regulation')
+
+
 class FeatureViewSet(ProtectedViewSet):
     queryset = Feature.objects.all().annotate(geom=Transform('geometry', 4326))  # display coordinates in WGS84
     serializer_class = FeatureSerializer
@@ -435,6 +441,11 @@ class ConservationProgrammeViewSet(ProtectedViewSet):
     serializer_class = ConservationProgrammeSerializer
 
 
+class SpeciesRegulationViewSet(ProtectedViewSet):
+    queryset = SpeciesRegulation.objects.all()
+    serializer_class = SpeciesRegulationSerializer
+
+
 router = routers.DefaultRouter()
 router.register(r'feature', FeatureViewSet)
 router.register(r'feature_class', FeatureClassViewSet)
@@ -456,3 +467,4 @@ router.register(r'transaction', TransactionViewSet)
 router.register(r'protection_criterion', ProtectionCriterionViewSet)
 router.register(r'conservation_programme', ConservationProgrammeViewSet)
 router.register(r'origin', OriginViewSet)
+router.register(r'species_regulation', SpeciesRegulationViewSet)
