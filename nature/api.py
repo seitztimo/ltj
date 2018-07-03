@@ -475,6 +475,11 @@ class SpeciesRegulationViewSet(ProtectedViewSet):
     serializer_class = SpeciesRegulationSerializer
 
 
+class SquareViewSet(ProtectedViewSet):
+    queryset = Square.objects.all()
+    serializer_class = SquareSerializer
+
+
 router = routers.DefaultRouter()
 router.register(r'abundance', AbundanceViewSet)
 router.register(r'breeding_degree', BreedingDegreeViewSet)
@@ -503,3 +508,4 @@ router.register(r'protection_criterion', ProtectionCriterionViewSet)
 router.register(r'conservation_programme', ConservationProgrammeViewSet)
 router.register(r'origin', OriginViewSet)
 router.register(r'species_regulation', SpeciesRegulationViewSet)
+router.register(r'square', SquareViewSet)
