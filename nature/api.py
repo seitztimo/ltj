@@ -207,8 +207,9 @@ class PublicationTypeSerializer(ProtectedHyperlinkedModelSerializer):
 class SpeciesSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Species
-        fields = ('id', 'url', 'code', 'taxon', 'taxon_1', 'name_fi', 'name_sci_1',
-                  'name_subspecies_1', 'registry_date', 'regulations', 'observations')
+        fields = ('id', 'url', 'code', 'taxon', 'taxon_1', 'taxon_2', 'name_fi', 'name_fi_2',
+                  'name_sci_1', 'name_subspecies_1', 'registry_date', 'regulations',
+                  'name_sv', 'protection_level', 'additional_info', 'link', 'name_en', 'observations')
 
 
 class AbundanceSerializer(ProtectedHyperlinkedModelSerializer):
