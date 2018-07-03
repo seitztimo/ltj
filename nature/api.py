@@ -13,7 +13,7 @@ from nature.models import (
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
     ProtectedFeatureClassQueryset,
     FeatureValue, Occurrence, PublicationType, FeaturePublication, SpeciesRegulation, LinkType, HabitatTypeRegulation,
-    ProtectionConservationProgramme)
+    ProtectionConservationProgramme, TransactionRegulation)
 
 
 class ProtectedManyRelatedField(relations.ManyRelatedField):
@@ -292,10 +292,16 @@ class ObservationSeriesSerializer(ProtectedHyperlinkedModelSerializer):
                   'valid', 'observations', 'habitat_type_observations')
 
 
+class TransactionRegulationSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = TransactionRegulation
+        fields = ('id', 'url', 'name')
+
+
 class TransactionTypeSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = TransactionType
-        fields = ('id', 'url', 'name')
+        fields = ('id', 'url', 'transactions')
 
 
 class TransactionSerializer(ProtectedHyperlinkedModelSerializer):
@@ -442,6 +448,11 @@ class TransactionViewSet(ProtectedViewSet):
     serializer_class = TransactionSerializer
 
 
+class TransactionTypeViewSet(ProtectedViewSet):
+    queryset = TransactionType.objects.all()
+    serializer_class = TransactionTypeSerializer
+
+
 class AbundanceViewSet(ProtectedViewSet):
     queryset = Abundance.objects.all()
     serializer_class = AbundanceSerializer
@@ -516,6 +527,7 @@ router.register(r'publication_type', PublicationTypeViewSet)
 router.register(r'protection', ProtectionViewSet)
 router.register(r'regulation', RegulationViewSet)
 router.register(r'transaction', TransactionViewSet)
+router.register(r'transaction_type', TransactionTypeViewSet)
 router.register(r'protection_criterion', ProtectionCriterionViewSet)
 router.register(r'protection_conservation_programme', ProtectionConservationProgrammeViewSet)
 router.register(r'conservation_programme', ConservationProgrammeViewSet)
