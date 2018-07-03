@@ -400,7 +400,7 @@ class ProtectionConservationProgrammeViewSet(ProtectedViewSet):
 
 
 class RegulationViewSet(ProtectedViewSet):
-    queryset = Regulation.objects.all()
+    queryset = Regulation.objects.filter(valid=True)
     serializer_class = RegulationSerializer
 
 
