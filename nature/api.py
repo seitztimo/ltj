@@ -12,7 +12,8 @@ from nature.models import (
     Regulation, HabitatType, HabitatTypeObservation,
     FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
     ProtectedFeatureClassQueryset,
-    FeatureValue, Occurrence, PublicationType, FeaturePublication, SpeciesRegulation, LinkType, HabitatTypeRegulation)
+    FeatureValue, Occurrence, PublicationType, FeaturePublication, SpeciesRegulation, LinkType, HabitatTypeRegulation,
+    ProtectionConservationProgramme)
 
 
 class ProtectedManyRelatedField(relations.ManyRelatedField):
@@ -132,6 +133,12 @@ class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
         model = Protection
         fields = ('url', 'reported_area', 'land_area', 'water_area', 'hiking', 'regulations', 'additional_info',
                   'criteria', 'conservation_programmes', 'feature')
+
+
+class ProtectionConservationProgrammeSerializer(ProtectedHyperlinkedModelSerializer):
+    class Meta:
+        model = ProtectionConservationProgramme
+        fields = ('id', 'url', 'protection', 'conservation_programme')
 
 
 class FeatureLinkSerializer(serializers.ModelSerializer):
@@ -385,6 +392,11 @@ class ProtectionViewSet(ProtectedViewSet):
     serializer_class = ProtectionSerializer
 
 
+class ProtectionConservationProgrammeViewSet(ProtectedViewSet):
+    queryset = ProtectionConservationProgramme.objects.all()
+    serializer_class = ProtectionConservationProgrammeSerializer
+
+
 class RegulationViewSet(ProtectedViewSet):
     queryset = Regulation.objects.all()
     serializer_class = RegulationSerializer
@@ -505,6 +517,7 @@ router.register(r'protection', ProtectionViewSet)
 router.register(r'regulation', RegulationViewSet)
 router.register(r'transaction', TransactionViewSet)
 router.register(r'protection_criterion', ProtectionCriterionViewSet)
+router.register(r'protection_conservation_programme', ProtectionConservationProgrammeViewSet)
 router.register(r'conservation_programme', ConservationProgrammeViewSet)
 router.register(r'origin', OriginViewSet)
 router.register(r'species_regulation', SpeciesRegulationViewSet)
