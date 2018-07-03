@@ -165,7 +165,7 @@ class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
 class ValueSerializer(ProtectedHyperlinkedModelSerializer):
     class Meta:
         model = Value
-        fields = ('url', 'explanation', 'value_type', 'date', 'link', 'features')
+        fields = ('url', 'explanation', 'value', 'date', 'link', 'features')
 
 
 class PublicationSerializer(ProtectedHyperlinkedModelSerializer):
@@ -383,3 +383,4 @@ router.register(r'regulation', RegulationViewSet)
 router.register(r'transaction', TransactionViewSet)
 router.register(r'protection_criterion', ProtectionCriterionViewSet)
 router.register(r'conservation_programme', ConservationProgrammeViewSet)
+router.register(r'origin', OriginViewSet)
