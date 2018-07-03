@@ -261,6 +261,7 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
             'frequency', 'number', 'migration_class', 'origin',
             'breeding_degree', 'description', 'notes', 'date',
             'occurrence', 'created_time', 'last_modified_time',
+            'protection_level', 'code',
         )
 
 
