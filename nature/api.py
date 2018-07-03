@@ -19,6 +19,7 @@ class ProtectedManyRelatedField(relations.ManyRelatedField):
     """
     Handles view permissions for related field listings with protection_level and open_data
     """
+
     def to_representation(self, iterable):
         if isinstance(iterable, ProtectionLevelEnabledQuerySet):
             iterable = iterable.for_public()
@@ -119,7 +120,6 @@ class SquareSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
-
     class Meta:
         model = Protection
         fields = ('url', 'reported_area', 'land_area', 'water_area', 'hiking', 'regulations', 'additional_info',
@@ -156,7 +156,6 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class FeatureClassSerializer(ProtectedHyperlinkedModelSerializer):
-
     class Meta:
         model = FeatureClass
         fields = ('id', 'url', 'name', 'additional_info', 'super_class', 'reporting', 'www', 'metadata', 'features')
