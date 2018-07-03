@@ -56,7 +56,7 @@ msgstr "alkuperä"
 msgid "origins"
 msgstr "alkuperä"
 
-msgid "value type"
+msgid "value class"
 msgstr "luokka"
 
 msgid "valuator"

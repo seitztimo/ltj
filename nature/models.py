@@ -79,7 +79,7 @@ class Origin(models.Model):
 
 class Value(models.Model):
     explanation = models.CharField(_('explanation'), max_length=50, blank=True, null=True, db_column='selite')
-    value_type = models.CharField(_('value type'), max_length=10, blank=True, null=True, db_column='luokka')
+    value = models.CharField(_('value class'), max_length=10, blank=True, null=True, db_column='luokka')
     valuator = models.CharField(_('valuator'), max_length=50, blank=True, null=True, db_column='arvottaja')
     date = models.DateField(_('date'), blank=True, null=True, db_column='pvm')
     link = models.CharField(_('link'), max_length=4000, blank=True, null=True, db_column='linkki')

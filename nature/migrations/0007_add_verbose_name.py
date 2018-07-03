@@ -1176,7 +1176,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='value',
-            name='value_type',
-            field=models.CharField(blank=True, db_column='luokka', max_length=10, null=True, verbose_name='value type'),
+            name='value',
+            field=models.CharField(blank=True, db_column='luokka', max_length=10, null=True, verbose_name='value class'),
         ),
     ]

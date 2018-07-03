@@ -198,8 +198,8 @@ class RegulationAdmin(admin.ModelAdmin):
 
 @admin.register(Value)
 class ValueAdmin(admin.ModelAdmin):
-    list_display = ('id', 'value_type', 'explanation')
-    search_fields = ('id', 'value_type', 'explanation')
+    list_display = ('id', 'value', 'explanation')
+    search_fields = ('id', 'value', 'explanation')
     form = ValueForm
     actions = None
 
