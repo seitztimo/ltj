@@ -694,7 +694,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='transaction',
             name='transaction_type',
-            field=models.ForeignKey(db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.TransactionType'),
+            field=models.ForeignKey(related_name='transactions', db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.TransactionType'),
         ),
         migrations.AddField(
             model_name='transaction',

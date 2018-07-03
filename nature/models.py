@@ -726,7 +726,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
     register_id = models.CharField(_('register id'), max_length=20, blank=True, null=True, db_column='diaarinro')
     description = models.CharField(_('description'), max_length=255, blank=True, null=True, db_column='kuvaus')
     transaction_type = models.ForeignKey('TransactionType', models.PROTECT, db_column='tapahtumatyyppiid',
-                                         verbose_name=_('transaction type'))
+                                         verbose_name=_('transaction type'), related_name='transactions')
     last_modified_by = models.CharField(_('last modified by'), max_length=150, blank=True, null=True,
                                         db_column='paivittaja')
     date = models.DateField(_('date'), blank=True, null=True, db_column='pvm')
