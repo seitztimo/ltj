@@ -114,9 +114,13 @@ class CriterionSerializer(ProtectedHyperlinkedModelSerializer):
 
 
 class SquareSerializer(ProtectedHyperlinkedModelSerializer):
+    feature = SpanOneToOneProtectedHyperlinkedRelatedField(source='id',
+                                                           view_name='feature-detail',
+                                                           queryset=Feature.objects.all())
+
     class Meta:
         model = Square
-        fields = ('url', 'number', 'degree_of_determination', 'additional_info')
+        fields = ('url', 'number', 'degree_of_determination', 'additional_info', 'feature')
 
 
 class ProtectionSerializer(ProtectedHyperlinkedModelSerializer):
