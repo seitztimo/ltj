@@ -448,13 +448,17 @@ class SpeciesRegulationViewSet(ProtectedViewSet):
 
 
 router = routers.DefaultRouter()
+router.register(r'abundance', AbundanceViewSet)
+router.register(r'breeding_degree', BreedingDegreeViewSet)
 router.register(r'feature', FeatureViewSet)
 router.register(r'feature_class', FeatureClassViewSet)
 router.register(r'feature_value', FeatureValueViewSet)
 router.register(r'feature_publication', FeaturePublicationViewSet)
 router.register(r'feature_link', FeatureLinkViewSet)
+router.register(r'frequency', FrequencyViewSet)
 router.register(r'value', ValueViewSet)
 router.register(r'species', SpeciesViewSet)
+router.register(r'migration_class', MigrationClassViewSet)
 router.register(r'occurrence', OccurrenceViewSet)
 router.register(r'observation', ObservationViewSet)
 router.register(r'observation_series', ObservationSeriesViewSet)
