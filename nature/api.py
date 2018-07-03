@@ -10,8 +10,7 @@ from nature.models import (
     Abundance, Frequency, MigrationClass, Origin, BreedingDegree,
     Observation, ObservationSeries, TransactionType, Transaction, Person,
     Regulation, HabitatType, HabitatTypeObservation,
-    FeatureLink, ProtectionLevelEnabledQuerySet, ProtectedFeatureQueryset,
-    ProtectedFeatureClassQueryset,
+    FeatureLink, ProtectedQuerySet,
     FeatureValue, Occurrence, PublicationType, FeaturePublication, SpeciesRegulation, LinkType, HabitatTypeRegulation,
     ProtectionConservationProgramme, TransactionRegulation, TransactionFeature)
 
@@ -22,11 +21,8 @@ class ProtectedManyRelatedField(relations.ManyRelatedField):
     """
 
     def to_representation(self, iterable):
-        if isinstance(iterable, ProtectionLevelEnabledQuerySet):
-            iterable = iterable.for_public()
-
-        if isinstance(iterable, (ProtectedFeatureQueryset, ProtectedFeatureClassQueryset)):
-            iterable = iterable.open_data()
+        if isinstance(iterable, ProtectedQuerySet):
+            iterable = iterable.filter_protected()
 
         return super().to_representation(iterable)
 
@@ -48,11 +44,8 @@ class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
     def get_queryset(self):
         qs = super().get_queryset()
 
-        if isinstance(qs, ProtectionLevelEnabledQuerySet):
-            qs = qs.for_public()
-
-        if isinstance(qs, (ProtectedFeatureQueryset, ProtectedFeatureClassQueryset)):
-            qs = qs.open_data()
+        if isinstance(qs, ProtectedQuerySet):
+            qs = qs.filter_protected()
 
         return qs
 
@@ -83,11 +76,8 @@ class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
 
-        if isinstance(qs, ProtectionLevelEnabledQuerySet):
-            qs = qs.for_public()
-
-        if isinstance(qs, (ProtectedFeatureQueryset, ProtectedFeatureClassQueryset)):
-            qs = qs.open_data()
+        if isinstance(qs, ProtectedQuerySet):
+            qs = qs.filter_protected()
 
         return qs
 

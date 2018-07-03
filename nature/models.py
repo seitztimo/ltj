@@ -12,38 +12,120 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSException
 from django.utils.translation import ugettext_lazy as _
 
+PROTECTION_LEVELS = {
+    'ADMIN_ONLY': 1,
+    'ADMIN_AND_STAFF': 2,
+    'PUBLIC': 3,
+}
 
-class ProtectionLevelEnabledQuerySet(models.QuerySet):
-    """Custom queryset to filter protection level enabled queryset based on user roles"""
+AUTHORIZATION_LEVELS = {
+    'ADMIN': 1,
+    'OFFICER': 2,
+    'PUBLIC': 3,
+    'OPEN_DATA': 4,
+}
+
+AUTHORIZATION_PROTECTION_MAP = {
+    AUTHORIZATION_LEVELS['ADMIN']: [
+        PROTECTION_LEVELS['ADMIN_ONLY'],
+        PROTECTION_LEVELS['ADMIN_AND_STAFF'],
+        PROTECTION_LEVELS['PUBLIC']
+    ],
+    AUTHORIZATION_LEVELS['OFFICER']: [
+        PROTECTION_LEVELS['ADMIN_AND_STAFF'],
+        PROTECTION_LEVELS['PUBLIC']
+    ],
+    AUTHORIZATION_LEVELS['PUBLIC']: [PROTECTION_LEVELS['PUBLIC']],
+    AUTHORIZATION_LEVELS['OPEN_DATA']: [PROTECTION_LEVELS['PUBLIC']],
+}
+
+
+class ProtectedQuerySet(models.QuerySet):
+    def __init__(self, model=None, *args, **kwargs):
+        self._model_fields = []
+        if model:
+            self._model_fields = [f.name for f in model._meta.get_fields()]
+        super().__init__(model=model, *args, **kwargs)
 
     def for_admin(self):
-        """ADMIN have access to all objects"""
-        return self
+        return self.filter_protected(AUTHORIZATION_LEVELS['ADMIN'])
 
     def for_admin_and_staff(self):
-        """ADMIN_AND_STAFF have access to objects of which the protection level is PUBLIC or ADMIN_AND_STAFF"""
-        return self.filter(protection_level__in=[ProtectionLevelMixin.PUBLIC, ProtectionLevelMixin.ADMIN_AND_STAFF])
+        return self.filter_protected(AUTHORIZATION_LEVELS['OFFICER'])
 
     def for_public(self):
-        """PUBLIC have access to objects of which the protection level is PUBLIC"""
-        return self.filter(protection_level=ProtectionLevelMixin.PUBLIC)
+        return self.filter_protected(AUTHORIZATION_LEVELS['PUBLIC'])
+
+    def open_data(self):
+        return self.filter_protected(AUTHORIZATION_LEVELS['OPEN_DATA'])
+
+    def filter_protected(self, auth_level=AUTHORIZATION_LEVELS['OPEN_DATA']):
+        protection_levels = AUTHORIZATION_PROTECTION_MAP[auth_level]
+        open_data_only = auth_level == AUTHORIZATION_LEVELS['OPEN_DATA']
+
+        filters = self._create_qs_filters(protection_levels, open_data_only)
+
+        return self.filter(**filters)
+
+    def _create_qs_filters(self, protection_levels, open_data_only):
+        filters = {}
+
+        filters.update(self._create_protection_level_filters(protection_levels=protection_levels))
+
+        if open_data_only:
+            filters.update(self._create_open_data_filters())
+        return filters
+
+    def _create_open_data_filters(self):
+        """
+        Creates a queryset filter dict based on open data restrictions
+
+        If the model includes fields that have open data restrictions
+        or if the model has open data restrictions directly, those fields
+        or relations are checked in order to make sure that only open data
+        instance are included.
+        """
+        filters = {}
+        if 'feature' in self._model_fields:
+            filters['feature__feature_class__open_data'] = True
+        elif 'feature_class' in self._model_fields:
+            filters['feature_class__open_data'] = True
+
+        if 'open_data' in self._model_fields:
+            filters['open_data'] = True
+
+        return filters
+
+    def _create_protection_level_filters(self, protection_levels):
+        """
+        Creates a queryset filter dict base on given permission levels
+
+        If the model includes fields that have protection level restrictions
+        or if the model has protection level restrictions directly, those fields
+        or relations are checked in order to make sure that only instances
+        matching the `protection_level` parameter are included.
+        """
+        filters = {}
+        if 'feature' in self._model_fields:
+            filters['feature__protection_level__in'] = protection_levels
+
+        if 'protection_level' in self._model_fields:
+            filters['protection_level__in'] = protection_levels
+
+        return filters
 
 
 class ProtectionLevelMixin(models.Model):
-    ADMIN_ONLY = 1
-    ADMIN_AND_STAFF = 2
-    PUBLIC = 3
-
     PROTECTION_LEVEL_CHOICES = (
-        (ADMIN_ONLY, "Administrators only"),
-        (ADMIN_AND_STAFF, "Administrators and staff"),
-        (PUBLIC, "Public"),
+        (PROTECTION_LEVELS['ADMIN_ONLY'], "Administrators only"),
+        (PROTECTION_LEVELS['ADMIN_AND_STAFF'], "Administrators and staff"),
+        (PROTECTION_LEVELS['PUBLIC'], "Public"),
     )
 
-    protection_level = models.IntegerField(_('protection level'), choices=PROTECTION_LEVEL_CHOICES, default=PUBLIC,
-                                           db_column='suojaustasoid')
+    protection_level = models.IntegerField(_('protection level'), choices=PROTECTION_LEVEL_CHOICES,
+                                           default=PROTECTION_LEVELS['PUBLIC'], db_column='suojaustasoid')
 
-    objects = ProtectionLevelEnabledQuerySet.as_manager()
+    objects = ProtectedQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -98,6 +180,8 @@ class FeatureValue(models.Model):
     """Through model for Value & Feature m2m relation"""
     value = models.ForeignKey(Value, models.CASCADE, db_column='arvoid', verbose_name=_('value'))
     feature = models.ForeignKey('Feature', models.CASCADE, db_column='kohdeid', verbose_name=_('feature'))
+
+    objects = ProtectedQuerySet.as_manager()
 
     class Meta:
         db_table = 'arvo_kohde'
@@ -200,12 +284,6 @@ class PublicationType(models.Model):
         return str(self.name)
 
 
-class ProtectedFeatureQueryset(ProtectionLevelEnabledQuerySet):
-
-    def open_data(self):
-        return self.filter(feature_class__open_data=True)
-
-
 class AbstractFeature(ProtectionLevelMixin, models.Model):
     """AbstractFeature model that provides common fields for Feature and HistoricalFeature """
     fid = models.CharField(_('fid'), max_length=10, blank=True, null=True, db_column='tunnus')
@@ -224,8 +302,6 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
     area = models.FloatField(_('area (ha)'), blank=True, null=True, editable=False, db_column='pinta_ala')
     text = models.CharField(_('text'), max_length=40000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(_('text www'), max_length=40000, blank=True, null=True, db_column='teksti_www')
-
-    objects = ProtectedFeatureQueryset.as_manager()
 
     class Meta:
         abstract = True
@@ -290,6 +366,8 @@ class FeaturePublication(models.Model):
     """Through model for Feature & Publication m2m relation"""
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid', verbose_name=_('feature'))
     publication = models.ForeignKey(Publication, models.CASCADE, db_column='julkid', verbose_name=_('publication'))
+
+    objects = ProtectedQuerySet.as_manager()
 
     class Meta:
         db_table = 'kohde_julk'
@@ -471,6 +549,8 @@ class HabitatTypeObservation(models.Model):
     last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True,
                                               db_column='pvm_editoitu')
 
+    objects = ProtectedQuerySet.as_manager()
+
     class Meta:
         ordering = ['id']
         db_table = 'ltyyppihavainto'
@@ -501,12 +581,6 @@ class HabitatType(models.Model):
         return str(self.name)
 
 
-class ProtectedFeatureClassQueryset(models.QuerySet):
-
-    def open_data(self):
-        return self.filter(open_data=True)
-
-
 class FeatureClass(models.Model):
     PROTECTED_SUPER_CLASS_ID = 'SK'
     SQUARE_SUPER_CLASS_ID = 'RK'
@@ -522,7 +596,7 @@ class FeatureClass(models.Model):
     www = models.BooleanField(_('www'), default=True)
     metadata = models.CharField(_('metadata'), max_length=4000, blank=True, null=True)
 
-    objects = ProtectedFeatureClassQueryset.as_manager()
+    objects = ProtectedQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
@@ -752,6 +826,8 @@ class TransactionFeature(models.Model):
     """Through model for Transaction & Feature m2m relation"""
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid', verbose_name=_('feature'))
     transaction = models.ForeignKey(Transaction, models.CASCADE, db_column='tapid', verbose_name=_('transaction'))
+
+    objects = ProtectedQuerySet.as_manager()
 
     class Meta:
         db_table = 'tapahtuma_kohde'

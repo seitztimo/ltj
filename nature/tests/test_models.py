@@ -20,7 +20,7 @@ from .factories import (
     TransactionTypeFactory, FrequencyFactory,
     TransactionFeatureFactory)
 
-from ..models import Feature, FeatureClass, ProtectionLevelMixin
+from ..models import Feature, FeatureClass, PROTECTION_LEVELS
 
 
 class TestProtectionLevelEnabledQuerySet(TestCase):
@@ -28,15 +28,15 @@ class TestProtectionLevelEnabledQuerySet(TestCase):
     def setUp(self):
         self.feature_admin = FeatureFactory(
             name='admin',
-            protection_level=ProtectionLevelMixin.ADMIN_ONLY,
+            protection_level=PROTECTION_LEVELS['ADMIN_ONLY'],
         )
         self.feature_admin_and_staff = FeatureFactory(
             name='admin_and_staff',
-            protection_level=ProtectionLevelMixin.ADMIN_AND_STAFF,
+            protection_level=PROTECTION_LEVELS['ADMIN_AND_STAFF'],
         )
         self.feature_public = FeatureFactory(
             name='public',
-            protection_level=ProtectionLevelMixin.PUBLIC,
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
         )
 
     def test_for_admin(self):
