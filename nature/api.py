@@ -146,7 +146,7 @@ class FeatureSerializer(ProtectedHyperlinkedModelSerializer):
     links = FeatureLinkSerializer(many=True)
 
     def get_text(self, obj):
-        # now this is a silly feature: text should not be public if text_www exists
+        # Text should not be public if text_www exists
         if obj.text_www:
             return obj.text_www
         else:
