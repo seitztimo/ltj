@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.contrib.gis.geos import Point, Polygon
 from django.utils.translation import activate
 
+from nature.tests.fake_models import FakeFeatureClassModel, FakeFeatureModel, FakeOpenDataModel, \
+    FakeProtectionLevelModel, FakeFeatureClassProtectionLevelModel, FakeFeatureClassProtectionLevelOpenDataModel
 from .factories import (
     OriginFactory, ValueFactory, OccurrenceFactory,
     ObservationSeriesFactory, PersonFactory,
@@ -20,7 +22,7 @@ from .factories import (
     TransactionTypeFactory, FrequencyFactory,
     TransactionFeatureFactory)
 
-from ..models import Feature, FeatureClass, PROTECTION_LEVELS, Observation
+from ..models import Feature, FeatureClass, PROTECTION_LEVELS, Observation, ProtectedQuerySet
 
 
 class TestProtectionLevelProtectedQuerySet(TestCase):
@@ -176,6 +178,53 @@ class TestOpenDataProtectedQuerySet(TestCase):
         self._test_method_with_positive_asserts('for_public')
 
 
+class TestProtectedQuerySet(TestCase):
+    def setUp(self):
+        self.feature_class_qs = ProtectedQuerySet(FakeFeatureClassModel)
+        self.feature_qs = ProtectedQuerySet(FakeFeatureModel)
+        self.open_data_qs = ProtectedQuerySet(FakeOpenDataModel)
+        self.protection_level_qs = ProtectedQuerySet(FakeProtectionLevelModel)
+        self.feature_class_protection_level_qs = ProtectedQuerySet(FakeFeatureClassProtectionLevelModel)
+        self.feature_class_protection_level_open_qs = ProtectedQuerySet(FakeFeatureClassProtectionLevelOpenDataModel)
+
+    def test_filters(self):
+        protection_levels = [3]
+
+        filters = self.feature_class_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
+        self.assertEqual(filters, {
+            'feature_class__open_data': True,
+        })
+
+        filters = self.feature_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
+        self.assertEqual(filters, {
+            'feature__feature_class__open_data': True,
+            'feature__protection_level__in': protection_levels,
+        })
+
+        filters = self.open_data_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
+        self.assertEqual(filters, {
+            'open_data': True,
+        })
+
+        filters = self.protection_level_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
+        self.assertEqual(filters, {
+            'protection_level__in': protection_levels,
+        })
+
+        filters = self.feature_class_protection_level_qs._create_qs_filters(protection_levels=protection_levels,
+                                                                            open_data_only=True)
+        self.assertEqual(filters, {
+            'feature_class__open_data': True,
+            'protection_level__in': protection_levels
+        })
+
+        filters = self.feature_class_protection_level_open_qs._create_qs_filters(protection_levels=protection_levels,
+                                                                                 open_data_only=True)
+        self.assertEqual(filters, {
+            'feature_class__open_data': True,
+            'protection_level__in': protection_levels,
+            'open_data': True
+        })
 
 
 class TestOrigin(TestCase):
