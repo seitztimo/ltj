@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-29 15:36+0300\n"
+"POT-Creation-Date: 2018-07-04 17:23+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -16,6 +16,34 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, python-brace-format
+msgid "{0} features are imported"
+msgstr ""
+
+msgid "shapefiles"
+msgstr ""
+
+msgid ""
+"Zipped shapefiles that contains .shp, .shx and .dbf files with a common "
+"filename prefix"
+msgstr ""
+
+msgid "created by"
+msgstr "digitoija"
+
+msgid "created time"
+msgstr "lisäysaika"
+
+#, python-format
+msgid "%(filename)s is not a valid zip file."
+msgstr ""
+
+msgid "Files do not have a common filename prefix."
+msgstr ""
+
+msgid ".shp, .shx and .dbf files are required."
+msgstr ""
 
 msgid "Luontotietojärjestelmä site admin"
 msgstr "Luontotietojärjestelmä-sivuston ylläpito"
@@ -140,9 +168,6 @@ msgstr "puhnro"
 msgid "email"
 msgstr "sähköposti"
 
-msgid "created time"
-msgstr "lisäysaika"
-
 msgid "persons"
 msgstr "henkilöt"
 
@@ -184,9 +209,6 @@ msgstr "voimassa"
 
 msgid "number"
 msgstr "numero"
-
-msgid "created by"
-msgstr "digitoija"
 
 msgid "last modified time"
 msgstr "pvm editoitu"
@@ -491,6 +513,30 @@ msgstr "yleisyys"
 
 msgid "frequencies"
 msgstr "yleisyydet"
+
+msgid "Area (from map)"
+msgstr "Pinta-ala (kartalta)"
+
+msgid "Backgroud map"
+msgstr "Taustakartta"
+
+msgid "Feature values"
+msgstr "Arvoluokat"
+
+msgid "Value type basics"
+msgstr "Arvoluokituksen perusteet "
+
+msgid "Feature description"
+msgstr "Kohdekuvaus"
+
+msgid "Date"
+msgstr "Pvm"
+
+msgid "Transaction type"
+msgstr "Tapahtumatyyppi"
+
+msgid "Description"
+msgstr "Kuvaus"
 
 msgid "Delete all Geometries"
 msgstr "Poista kaikki geometriat"
