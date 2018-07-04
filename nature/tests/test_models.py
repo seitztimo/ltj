@@ -196,6 +196,13 @@ class TestFeature(TestCase):
         with patch('nature.models.FeatureClass.is_square', new_callable=MagicMock(return_value=False)):
             self.assertFalse(self.feature.is_square)
 
+    def test_text_display(self):
+        self.feature.text = 'text field is set'
+        self.assertEqual(self.feature.text_display, 'text field is set')
+
+        self.feature.text_www = 'text_www field is set'
+        self.assertEqual(self.feature.text_display, 'text_www field is set')
+
 
 class TestHistoricalFeature(TestCase):
 

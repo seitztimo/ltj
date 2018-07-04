@@ -243,6 +243,10 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
             return 0.0
         return float("{0:.2f}".format(self.area))
 
+    @property
+    def text_display(self):
+        return self.text_www or self.text
+
 
 class Feature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus', related_name='features',
