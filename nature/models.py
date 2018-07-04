@@ -103,7 +103,7 @@ class FeatureValue(models.Model):
         db_table = 'arvo_kohde'
         unique_together = (('value', 'feature'),)
         verbose_name = _('feature value')
-        verbose_name_plural = _('features values')
+        verbose_name_plural = _('feature values')
 
 
 class Occurrence(models.Model):

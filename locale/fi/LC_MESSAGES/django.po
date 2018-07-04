@@ -80,7 +80,7 @@ msgstr "kohde"
 msgid "feature value"
 msgstr "arvoluokka"
 
-msgid "features values"
+msgid "feature values"
 msgstr "arvoluokat"
 
 msgid "occurrence"
