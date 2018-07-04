@@ -69,6 +69,7 @@ class FeatureClassFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=50)
     reporting = True
     www = True
+    open_data = True
 
     class Meta:
         model = 'nature.FeatureClass'

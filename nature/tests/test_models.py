@@ -20,10 +20,10 @@ from .factories import (
     TransactionTypeFactory, FrequencyFactory,
     TransactionFeatureFactory)
 
-from ..models import Feature, FeatureClass, PROTECTION_LEVELS
+from ..models import Feature, FeatureClass, PROTECTION_LEVELS, Observation
 
 
-class TestProtectionLevelEnabledQuerySet(TestCase):
+class TestProtectionLevelProtectedQuerySet(TestCase):
 
     def setUp(self):
         self.feature_admin = FeatureFactory(
@@ -39,23 +39,143 @@ class TestProtectionLevelEnabledQuerySet(TestCase):
             protection_level=PROTECTION_LEVELS['PUBLIC'],
         )
 
+        test_species = SpeciesFactory(
+            protection_level=3
+        )
+
+        self.observation_admin = ObservationFactory(
+            feature=self.feature_admin,
+            species=test_species,
+            protection_level=3,
+        )
+        self.observation_admin_and_staff = ObservationFactory(
+            feature=self.feature_admin_and_staff,
+            species=test_species,
+            protection_level=3,
+        )
+        self.observation_public = ObservationFactory(
+            feature=self.feature_public,
+            species=test_species,
+            protection_level=3,
+        )
+
     def test_for_admin(self):
-        qs = Feature.objects.for_admin()
-        self.assertIn(self.feature_admin, qs)
-        self.assertIn(self.feature_admin_and_staff, qs)
-        self.assertIn(self.feature_public, qs)
+        feature_qs = Feature.objects.for_admin()
+        self.assertIn(self.feature_admin, feature_qs)
+        self.assertIn(self.feature_admin_and_staff, feature_qs)
+        self.assertIn(self.feature_public, feature_qs)
+
+        observation_qs = Observation.objects.for_admin()
+        self.assertIn(self.observation_admin, observation_qs)
+        self.assertIn(self.observation_admin_and_staff, observation_qs)
+        self.assertIn(self.observation_public, observation_qs)
 
     def test_for_admin_and_staff(self):
-        qs = Feature.objects.for_admin_and_staff()
-        self.assertNotIn(self.feature_admin, qs)
-        self.assertIn(self.feature_admin_and_staff, qs)
-        self.assertIn(self.feature_public, qs)
+        feature_qs = Feature.objects.for_admin_and_staff()
+        self.assertNotIn(self.feature_admin, feature_qs)
+        self.assertIn(self.feature_admin_and_staff, feature_qs)
+        self.assertIn(self.feature_public, feature_qs)
+
+        observation_qs = Observation.objects.for_admin_and_staff()
+        self.assertNotIn(self.observation_admin, observation_qs)
+        self.assertIn(self.observation_admin_and_staff, observation_qs)
+        self.assertIn(self.observation_public, observation_qs)
 
     def test_for_public(self):
-        qs = Feature.objects.for_public()
-        self.assertNotIn(self.feature_admin, qs)
-        self.assertNotIn(self.feature_admin_and_staff, qs)
-        self.assertIn(self.feature_public, qs)
+        feature_qs = Feature.objects.for_public()
+        self.assertNotIn(self.feature_admin, feature_qs)
+        self.assertNotIn(self.feature_admin_and_staff, feature_qs)
+        self.assertIn(self.feature_public, feature_qs)
+
+        observation_qs = Observation.objects.for_public()
+        self.assertNotIn(self.observation_admin, observation_qs)
+        self.assertNotIn(self.observation_admin_and_staff, observation_qs)
+        self.assertIn(self.observation_public, observation_qs)
+
+    def test_open_data(self):
+        feature_qs = Feature.objects.open_data()
+        self.assertNotIn(self.feature_admin, feature_qs)
+        self.assertNotIn(self.feature_admin_and_staff, feature_qs)
+        self.assertIn(self.feature_public, feature_qs)
+
+        observation_qs = Observation.objects.open_data()
+        self.assertNotIn(self.observation_admin, observation_qs)
+        self.assertNotIn(self.observation_admin_and_staff, observation_qs)
+        self.assertIn(self.observation_public, observation_qs)
+
+
+class TestOpenDataProtectedQuerySet(TestCase):
+
+    def setUp(self):
+        self.feature_class_open = FeatureClassFactory(
+            open_data=True
+        )
+        self.feature_class_internal = FeatureClassFactory(
+            open_data=False
+        )
+
+        self.feature_open = FeatureFactory(
+            name='feature_open',
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=self.feature_class_open
+        )
+        self.feature_internal = FeatureFactory(
+            name='feature_internal',
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=self.feature_class_internal
+        )
+
+        test_species = SpeciesFactory(
+            protection_level=3
+        )
+
+        self.observation_open = ObservationFactory(
+            feature=self.feature_open,
+            species=test_species,
+            protection_level=3,
+        )
+        self.observation_internal = ObservationFactory(
+            feature=self.feature_internal,
+            species=test_species,
+            protection_level=3,
+        )
+
+    def test_open_data(self):
+        feature_class_qs = FeatureClass.objects.open_data()
+        self.assertNotIn(self.feature_class_internal, feature_class_qs)
+        self.assertIn(self.feature_class_open, feature_class_qs)
+
+        feature_qs = Feature.objects.open_data()
+        self.assertNotIn(self.feature_internal, feature_qs)
+        self.assertIn(self.feature_open, feature_qs)
+
+        observation_qs = Observation.objects.open_data()
+        self.assertNotIn(self.observation_internal, observation_qs)
+        self.assertIn(self.observation_open, observation_qs)
+
+    def _test_method_with_positive_asserts(self, method):
+        feature_class_qs = getattr(FeatureClass.objects, method)()
+        self.assertIn(self.feature_class_internal, feature_class_qs)
+        self.assertIn(self.feature_class_open, feature_class_qs)
+
+        feature_qs = getattr(Feature.objects, method)()
+        self.assertIn(self.feature_internal, feature_qs)
+        self.assertIn(self.feature_open, feature_qs)
+
+        observation_qs = getattr(Observation.objects, method)()
+        self.assertIn(self.observation_internal, observation_qs)
+        self.assertIn(self.observation_open, observation_qs)
+
+    def test_for_admin(self):
+        self._test_method_with_positive_asserts('for_admin')
+
+    def test_for_admin_and_staff(self):
+        self._test_method_with_positive_asserts('for_admin_and_staff')
+
+    def test_for_public(self):
+        self._test_method_with_positive_asserts('for_public')
+
+
 
 
 class TestOrigin(TestCase):
@@ -123,21 +243,6 @@ class TestPublicationType(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.publication_type.__str__(), 'publication type')
-
-
-class TestProtectedFeatureQueryset(TestCase):
-
-    def setUp(self):
-        open_data_feature_class = FeatureClassFactory(open_data=True)
-        self.open_data_feature = FeatureFactory(feature_class=open_data_feature_class)
-
-        not_open_data_feature_class = FeatureClassFactory(open_data=False)
-        self.not_open_data_feature = FeatureFactory(feature_class=not_open_data_feature_class)
-
-    def test_open_data(self):
-        qs = Feature.objects.open_data()
-        self.assertIn(self.open_data_feature, qs)
-        self.assertNotIn(self.not_open_data_feature, qs)
 
 
 class TestFeature(TestCase):
