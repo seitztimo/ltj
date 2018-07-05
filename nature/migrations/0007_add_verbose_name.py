@@ -1127,7 +1127,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='transaction',
             name='transaction_type',
-            field=models.ForeignKey(db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.TransactionType', verbose_name='transaction type'),
+            field=models.ForeignKey(related_name='transactions', db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.TransactionType', verbose_name='transaction type'),
         ),
         migrations.AlterField(
             model_name='transactionfeature',
@@ -1176,7 +1176,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='value',
-            name='value_type',
-            field=models.CharField(blank=True, db_column='luokka', max_length=10, null=True, verbose_name='value type'),
+            name='value',
+            field=models.CharField(blank=True, db_column='luokka', max_length=10, null=True, verbose_name='value class'),
         ),
     ]

@@ -14,7 +14,7 @@ class OriginFactory(factory.django.DjangoModelFactory):
 
 class ValueFactory(factory.django.DjangoModelFactory):
     explanation = factory.Faker('text', max_nb_chars=50)
-    value_type = factory.Faker('text', max_nb_chars=10)
+    value = factory.Faker('text', max_nb_chars=10)
     valuator = factory.Faker('text', max_nb_chars=50)
     link = factory.Faker('paragraph')
 
@@ -69,6 +69,7 @@ class FeatureClassFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=50)
     reporting = True
     www = True
+    open_data = True
 
     class Meta:
         model = 'nature.FeatureClass'
