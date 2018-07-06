@@ -1,0 +1,91 @@
+{% load static i18n %}<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.css" type="text/css" media="all" rel="stylesheet">
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-uppercase">{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }})</h2>
+    <hr class="mb-2">
+
+    <!-- Area and geometry -->
+    <div class="form-group row mb-0">
+        <label for="area" class="col-sm-2 col-form-label font-weight-bold">{% trans "Area (from map)" %}</label>
+        <div class="col-sm-10">
+          <input type="text" readonly class="form-control-plaintext" id="area" value="{{ feature.area }} ha">
+        </div>
+    </div>
+    <div class="form-group row mb-2">
+        <label for="background-map" class="col-sm-2 col-form-label font-weight-bold">{% trans "Backgroud map" %}</label>
+        <select id="background-map" class="col-sm-3 form-control" onchange="reportMap.changeLayer(this.value)">
+            <option value="avoindata:Opaskartta_Helsinki">Opaskartta Helsinki</option>
+            <option value="avoindata:Kantakartta">Kantakartta</option>
+            <option value="avoindata:Kantakartan_maastotiedot">Kantakartan maastotiedot</option>
+            <option value="avoindata:Kiinteistokartta">Kiinteistokartta</option>
+            <option value="avoindata:Kiinteistokartan_maastotiedot">Kiinteistokartan maastotiedot</option>
+            <option value="avoindata:Opaskartta_PKS">Opaskartta PKS</option>
+            <option value="avoindata:Ortoilmakuva" selected>Ortoilmakuva</option>
+        </select>
+    </div>
+    <div id="map"></div>
+    <hr class="mb-2">
+
+    <!-- Feature values -->
+    <h4 class="text-uppercase">{% trans "Feature values" %}</h4>
+    <div class="row">
+        {% for value in feature.values.all %}
+            <div class="col-md-4">{{ value.value_type }}</div>
+            <div class="col-md-4">{{ value.valuator }}</div>
+            <div class="col-md-4"><a href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
+        {% endfor %}
+    </div>
+    <hr class="mb-2">
+
+    <!-- Feature description -->
+    <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
+    <p>{{ feature.text_display|safe }}</p>
+    <hr class="mb-2">
+
+    <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
+    {% for transaction in feature.transactions.all %}
+        <div class="form-group row mb-0">
+            <label for="transaction-date" class="col-sm-2 col-form-label font-weight-bold">{% trans "Date" %}</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="transaction-date" value="{{ transaction.date|date:'d.m.Y' }}">
+            </div>
+        </div>
+        <div class="form-group row mb-0">
+            <label for="transaction-type" class="col-sm-2 col-form-label font-weight-bold">{% trans "Transaction type" %}</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="transaction-type" value="{{ transaction.transaction_type }}">
+            </div>
+        </div>
+        <div class="form-group row mb-0">
+            <p for="transaction-description" class="col-sm-2 col-form-label font-weight-bold">{% trans "Description" %}</p>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="transaction-date" value="{{ transaction.description }}">
+            </div>
+        </div>
+    {% endfor %}
+    <hr class="mb-2">
+    <footer>
+        <p class="mb-1">© Helsingin kaupunki</p>
+        <p>Luontotietojärjestelmä</p>
+    </footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
+<script src="{% static 'nature/js/ReportMap.js' %}"></script>
+<script type="text/javascript">
+    var reportMap = new ReportMap('map', '{{ feature.geometry.geojson|safe }}');
+</script>
+</body>
+</html>

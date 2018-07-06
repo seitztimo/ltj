@@ -21,7 +21,8 @@ from nature.api import router
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'v1/', include(router.urls))
+    url(r'v1/', include(router.urls)),
+    url(r'^ltj/', include('nature.urls')),
 ]
 
 admin.site.site_title = _('Luontotietojärjestelmä site admin')

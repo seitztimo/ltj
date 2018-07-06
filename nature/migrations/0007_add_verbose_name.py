@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='featurevalue',
-            options={'verbose_name': 'feature value', 'verbose_name_plural': 'features values'},
+            options={'verbose_name': 'feature value', 'verbose_name_plural': 'feature values'},
         ),
         migrations.AlterModelOptions(
             name='frequency',
