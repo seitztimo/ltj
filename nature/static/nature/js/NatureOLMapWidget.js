@@ -110,11 +110,28 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
 
         this.map = this.createMap();
         this.featureCollection = new ol.Collection();
+
+        var stroke = new ol.style.Stroke({
+            color: [0, 0, 255, 1],
+            width: 3
+        });
+        var fill = new ol.style.Fill({
+            color: [0, 0, 255, 0.5]
+        });
         this.featureOverlay = new ol.layer.Vector({
             map: this.map,
             source: new ol.source.Vector({
                 features: this.featureCollection,
                 useSpatialIndex: false // improve performance
+            }),
+            style: new ol.style.Style({
+                stroke: stroke,
+                fill: fill,
+                image: new ol.style.Circle({
+                    stroke: stroke,
+                    fill: fill,
+                    radius: 5
+                })
             }),
             updateWhileAnimating: true, // optional, for instant visual feedback
             updateWhileInteracting: true // optional, for instant visual feedback
@@ -189,9 +206,10 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         ol.proj.addProjection(projection);
 
         var baseLayerGroup = this.getBaseLayerGroup();
+        var overLayerGroup = this.getOverlayGroup();
         var map = new ol.Map({
             target: this.options.map_id,
-            layers: [baseLayerGroup],
+            layers: [baseLayerGroup, overLayerGroup],
             view: new ol.View({
                 projection: projection,
                 zoom: this.options.default_zoom,
@@ -249,6 +267,95 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             title: 'Base maps',
             layers: baseLayers
         });
+    };
+
+    MapWidget.prototype.getOverlayGroup = function() {
+        var featureWFSLayers = [
+            ['ltj_rauh_luonnonsuojelualueet', 'Luonnonsuojelualueet'],
+            ['ltj_rauh_natura', 'Natura-alueet'],
+            ['ltj_rauh_suojellut_luontotyypit', 'Luonnonsuojelulain mukaiset suojellut luontotyypit'],
+            ['ltj_rauh_luonnonmuistomerkit', 'Luonnonmuistomerkit'],
+            ['ltj_suojellut_lajikohteet', 'Suojellut lajikohteet'],
+            ['ltj_rauh_luonnonsuojeluohjelma', 'Luonnonsuojeluohjelman kohteet'],
+            ['ltj_arvokkaat_kasvikohteet', 'Arvokkaat kasvillisuus- ja kasvistokohteet'],
+            ['ltj_arvokkaat_lintukohteet', 'Linnustollisesti arvokkaat kohteet'],
+            ['ltj_arvo_tarkeat_lepakkoalueet', 'Lepakkokohteet'],
+            ['ltj_arvokkaat_geologiset', 'Arvokkaat geologiset kohteet'],
+            ['ltj_arvo_tarkeat_matelija_ja_sammakkoelainkohteet', 'Matelija- ja sammakkoeläinkohteet'],
+            ['ltj_arvo_kaapakohteet', 'Kääpäkohteet ja orvakkakohteet'],
+            ['ltj_arvo_metsakohteet', 'Arvokkaat metsäkohteet'],
+            ['ltj_arvo_liito_orava', 'Liito-oravan ydinalueet'],
+            ['ltj_muu_perinnemaisemia', 'Perinnemaisemat'],
+            ['ltj_vesi_lahteet', 'Lähteet'],
+            ['ltj_vesi_purot_ja_lammet', 'Purot ja lammet'],
+            ['ltj_vesi_purojen_ja_lampien_valuma_alueet', 'Purojen ja lampien valuma-alueet'],
+            ['ltj_vesi_purojen_putkitetut_osuudet', 'Purojen putkitetut osuudet'],
+            ['ltj_muu_elainhavaintoja', 'Eläinhavaintoja'],
+            ['ltj_muut_luontokohteet', 'Muut luontokohteet'],
+            ['ltj_vesi_vesikasvilinjat', 'Vesikasvilinjat'],
+            ['ltj_vesi_vedenalainen_roskaantuminen', 'Vedenalaisen roskan kartoitus']
+        ].sort(function(a, b) {
+            // sort layer in reverse-alphabetic order, the layer order will
+            // be reversed when adding to layer switcher
+            if (a[1] > b[1]) {
+                return -1;
+            }
+            if (a[1] < b[1]) {
+                return 1;
+            }
+            return 0;
+        });
+
+        self = this;
+        var layers = featureWFSLayers.map(function(wfsLayer, index) {
+            var colors = self.getWFSColors(index, featureWFSLayers.length);
+            var stroke = new ol.style.Stroke({
+                color: colors.stroke
+            });
+            var fill = new ol.style.Fill({
+                color: colors.fill
+            });
+            return new ol.layer.Vector({
+                title: wfsLayer[1],
+                source: new ol.source.Vector({
+                    format: new ol.format.GeoJSON(),
+                    url: function(extent) {
+                        return self.getWFSUrl(wfsLayer[0], extent);
+                    },
+                    strategy: ol.loadingstrategy.bbox
+                }),
+                style: new ol.style.Style({
+                    stroke: stroke,
+                    fill: fill,
+                    image: new ol.style.Circle({
+                        stroke: stroke,
+                        fill: fill,
+                        radius: 5
+                    })
+                })
+            });
+        });
+
+        return new ol.layer.Group({
+            title: 'Overlays',
+            layers: layers
+        });
+    };
+
+    MapWidget.prototype.getWFSColors = function(layerIndex, layerCount) {
+        var step = Math.floor(255 / layerCount);
+        var offset = step * layerIndex;
+        return {
+            stroke: [255 - offset, offset, 255 - offset, 1],
+            fill: [255 - offset, offset, 255 - offset, 0.1]
+        }
+    };
+
+    MapWidget.prototype.getWFSUrl = function(typeName, extent) {
+        return self.options.wfs_server_url +
+            '?service=WFS&version=1.1.0&request=GetFeature' +
+            '&typeName=' + typeName + '&outputFormat=application/json' +
+            '&srsname=EPSG:3879&bbox=' + extent.join(',') + ',EPSG:3879';
     };
 
     MapWidget.prototype.createInteractions = function() {

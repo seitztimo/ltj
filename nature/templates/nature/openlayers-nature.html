@@ -23,7 +23,8 @@
             name: '{{ name }}',
             default_x: {{ default_x|unlocalize }},
             default_y: {{ default_y|unlocalize }},
-            default_zoom: {{ default_zoom|unlocalize }}
+            default_zoom: {{ default_zoom|unlocalize }},
+            wfs_server_url: '{% url 'nature:wfs' %}'
         };
         {% endblock %}
         var {{ module }} = new MapWidget(options);
