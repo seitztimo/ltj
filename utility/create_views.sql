@@ -624,12 +624,10 @@ CREATE OR REPLACE VIEW ltj.vesi_vedenalainen_roskaantuminen AS
             ELSE kohde.teksti
         END AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=291&l=fi'::text AS metadata,
-    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS k
-ohderaportti
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-  WHERE (((kohde.luokkatunnus)::text = 'ROSK'::text) AND (kohde.voimassa = true) AND (kohde.suojaust
-asoid <> 1));
+  WHERE (((kohde.luokkatunnus)::text = 'ROSK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Sisäiset vesikasvilinjat:
 
