@@ -1,13 +1,6 @@
 /**
  * @file This is a modified version of OLMapWidget.js provided by Django
  * to support the needs of feature geometry editing.
- *
- * List of modifications:
- * - Set map projection to EPSG:3879
- * - Add custom base maps (WMTS)
- * - Scale bar
- * - Coordinates at mouse
- * - Allow drawing MultiLineString and MultiPolygon
  */
 
 var GeometryTypeControl = function(opt_options) {
@@ -59,36 +52,6 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         this.interactions = {draw: null, modify: null};
         this.typeChoices = false;
         this.ready = false;
-
-        // WMTS layers and options
-        this.wmtsLayerNames = [
-            'avoindata:Ortoilmakuva',
-            'avoindata:Opaskartta_PKS',
-            'avoindata:Kiinteistokartan_maastotiedot',
-            'avoindata:Kiinteistokartta',
-            'avoindata:Kantakartan_maastotiedot',
-            'avoindata:Kantakartta',
-            'avoindata:Opaskartta_Helsinki'
-        ];
-        this.wmtsLayerImageFormat = {
-            'avoindata:Ortoilmakuva': 'image/jpeg'
-        };
-        this.wmtsOptions = {
-            attributions: ['Helsingin kaupungin avoimen datan WMTS-palvelu, CC BY 4.0'],
-            url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
-            matrixSet: 'ETRS-GK25',
-            tileSize: [256, 256],
-            extent: [25440000, 6630000, 25571072, 6761072],
-            origin: [25440000, 6761072],
-            resolutions: [256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.125, 0.0625],
-            matrixIds: [
-                'ETRS-GK25:0', 'ETRS-GK25:1', 'ETRS-GK25:2',
-                'ETRS-GK25:3', 'ETRS-GK25:4', 'ETRS-GK25:5',
-                'ETRS-GK25:6', 'ETRS-GK25:7', 'ETRS-GK25:8',
-                'ETRS-GK25:9', 'ETRS-GK25:10', 'ETRS-GK25:11',
-                'ETRS-GK25:12'
-            ]
-        };
 
         // Default options
         this.options = {
@@ -239,32 +202,69 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     };
 
     MapWidget.prototype.getBaseLayerGroup = function() {
-        var baseLayers = [];
-        for (var i=0; i<this.wmtsLayerNames.length; i++) {
-            var layerName = this.wmtsLayerNames[i];
-            var layer = new ol.layer.Tile({
+        var wmtsLayers = [
+            ['avoindata:Ortoilmakuva', 'Ortoilmakuva'],
+            ['avoindata:Opaskartta_PKS', 'Opaskartta PKS'],
+            ['avoindata:Kiinteistokartan_maastotiedot', 'Kiinteistokartan maastotiedot'],
+            ['avoindata:Kiinteistokartta', 'Kiinteistokartta'],
+            ['avoindata:Kantakartan_maastotiedot', 'Kantakartan maastotiedot'],
+            ['avoindata:Kantakartta', 'Kantakartta'],
+            ['avoindata:Opaskartta_Helsinki', 'Opaskartta Helsinki']
+        ].sort(function(a, b) {
+            // sort layer in reverse-alphabetic order, the layer order will
+            // be reversed when adding to layer switcher
+            if (a[1] > b[1]) {
+                return -1;
+            }
+            if (a[1] < b[1]) {
+                return 1;
+            }
+            return 0;
+        });
+        var wmtsLayerImageFormat = {
+            'avoindata:Ortoilmakuva': 'image/jpeg'
+        };
+        var wmtsOptions = {
+            attributions: ['Helsingin kaupungin avoimen datan WMTS-palvelu, CC BY 4.0'],
+            url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
+            matrixSet: 'ETRS-GK25',
+            tileSize: [256, 256],
+            extent: [25440000, 6630000, 25571072, 6761072],
+            origin: [25440000, 6761072],
+            resolutions: [256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.125, 0.0625],
+            matrixIds: [
+                'ETRS-GK25:0', 'ETRS-GK25:1', 'ETRS-GK25:2',
+                'ETRS-GK25:3', 'ETRS-GK25:4', 'ETRS-GK25:5',
+                'ETRS-GK25:6', 'ETRS-GK25:7', 'ETRS-GK25:8',
+                'ETRS-GK25:9', 'ETRS-GK25:10', 'ETRS-GK25:11',
+                'ETRS-GK25:12'
+            ]
+        };
+
+        var baseLayers = wmtsLayers.map(function(wmtsLayer) {
+            return new ol.layer.Tile({
                 type: 'base',
-                title: layerName,
+                title: wmtsLayer[1],
+                visible: wmtsLayer[0] === 'avoindata:Opaskartta_Helsinki',
                 source: new ol.source.WMTS({
-                    attributions: this.wmtsOptions.attributions,
+                    attributions: wmtsOptions.attributions,
                     url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
-                    layer: layerName,
-                    format: this.wmtsLayerImageFormat[layerName] || 'image/png',
-                    matrixSet: this.wmtsOptions.matrixSet,
+                    layer: wmtsLayer[0],
+                    format: wmtsLayerImageFormat[wmtsLayer[0]] || 'image/png',
+                    matrixSet: wmtsOptions.matrixSet,
                     tileGrid: new ol.tilegrid.WMTS({
-                        tileSize: this.wmtsOptions.tileSize,
-                        extent: this.wmtsOptions.extent,
-                        origin: this.wmtsOptions.origin,
-                        resolutions: this.wmtsOptions.resolutions,
-                        matrixIds: this.wmtsOptions.matrixIds
+                        tileSize: wmtsOptions.tileSize,
+                        extent: wmtsOptions.extent,
+                        origin: wmtsOptions.origin,
+                        resolutions: wmtsOptions.resolutions,
+                        matrixIds: wmtsOptions.matrixIds
                     }),
                     wrapX: true
                 })
             });
-            baseLayers.push(layer);
-        }
+        });
         return new ol.layer.Group({
-            title: 'Base maps',
+            title: 'Basemaps',
             layers: baseLayers
         });
     };
