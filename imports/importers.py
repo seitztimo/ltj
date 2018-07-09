@@ -7,6 +7,24 @@ from django.contrib.gis.geos import GEOSGeometry
 
 from nature.models import Feature
 
+REQUIRED_SHAPEFILE_EXTENSIONS = ('.shp', '.shx', '.dbf')
+SHAPEFILE_FIELD_MAPPING = {
+    'id': 'id',
+    'tunnus': 'fid',
+    'luokkatunn': 'feature_class_id',
+    'nimi': 'name',
+    'kuvaus': 'description',
+    'huom': 'notes',
+    'voimassa': 'active',
+    'digipvm': 'created_time',
+    'numero': 'number',
+    'digitoija': 'created_by',
+    'suojaustas': 'protection_level',
+    'pvm_editoi': 'last_modified_time',
+    'muokkaaja': 'last_modified_by',
+    'pinta_ala': 'area',
+}
+
 
 class ShapefileImporter:
     """A class that allow importing shapefile features to Feature model
@@ -19,7 +37,7 @@ class ShapefileImporter:
         - the number of shapes and records must match
 
     - The shapefiles must not include additional fields besides the ones
-    listed below and the names must match exactly. Basically they have
+    listed above and the names must match exactly. Basically they have
     same names as in database but shapefile has a 10 characters limit
     on field names.
 
@@ -30,28 +48,10 @@ class ShapefileImporter:
     then the importer will update the feature, otherwise it will create
     new ones.
     """
-    required_extensions = ('.shp', '.shx', '.dbf')
-    field_mapping = {
-        'id': 'id',
-        'tunnus': 'fid',
-        'luokkatunn': 'feature_class_id',
-        'nimi': 'name',
-        'kuvaus': 'description',
-        'huom': 'notes',
-        'voimassa': 'active',
-        'digipvm': 'created_time',
-        'numero': 'number',
-        'digitoija': 'created_by',
-        'suojaustas': 'protection_level',
-        'pvm_editoi': 'last_modified_time',
-        'muokkaaja': 'last_modified_by',
-        'pinta_ala': 'area',
-    }
-
     @classmethod
     def import_features(cls, zipped_shapefiles):
         shp_reader = cls._get_shp_reader(zipped_shapefiles)
-        fields = [cls.field_mapping[shape_field[0]] for shape_field in shp_reader.fields[1:]]
+        fields = [SHAPEFILE_FIELD_MAPPING[shape_field[0]] for shape_field in shp_reader.fields[1:]]
         for shape_record in shp_reader.iterShapeRecords():
             cls._import_feature(fields, shape_record)
         return shp_reader.numRecords
@@ -59,7 +59,7 @@ class ShapefileImporter:
     @classmethod
     def _get_shp_reader(cls, zipped_shapefiles):
         with zipfile.ZipFile(zipped_shapefiles) as zfile:
-            dbf, shp, shx = sorted([name for name in zfile.namelist() if name.endswith(cls.required_extensions)])
+            dbf, shp, shx = sorted([name for name in zfile.namelist() if name.endswith(REQUIRED_SHAPEFILE_EXTENSIONS)])
             with zfile.open(dbf) as dbf, zfile.open(shp) as shp, zfile.open(shx) as shx:
                 return shapefile.Reader(shp=shp, shx=shx, dbf=dbf)
 

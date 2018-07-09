@@ -3,27 +3,11 @@ import zipfile
 
 import shapefile
 
+from ..importers import SHAPEFILE_FIELD_MAPPING
+
 
 class ZippedShapefilesGenerator:
     """A helper class to generate zipped shapefiles for given features"""
-
-    field_mapping = {
-        'id': 'id',
-        'tunnus': 'fid',
-        'luokkatunn': 'feature_class_id',
-        'nimi': 'name',
-        'kuvaus': 'description',
-        'huom': 'notes',
-        'voimassa': 'active',
-        'digipvm': 'created_time',
-        'numero': 'number',
-        'digitoija': 'created_by',
-        'suojaustas': 'protection_level',
-        'pvm_editoi': 'last_modified_time',
-        'muokkaaja': 'last_modified_by',
-        'pinta_ala': 'area',
-    }
-
     shape_fields = [
         ['id', 'N', 10, 0],
         ['tunnus', 'C', 10, 0],
@@ -60,4 +44,4 @@ class ZippedShapefilesGenerator:
     @classmethod
     def _get_record(cls, feature):
         shape_field_names = [shape_field[0] for shape_field in cls.shape_fields]
-        return [getattr(feature, cls.field_mapping[field_name]) for field_name in shape_field_names]
+        return [getattr(feature, SHAPEFILE_FIELD_MAPPING[field_name]) for field_name in shape_field_names]
