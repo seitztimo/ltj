@@ -18,5 +18,9 @@ class ShapefileImport(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('created by'))
     created_time = models.DateTimeField(_('created time'), auto_now_add=True, null=True, blank=True)
 
+    class Meta:
+        verbose_name = _('shapefile import')
+        verbose_name_plural = _('shapefile imports')
+
     def __str__(self):
         return self.shapefiles.name
