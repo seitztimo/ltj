@@ -1,13 +1,6 @@
 /**
  * @file This is a modified version of OLMapWidget.js provided by Django
  * to support the needs of feature geometry editing.
- *
- * List of modifications:
- * - Set map projection to EPSG:3879
- * - Add custom base maps (WMTS)
- * - Scale bar
- * - Coordinates at mouse
- * - Allow drawing MultiLineString and MultiPolygon
  */
 
 var GeometryTypeControl = function(opt_options) {
@@ -60,36 +53,6 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         this.typeChoices = false;
         this.ready = false;
 
-        // WMTS layers and options
-        this.wmtsLayerNames = [
-            'avoindata:Ortoilmakuva',
-            'avoindata:Opaskartta_PKS',
-            'avoindata:Kiinteistokartan_maastotiedot',
-            'avoindata:Kiinteistokartta',
-            'avoindata:Kantakartan_maastotiedot',
-            'avoindata:Kantakartta',
-            'avoindata:Opaskartta_Helsinki'
-        ];
-        this.wmtsLayerImageFormat = {
-            'avoindata:Ortoilmakuva': 'image/jpeg'
-        };
-        this.wmtsOptions = {
-            attributions: ['Helsingin kaupungin avoimen datan WMTS-palvelu, CC BY 4.0'],
-            url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
-            matrixSet: 'ETRS-GK25',
-            tileSize: [256, 256],
-            extent: [25440000, 6630000, 25571072, 6761072],
-            origin: [25440000, 6761072],
-            resolutions: [256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.125, 0.0625],
-            matrixIds: [
-                'ETRS-GK25:0', 'ETRS-GK25:1', 'ETRS-GK25:2',
-                'ETRS-GK25:3', 'ETRS-GK25:4', 'ETRS-GK25:5',
-                'ETRS-GK25:6', 'ETRS-GK25:7', 'ETRS-GK25:8',
-                'ETRS-GK25:9', 'ETRS-GK25:10', 'ETRS-GK25:11',
-                'ETRS-GK25:12'
-            ]
-        };
-
         // Default options
         this.options = {
             default_y: 0,
@@ -110,11 +73,28 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
 
         this.map = this.createMap();
         this.featureCollection = new ol.Collection();
+
+        var stroke = new ol.style.Stroke({
+            color: [0, 0, 255, 1],
+            width: 3
+        });
+        var fill = new ol.style.Fill({
+            color: [0, 0, 255, 0.5]
+        });
         this.featureOverlay = new ol.layer.Vector({
             map: this.map,
             source: new ol.source.Vector({
                 features: this.featureCollection,
                 useSpatialIndex: false // improve performance
+            }),
+            style: new ol.style.Style({
+                stroke: stroke,
+                fill: fill,
+                image: new ol.style.Circle({
+                    stroke: stroke,
+                    fill: fill,
+                    radius: 5
+                })
             }),
             updateWhileAnimating: true, // optional, for instant visual feedback
             updateWhileInteracting: true // optional, for instant visual feedback
@@ -189,9 +169,10 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         ol.proj.addProjection(projection);
 
         var baseLayerGroup = this.getBaseLayerGroup();
+        var overLayerGroup = this.getOverlayGroup();
         var map = new ol.Map({
             target: this.options.map_id,
-            layers: [baseLayerGroup],
+            layers: [baseLayerGroup, overLayerGroup],
             view: new ol.View({
                 projection: projection,
                 zoom: this.options.default_zoom,
@@ -221,34 +202,160 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     };
 
     MapWidget.prototype.getBaseLayerGroup = function() {
-        var baseLayers = [];
-        for (var i=0; i<this.wmtsLayerNames.length; i++) {
-            var layerName = this.wmtsLayerNames[i];
-            var layer = new ol.layer.Tile({
+        var wmtsLayers = [
+            ['avoindata:Ortoilmakuva', 'Ortoilmakuva'],
+            ['avoindata:Opaskartta_PKS', 'Opaskartta PKS'],
+            ['avoindata:Kiinteistokartan_maastotiedot', 'Kiinteistokartan maastotiedot'],
+            ['avoindata:Kiinteistokartta', 'Kiinteistokartta'],
+            ['avoindata:Kantakartan_maastotiedot', 'Kantakartan maastotiedot'],
+            ['avoindata:Kantakartta', 'Kantakartta'],
+            ['avoindata:Opaskartta_Helsinki', 'Opaskartta Helsinki']
+        ].sort(function(a, b) {
+            // sort layer in reverse-alphabetic order, the layer order will
+            // be reversed when adding to layer switcher
+            if (a[1] > b[1]) {
+                return -1;
+            }
+            if (a[1] < b[1]) {
+                return 1;
+            }
+            return 0;
+        });
+        var wmtsLayerImageFormat = {
+            'avoindata:Ortoilmakuva': 'image/jpeg'
+        };
+        var wmtsOptions = {
+            attributions: ['Helsingin kaupungin avoimen datan WMTS-palvelu, CC BY 4.0'],
+            url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
+            matrixSet: 'ETRS-GK25',
+            tileSize: [256, 256],
+            extent: [25440000, 6630000, 25571072, 6761072],
+            origin: [25440000, 6761072],
+            resolutions: [256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.125, 0.0625],
+            matrixIds: [
+                'ETRS-GK25:0', 'ETRS-GK25:1', 'ETRS-GK25:2',
+                'ETRS-GK25:3', 'ETRS-GK25:4', 'ETRS-GK25:5',
+                'ETRS-GK25:6', 'ETRS-GK25:7', 'ETRS-GK25:8',
+                'ETRS-GK25:9', 'ETRS-GK25:10', 'ETRS-GK25:11',
+                'ETRS-GK25:12'
+            ]
+        };
+
+        var baseLayers = wmtsLayers.map(function(wmtsLayer) {
+            return new ol.layer.Tile({
                 type: 'base',
-                title: layerName,
+                title: wmtsLayer[1],
+                visible: wmtsLayer[0] === 'avoindata:Opaskartta_Helsinki',
                 source: new ol.source.WMTS({
-                    attributions: this.wmtsOptions.attributions,
+                    attributions: wmtsOptions.attributions,
                     url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
-                    layer: layerName,
-                    format: this.wmtsLayerImageFormat[layerName] || 'image/png',
-                    matrixSet: this.wmtsOptions.matrixSet,
+                    layer: wmtsLayer[0],
+                    format: wmtsLayerImageFormat[wmtsLayer[0]] || 'image/png',
+                    matrixSet: wmtsOptions.matrixSet,
                     tileGrid: new ol.tilegrid.WMTS({
-                        tileSize: this.wmtsOptions.tileSize,
-                        extent: this.wmtsOptions.extent,
-                        origin: this.wmtsOptions.origin,
-                        resolutions: this.wmtsOptions.resolutions,
-                        matrixIds: this.wmtsOptions.matrixIds
+                        tileSize: wmtsOptions.tileSize,
+                        extent: wmtsOptions.extent,
+                        origin: wmtsOptions.origin,
+                        resolutions: wmtsOptions.resolutions,
+                        matrixIds: wmtsOptions.matrixIds
                     }),
                     wrapX: true
                 })
             });
-            baseLayers.push(layer);
-        }
+        });
         return new ol.layer.Group({
-            title: 'Base maps',
+            title: 'Basemaps',
             layers: baseLayers
         });
+    };
+
+    MapWidget.prototype.getOverlayGroup = function() {
+        var featureWFSLayers = [
+            ['ltj_rauh_luonnonsuojelualueet', 'Luonnonsuojelualueet'],
+            ['ltj_rauh_natura', 'Natura-alueet'],
+            ['ltj_rauh_suojellut_luontotyypit', 'Luonnonsuojelulain mukaiset suojellut luontotyypit'],
+            ['ltj_rauh_luonnonmuistomerkit', 'Luonnonmuistomerkit'],
+            ['ltj_suojellut_lajikohteet', 'Suojellut lajikohteet'],
+            ['ltj_rauh_luonnonsuojeluohjelma', 'Luonnonsuojeluohjelman kohteet'],
+            ['ltj_arvokkaat_kasvikohteet', 'Arvokkaat kasvillisuus- ja kasvistokohteet'],
+            ['ltj_arvokkaat_lintukohteet', 'Linnustollisesti arvokkaat kohteet'],
+            ['ltj_arvo_tarkeat_lepakkoalueet', 'Lepakkokohteet'],
+            ['ltj_arvokkaat_geologiset', 'Arvokkaat geologiset kohteet'],
+            ['ltj_arvo_tarkeat_matelija_ja_sammakkoelainkohteet', 'Matelija- ja sammakkoeläinkohteet'],
+            ['ltj_arvo_kaapakohteet', 'Kääpäkohteet ja orvakkakohteet'],
+            ['ltj_arvo_metsakohteet', 'Arvokkaat metsäkohteet'],
+            ['ltj_arvo_liito_orava', 'Liito-oravan ydinalueet'],
+            ['ltj_muu_perinnemaisemia', 'Perinnemaisemat'],
+            ['ltj_vesi_lahteet', 'Lähteet'],
+            ['ltj_vesi_purot_ja_lammet', 'Purot ja lammet'],
+            ['ltj_vesi_purojen_ja_lampien_valuma_alueet', 'Purojen ja lampien valuma-alueet'],
+            ['ltj_vesi_purojen_putkitetut_osuudet', 'Purojen putkitetut osuudet'],
+            ['ltj_muu_elainhavaintoja', 'Eläinhavaintoja'],
+            ['ltj_muut_luontokohteet', 'Muut luontokohteet'],
+            ['ltj_vesi_vesikasvilinjat', 'Vesikasvilinjat'],
+            ['ltj_vesi_vedenalainen_roskaantuminen', 'Vedenalaisen roskan kartoitus']
+        ].sort(function(a, b) {
+            // sort layer in reverse-alphabetic order, the layer order will
+            // be reversed when adding to layer switcher
+            if (a[1] > b[1]) {
+                return -1;
+            }
+            if (a[1] < b[1]) {
+                return 1;
+            }
+            return 0;
+        });
+
+        self = this;
+        var layers = featureWFSLayers.map(function(wfsLayer, index) {
+            var colors = self.getWFSColors(index, featureWFSLayers.length);
+            var stroke = new ol.style.Stroke({
+                color: colors.stroke
+            });
+            var fill = new ol.style.Fill({
+                color: colors.fill
+            });
+            return new ol.layer.Vector({
+                title: wfsLayer[1],
+                source: new ol.source.Vector({
+                    format: new ol.format.GeoJSON(),
+                    url: function(extent) {
+                        return self.getWFSUrl(wfsLayer[0], extent);
+                    },
+                    strategy: ol.loadingstrategy.bbox
+                }),
+                style: new ol.style.Style({
+                    stroke: stroke,
+                    fill: fill,
+                    image: new ol.style.Circle({
+                        stroke: stroke,
+                        fill: fill,
+                        radius: 5
+                    })
+                })
+            });
+        });
+
+        return new ol.layer.Group({
+            title: 'Overlays',
+            layers: layers
+        });
+    };
+
+    MapWidget.prototype.getWFSColors = function(layerIndex, layerCount) {
+        var step = Math.floor(255 / layerCount);
+        var offset = step * layerIndex;
+        return {
+            stroke: [255 - offset, offset, 255 - offset, 1],
+            fill: [255 - offset, offset, 255 - offset, 0.1]
+        }
+    };
+
+    MapWidget.prototype.getWFSUrl = function(typeName, extent) {
+        return self.options.wfs_server_url +
+            '?service=WFS&version=1.1.0&request=GetFeature' +
+            '&typeName=' + typeName + '&outputFormat=application/json' +
+            '&srsname=EPSG:3879&bbox=' + extent.join(',') + ',EPSG:3879';
     };
 
     MapWidget.prototype.createInteractions = function() {

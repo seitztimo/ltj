@@ -18,6 +18,8 @@ env = environ.Env(
     LOG_LEVEL=(str, 'INFO'),
     SENTRY_DSN=(str, ''),
     SENTRY_ENVIRONMENT=(str, 'unconfigured'),
+    WFS_SERVER_URL=(str, 'http://localhost/'),
+    WFS_NAMESPACE=(str, 'ltj-dev'),
 )
 
 # .env file, should load only in development environment
@@ -156,3 +158,6 @@ USE_TZ = True
 # Custom settings
 
 SRID = 3879  # Spatial reference system identifier used for geometry fields
+
+WFS_SERVER_URL = env('WFS_SERVER_URL')  # WFS server url for features
+WFS_NAMESPACE = env('WFS_NAMESPACE')  # Namespace for WFS layers
