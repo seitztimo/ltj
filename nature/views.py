@@ -6,12 +6,31 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views import View
 
-from .models import Feature
+from .models import Feature, Species
 
 
 class FeatureReportView(DetailView):
     queryset = Feature.objects.open_data()
     template_name = 'nature/feature-report.html'
+
+
+class SpeciesReportView(DetailView):
+    queryset = Species.objects.open_data()
+    template_name = 'nature/species-report.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.object:
+            context['feature_classes'] = {}
+            for observation in self.object.observations.all():
+                feature_class = observation.feature.feature_class
+                if feature_class.id not in context['feature_classes'].keys():
+                    context['feature_classes'][feature_class.id] = {
+                        'name': feature_class.name,
+                        'observations': [],
+                    }
+                context['feature_classes'][feature_class.id]['observations'].append(observation)
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
