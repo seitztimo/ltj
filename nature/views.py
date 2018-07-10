@@ -6,12 +6,17 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views import View
 
-from .models import Feature, Species
+from .models import Feature, Species, Observation
 
 
 class FeatureReportView(DetailView):
     queryset = Feature.objects.open_data()
     template_name = 'nature/feature-report.html'
+
+
+class ObservationReportView(DetailView):
+    queryset = Observation.objects.open_data()
+    template_name = 'nature/observation-report.html'
 
 
 class SpeciesReportView(DetailView):
