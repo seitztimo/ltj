@@ -1,0 +1,69 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        hr.dashed {
+            border: none;
+            border-top: 1px dashed rgba(0, 0, 0, .1);
+        }
+
+        hr.strong {
+            border: none;
+            border-top: 2px solid rgba(0, 0, 0, .1);
+        }
+
+        .row {
+            margin-bottom: .3rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="image-container"></div>
+    <h2 class="text-uppercase">{{ observationseries.name }}</h2>
+    <hr class="mb-2">
+
+    <div class="row">
+        <b class="col-sm-3">{% trans "Name" %}</b>
+        <div class="col-sm-9">
+            {{ observationseries.name }}
+        </div>
+    </div>
+    {% if observationseries.description %}
+        <div class="row">
+            <b class="col-sm-3">{% trans "Description" %}</b>
+            <div class="col-sm-9">
+                {{ observationseries.description }}
+            </div>
+        </div>
+    {% endif %}
+    {% if observationseries.start_date %}
+        <div class="row">
+            <b class="col-sm-3">{% trans "Start date" %}</b>
+            <div class="col-sm-9">
+                {{ observationseries.start_date|date:'d.m.Y' }}
+            </div>
+        </div>
+    {% endif %}
+    {% if observationseries.end_date %}
+        <div class="row">
+            <b class="col-sm-3">{% trans "End date" %}</b>
+            <div class="col-sm-9">
+                {{ observationseries.end_date|date:'d.m.Y' }}
+            </div>
+        </div>
+    {% endif %}
+    <hr class="mb-2">
+    <footer>
+        <p class="mb-1">© Helsingin kaupunki</p>
+        <p>Luontotietojärjestelmä</p>
+    </footer>
+</div>
+</body>
+</html>
