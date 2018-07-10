@@ -4,9 +4,9 @@ from django.http import QueryDict
 from django.test import TestCase, RequestFactory, override_settings
 from django.urls import reverse
 
-from nature.tests.factories import FeatureClassFactory
+from nature.tests.factories import FeatureClassFactory, ObservationFactory
 from nature.tests.utils import make_user
-from ..views import FeatureWFSView
+from ..views import FeatureWFSView, SpeciesReportView
 
 
 class MockResponse:
@@ -68,3 +68,31 @@ class TestFeatureWFSView(TestCase):
             'bbox': '0,1,2,3,EPSG:3879'
         }
         self.assertEqual(query_dict.dict(), expected_dict)
+
+
+class TestSpeciesReportView(TestCase):
+
+    def setUp(self):
+        self.observation = ObservationFactory()
+        self.species = self.observation.species
+        self.feature_class = self.observation.feature.feature_class
+
+        self.view = SpeciesReportView()
+        factory = RequestFactory()
+        view_kwargs = {'pk': self.species.pk}
+        self.request = factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        self.view.request = self.request
+        self.view.kwargs = view_kwargs
+
+    def test_get_context_data(self):
+        self.view.get(self.request)
+        context = self.view.get_context_data()
+        self.assertEqual(len(context['feature_classes']), 1)
+        self.assertTrue(context['feature_classes'][self.feature_class.id])
+        self.assertEqual(
+            context['feature_classes'][self.feature_class.id],
+            {
+                'name': self.feature_class.name,
+                'observations': [self.observation]
+            }
+        )
