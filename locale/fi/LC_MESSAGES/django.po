@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 10:10+0300\n"
+"POT-Creation-Date: 2018-07-11 10:14+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -538,7 +538,15 @@ msgstr "Tapahtumatyyppi"
 msgid "Description"
 msgstr "Kuvaus"
 
-msgid "Observation"
+msgid "Observations at this feature"
+msgstr "Kohteen lajihavainnot"
+
+msgid "Feature"
+msgstr "Kohde"
+
+#, fuzzy
+#| msgid "Observation"
+msgid "Observations"
 msgstr "Lajihavainto"
 
 msgid "Species"
@@ -555,6 +563,9 @@ msgstr "Havaintosarjan kuvaus"
 
 msgid "Observation series"
 msgstr "Havaintosarja"
+
+msgid "Observation"
+msgstr "Lajihavainto"
 
 msgid "Name"
 msgstr "Nimi"
@@ -594,9 +605,6 @@ msgstr "Voimaantulo"
 
 msgid "Features"
 msgstr "Kohteet"
-
-msgid "Feature"
-msgstr "Kohde"
 
 msgid "Home"
 msgstr "Etusivu"

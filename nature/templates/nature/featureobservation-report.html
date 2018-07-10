@@ -1,0 +1,100 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        hr.dashed {
+            border: none;
+            border-top: 1px dashed rgba(0, 0, 0, .1);
+        }
+
+        hr.strong {
+            border: none;
+            border-top: 2px solid rgba(0, 0, 0, .1);
+        }
+
+        .row {
+            margin-bottom: .3rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="image-container"></div>
+    <h2 class="text-uppercase">{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }})</h2>
+    <hr class="mb-2">
+
+
+    <!-- Feature -->
+    <div class="row">
+        <b class="col-sm-2">{% trans "Feature" %}</b>
+        <div class="col-sm-10">
+            <a href="{% url 'nature:feature-report' feature.id %}">{{ feature.name }}</a>
+        </div>
+    </div>
+
+    <hr class="mb-4">
+    {% if feature.observations.all %}
+        <h4 class="text-uppercase">{% trans "Observations" %}</h4>
+        <hr class="mb-2">
+
+        {% for observation in feature.observations.all %}
+            <div class="row">
+                <b class="col-sm-3">{% trans "Species" %}</b>
+                <div class="col-sm-9">
+                    <a href="{% url 'nature:species-report' observation.species.id %}">
+                        {{ observation.species.name_fi }} (<i>{{ observation.species.name_sci_1 }}</i>)
+                    </a>
+                </div>
+            </div>
+            {% if observation.species.additional_info %}
+                <div class="row">
+                    <b class="col-sm-3">{% trans "Species information" %}</b>
+                    <div class="col-sm-9">
+                        {{ observation.species.additional_info }}
+                    </div>
+                </div>
+            {% endif %}
+            {% if observation.number %}
+                <div class="row">
+                    <b class="col-sm-3">{% trans "Number" %}</b>
+                    <div class="col-sm-9">
+                        {{ observation.number }}
+                    </div>
+                </div>
+            {% endif %}
+            {% if observation.description %}
+                <div class="row">
+                    <b class="col-sm-3">{% trans "Observation description" %}</b>
+                    <div class="col-sm-9">
+                        {{ observation.description }}
+                    </div>
+                </div>
+            {% endif %}
+            {% if observation.series.id %}
+                <div class="row">
+                    <b class="col-sm-3">{% trans "Observation series" %}</b>
+                    <div class="col-sm-9">
+                        <!--TODO: Make this into a link -->
+                        {{ observation.series.name }}
+                    </div>
+                </div>
+            {% endif %}
+            {% if not forloop.last %}
+                <hr class="mb-2 dashed">
+            {% endif %}
+        {% endfor %}
+        <hr class="mb-4">
+    {% endif %}
+    <footer>
+        <p class="mb-1">© Helsingin kaupunki</p>
+        <p>Luontotietojärjestelmä</p>
+    </footer>
+</div>
+</body>
+</html>

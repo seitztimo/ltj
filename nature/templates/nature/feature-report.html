@@ -77,6 +77,12 @@
         </div>
     {% endfor %}
     <hr class="mb-2">
+    {% if feature.observations.all %}
+        <a href="{% url 'nature:featureobservation-report' feature.id %}">
+            {% trans "Observations at this feature" %}
+        </a>
+    {% endif %}
+    <hr class="mb-2">
     <footer>
         <p class="mb-1">© Helsingin kaupunki</p>
         <p>Luontotietojärjestelmä</p>
