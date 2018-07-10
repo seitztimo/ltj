@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
             name='Transaction',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
+                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
                 ('register_id', models.CharField(blank=True, db_column='diaarinro', max_length=20, null=True)),
                 ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
                 ('last_modified_by', models.CharField(blank=True, db_column='paivittaja', max_length=20, null=True)),
@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
             name='Feature',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
+                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
                 ('fid', models.CharField(blank=True, db_column='tunnus', max_length=10, null=True)),
                 ('geometry', nature.models.PermissiveGeometryField(db_column='geometry1', srid=3879)),
                 ('name', models.CharField(blank=True, db_column='nimi', max_length=80, null=True)),
@@ -161,7 +161,7 @@ class Migration(migrations.Migration):
             name='FeatureLink',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
+                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
                 ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
                 ('text', models.CharField(blank=True, db_column='linkkiteksti', max_length=4000, null=True)),
                 ('ordering', models.IntegerField(blank=True, db_column='jarjestys', null=True)),
@@ -237,7 +237,7 @@ class Migration(migrations.Migration):
             name='HistoricalFeature',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
+                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
                 ('fid', models.CharField(blank=True, db_column='tunnus', max_length=10, null=True)),
                 ('geometry', nature.models.PermissiveGeometryField(db_column='geometry1', srid=3879)),
                 ('name', models.CharField(blank=True, db_column='nimi', max_length=80, null=True)),
@@ -289,7 +289,7 @@ class Migration(migrations.Migration):
             name='Observation',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
+                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
                 ('code', models.CharField(blank=True, db_column='hav_koodi', max_length=100, null=True)),
                 ('number', models.CharField(blank=True, db_column='lkm', max_length=30, null=True)),
                 ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
@@ -450,7 +450,7 @@ class Migration(migrations.Migration):
             name='Species',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Administrators only'), (2, 'Administrators and staff'), (3, 'Public')], db_column='suojaustasoid', default=3)),
+                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
                 ('taxon', models.CharField(blank=True, db_column='ryhma', max_length=5, null=True)),
                 ('taxon_1', models.CharField(blank=True, db_column='elioryhma1', max_length=50, null=True)),
                 ('taxon_2', models.CharField(blank=True, db_column='elioryhma2', max_length=50, null=True)),
