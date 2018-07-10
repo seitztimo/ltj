@@ -82,6 +82,12 @@
             {% trans "Observations at this feature" %}
         </a>
     {% endif %}
+
+    {% if feature.habitat_type_observations.all %}
+        <a href="{% url 'nature:featureobservation-report' feature.id %}">
+            {% trans "Habitat observations at this feature" %}
+        </a>
+    {% endif %}
     <hr class="mb-2">
     <footer>
         <p class="mb-1">© Helsingin kaupunki</p>

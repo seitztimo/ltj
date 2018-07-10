@@ -9,6 +9,8 @@ urlpatterns = [
         name='observationseries-report'),
     url(r'^feature-observations-report/(?P<pk>\d+)/$', views.FeatureObservationView.as_view(),
         name='featureobservation-report'),
+    url(r'^feature-habitatobservations-report/(?P<pk>\d+)/$', views.FeatureHabitatObservationView.as_view(),
+        name='featureobservation-report'),
     url(r'^species-report/(?P<pk>\d+)/$', views.SpeciesReportView.as_view(), name='species-report'),
     url(r'^observation-report/(?P<pk>\d+)/$', views.ObservationReportView.as_view(), name='observation-report'),
     url(r'^wfs', views.FeatureWFSView.as_view(), name='wfs'),
