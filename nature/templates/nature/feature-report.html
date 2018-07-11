@@ -10,6 +10,19 @@
             height: 500px;
             width: 100%;
         }
+
+        hr.dashed {
+            border: none;
+            border-top: 1px dashed rgba(0, 0, 0, .1);
+        }
+
+        .row {
+            margin-bottom: .3rem;
+        }
+
+        #background-map {
+            margin-left: 15px;
+        }
     </style>
 </head>
 <body>
@@ -18,13 +31,13 @@
     <hr class="mb-2">
 
     <!-- Area and geometry -->
-    <div class="form-group row mb-0">
-        <label for="area" class="col-sm-2 col-form-label font-weight-bold">{% trans "Area (from map)" %}</label>
+    <div class="row">
+        <b class="col-sm-2">{% trans "Area (from map)" %}</b>
         <div class="col-sm-10">
-          <input type="text" readonly class="form-control-plaintext" id="area" value="{{ feature.area }} ha">
+            {{ feature.area }} ha
         </div>
     </div>
-    <div class="form-group row mb-2">
+    <div class="row mb-2">
         <label for="background-map" class="col-sm-2 col-form-label font-weight-bold">{% trans "Backgroud map" %}</label>
         <select id="background-map" class="col-sm-3 form-control" onchange="reportMap.changeLayer(this.value)">
             <option value="avoindata:Opaskartta_Helsinki">Opaskartta Helsinki</option>
@@ -57,24 +70,27 @@
 
     <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
     {% for transaction in feature.transactions.all %}
-        <div class="form-group row mb-0">
-            <label for="transaction-date" class="col-sm-2 col-form-label font-weight-bold">{% trans "Date" %}</label>
+        <div class="row mb-0">
+            <b class="col-sm-2">{% trans "Date" %}</b>
             <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="transaction-date" value="{{ transaction.date|date:'d.m.Y' }}">
+                {{ transaction.date|date:'d.m.Y' }}
             </div>
         </div>
         <div class="form-group row mb-0">
-            <label for="transaction-type" class="col-sm-2 col-form-label font-weight-bold">{% trans "Transaction type" %}</label>
+            <b class="col-sm-2">{% trans "Transaction type" %}</b>
             <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="transaction-type" value="{{ transaction.transaction_type }}">
+                {{ transaction.transaction_type }}
             </div>
         </div>
         <div class="form-group row mb-0">
-            <p for="transaction-description" class="col-sm-2 col-form-label font-weight-bold">{% trans "Description" %}</p>
+            <b class="col-sm-2">{% trans "Description" %}</b>
             <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="transaction-date" value="{{ transaction.description }}">
+                {{ transaction.description }}
             </div>
         </div>
+        {% if not forloop.last %}
+            <hr class="mb-2 dashed">
+        {% endif %}
     {% endfor %}
     <hr class="mb-2">
     {% if feature.observations.all %}
