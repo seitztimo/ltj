@@ -82,8 +82,7 @@
                 <div class="row">
                     <b class="col-sm-3">{% trans "Observation series" %}</b>
                     <div class="col-sm-9">
-                        <!--TODO: Make this into a link -->
-                        {{ observation.observation_series.name }}
+                        <a href="{% url 'nature:observationseries-report' observation.observation_series.id %}">{{ observation.observation_series.name }}</a>
                     </div>
                 </div>
             {% endif %}
