@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-12 13:33+0300\n"
+"POT-Creation-Date: 2018-07-12 13:35+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -560,6 +560,9 @@ msgstr "Lajihavainto"
 msgid "Observations at this feature"
 msgstr "Kohteen lajihavainnot"
 
+msgid "Habitat type"
+msgstr "Luontotyyppi"
+
 msgid "Habitat observations at this feature"
 msgstr "Kohteen luontotyypit"
 
@@ -568,9 +571,6 @@ msgstr "Kohde"
 
 msgid "Habitat types"
 msgstr "Luontotyypit"
-
-msgid "Habitat type"
-msgstr "luontotyyppi"
 
 msgid "Habitat group"
 msgstr "Luontotyyppiryhmä"
@@ -624,7 +624,7 @@ msgid "Species regulation report"
 msgstr "Lajisäädösraportti"
 
 msgid "Regulations"
-msgstr "säädökset"
+msgstr "Säädökset"
 
 msgid "Regulation values in the nature information system"
 msgstr "Suojeluarvot luontotietojärjestelmässä"
