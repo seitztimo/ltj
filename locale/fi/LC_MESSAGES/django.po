@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-09 14:30+0300\n"
+"POT-Creation-Date: 2018-07-11 13:57+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -620,11 +620,8 @@ msgstr "Poista kaikki geometriat"
 msgid "Debugging window (serialized value)"
 msgstr "Debuggausikkuna (sarjoitettu arvo)"
 
-msgid "Species report"
-msgstr "Lajiraportti"
-
-msgid "Taxon"
-msgstr "Eliöryhmä"
+msgid "Species regulation report"
+msgstr "Lajisäädösraportti"
 
 msgid "Regulations"
 msgstr "säädökset"
@@ -640,6 +637,12 @@ msgstr "Suojeluarvo"
 
 msgid "Date of entry"
 msgstr "Voimaantulo"
+
+msgid "Species report"
+msgstr "Lajiraportti"
+
+msgid "Taxon"
+msgstr "Eliöryhmä"
 
 msgid "Features"
 msgstr "Kohteet"

@@ -38,6 +38,11 @@ class SpeciesReportView(DetailView):
         return context
 
 
+class SpeciesRegulationReportView(DetailView):
+    queryset = Species.objects.open_data()
+    template_name = 'nature/species-regulation-report.html'
+
+
 class ObservationSeriesView(DetailView):
     queryset = ObservationSeries.objects.all()
     template_name = 'nature/observationseries-report.html'
