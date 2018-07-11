@@ -1,0 +1,42 @@
+{% load static i18n %}
+
+<div class="row">
+    <b class="col-sm-3">{% trans "Species" %}</b>
+    <div class="col-sm-9">
+        <a href="{% url 'nature:species-report' observation.species.id %}">
+            {{ observation.species.name_fi }} (<i>{{ observation.species.name_sci_1 }}</i>)
+        </a>
+    </div>
+</div>
+{% if observation.species.additional_info %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Species information" %}</b>
+        <div class="col-sm-9">
+            {{ observation.species.additional_info }}
+        </div>
+    </div>
+{% endif %}
+{% if observation.number %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Number" %}</b>
+        <div class="col-sm-9">
+            {{ observation.number }}
+        </div>
+    </div>
+{% endif %}
+{% if observation.description %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Observation description" %}</b>
+        <div class="col-sm-9">
+            {{ observation.description }}
+        </div>
+    </div>
+{% endif %}
+{% if observation.series.id %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Observation series" %}</b>
+        <div class="col-sm-9">
+            <a href="{% url 'nature:observationseries-report' observation.series.id %}">{{ observation.series.name }}</a>
+        </div>
+    </div>
+{% endif %}

@@ -100,9 +100,19 @@
         <hr class="mb-2">
     {% endif %}
     {% if feature.observations.all %}
-        <a href="{% url 'nature:featureobservation-report' feature.id %}">
-            {% trans "Observations at this feature" %}
-        </a>
+        {% if feature.geometry.geom_type == 'Point' %}
+            <h4 class="text-uppercase">{% trans "Observations" %}</h4>
+            {% for observation in feature.observations.all %}
+                {% include "nature/stubs/observation-info.html" with observation=observation %}
+                {% if not forloop.last %}
+                    <hr class="mb-2 dashed">
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <a href="{% url 'nature:featureobservation-report' feature.id %}">
+                {% trans "Observations at this feature" %}
+            </a>
+        {% endif %}
     {% endif %}
 
     {% if feature.habitat_type_observations.all %}
