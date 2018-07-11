@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'nature',
     'imports',
+    'files',
 ]
 
 # Sentry
