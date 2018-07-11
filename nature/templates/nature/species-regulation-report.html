@@ -1,0 +1,62 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        hr.dashed {
+            border: none;
+            border-top: 1px dashed rgba(0, 0, 0, .1);
+        }
+
+        .row {
+            margin-bottom: .3rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-uppercase">{% trans "Species regulation report" %}</h2>
+    <hr class="mb-2">
+
+
+    <!-- Species -->
+    <div class="row">
+        <b class="col-sm-2">{% trans "Species" %}</b>
+        <div class="col-sm-10">
+            <i>{{ species.name_sci_1 | lower | capfirst }}</i>
+            <br/>
+            {{ species.name_fi | lower | capfirst }}
+        </div>
+    </div>
+
+    <hr class="mb-4">
+
+    <!-- Regulations -->
+    {% if species.regulations.all %}
+        <h4 class="text-uppercase">{% trans "Regulations" %}</h4>
+        <hr class="mb-2">
+
+        {% for regulation in species.regulations.all %}
+            {% include 'nature/stubs/species-regulation.html' with regulation=regulation %}
+            {% if not forloop.last %}
+                <hr class="mb-2 dashed">
+            {% endif %}
+        {% endfor %}
+        <hr class="mb-2">
+    {% endif %}
+    <a href="http://kartta.hel.fi/Applications/ltj/html/Suojeluarvot_ltj_fi.htm">
+        {% trans "Regulation values in the nature information system" %}
+    </a>
+    <hr class="mb-2">
+    <footer>
+        <p class="mb-1">© Helsingin kaupunki</p>
+        <p>Luontotietojärjestelmä</p>
+    </footer>
+</div>
+</body>
+</html>
