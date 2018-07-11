@@ -43,6 +43,16 @@ class ObservationSeriesView(DetailView):
     template_name = 'nature/observationseries-report.html'
 
 
+class FeatureObservationView(DetailView):
+    queryset = Feature.objects.open_data()
+    template_name = 'nature/featureobservation-report.html'
+
+
+class FeatureHabitatObservationView(DetailView):
+    queryset = Feature.objects.open_data()
+    template_name = 'nature/featurehabitatobservation-report.html'
+
+
 @method_decorator(login_required, name='dispatch')
 class FeatureWFSView(View):
 
