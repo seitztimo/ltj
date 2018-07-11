@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 14:33+0300\n"
+"POT-Creation-Date: 2018-07-11 14:34+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -630,19 +630,19 @@ msgid "Regulation values in the nature information system"
 msgstr "Suojeluarvot luontotietojärjestelmässä"
 
 msgid "Species report"
-msgstr "Lajiraportti"
+msgstr "Lajisäädösraportti"
 
 msgid "Taxon"
 msgstr "Eliöryhmä"
 
+msgid "Link"
+msgstr "Linkki"
+
 msgid "Features"
-msgstr "Kohteet"
+msgstr "Kohde"
 
 msgid "Regulation"
 msgstr "Säädös"
-
-msgid "Link"
-msgstr "Linkki"
 
 msgid "Protection value"
 msgstr "Suojeluarvo"
