@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 10:16+0300\n"
+"POT-Creation-Date: 2018-07-09 14:30+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -22,7 +22,7 @@ msgid "{0} features are imported"
 msgstr ""
 
 msgid "shapefiles"
-msgstr ""
+msgstr "shape-tiedostot"
 
 msgid ""
 "Zipped shapefiles that contains .shp, .shx and .dbf files with a common "
@@ -35,6 +35,12 @@ msgstr "digitoija"
 msgid "created time"
 msgstr "lisäysaika"
 
+msgid "shapefile import"
+msgstr "shape-tiedoston eräajo"
+
+msgid "shapefile imports"
+msgstr "shape-tiedostojen eräajot"
+
 #, python-format
 msgid "%(filename)s is not a valid zip file."
 msgstr ""
@@ -43,6 +49,16 @@ msgid "Files do not have a common filename prefix."
 msgstr ""
 
 msgid ".shp, .shx and .dbf files are required."
+msgstr ""
+
+#, python-format
+msgid ""
+"Fields not allowed: %(fields)s. Allowed shapefile fields are: "
+"%(allowed_fields)s."
+msgstr ""
+
+#, python-format
+msgid "Feature classes do not exist: %(feature_classes)s."
 msgstr ""
 
 msgid "Luontotietojärjestelmä site admin"

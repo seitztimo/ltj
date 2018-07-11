@@ -1,11 +1,14 @@
 import os
 import zipfile
+from unittest.mock import patch, MagicMock
 
 from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.test import TestCase
 
+from nature.tests.factories import FeatureFactory
 from .factories import ShapefileImportFactory
+from .utils import ZippedShapefilesGenerator
 from ..validators import ZippedShapefilesValidator
 
 
@@ -15,16 +18,8 @@ class TestValidateZippedShapefiles(TestCase):
         self.validator = ZippedShapefilesValidator()
 
     def test_not_raise_validation_error_for_valid_zipped_shapefiles(self):
-        filename = 'test.zip'
-        with zipfile.ZipFile(filename, 'w') as zfile:
-            with open('test.shp', 'w') as shp, open('test.shx', 'w') as shx, open('test.dbf', 'w') as dbf:
-                zfile.write(shp.name)
-                zfile.write(shx.name)
-                zfile.write(dbf.name)
-                os.remove(shp.name)
-                os.remove(shx.name)
-                os.remove(dbf.name)
-
+        feature = FeatureFactory()
+        filename = ZippedShapefilesGenerator.create_shapefiles([feature])
         with open(filename, mode='rb') as f:
             shp_import = ShapefileImportFactory.build(shapefiles=File(f))
             try:
@@ -89,6 +84,38 @@ class TestValidateZippedShapefiles(TestCase):
                 self.fail('Does not raise ValidationError for missing required files.')
             except ValidationError as e:
                 self.assertEqual(e.code, 'missing_required_files')
+            finally:
+                f.close()
+                os.remove(filename)
+
+    def test_raise_validation_error_for_not_allowed_fields(self):
+        feature = FeatureFactory()
+        filename = ZippedShapefilesGenerator.create_shapefiles([feature])
+
+        with open(filename, mode='rb') as f:
+            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
+            mock_fields = [('DeletionFlag',), ('test-field',)]
+            with patch('shapefile.Reader', MagicMock(return_value=MagicMock(fields=mock_fields))):
+                try:
+                    self.validator(shp_import.shapefiles)
+                    self.fail('Does not raise ValidationError for not allowed fields')
+                except ValidationError as e:
+                    self.assertEqual(e.code, 'fields_not_allowed')
+                finally:
+                    f.close()
+                    os.remove(filename)
+
+    def test_raise_validation_error_for_not_exist_feature_classes(self):
+        feature = FeatureFactory.build()
+        filename = ZippedShapefilesGenerator.create_shapefiles([feature])
+
+        with open(filename, mode='rb') as f:
+            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
+            try:
+                self.validator(shp_import.shapefiles)
+                self.fail('Does not raise ValidationError for not exist feature classes')
+            except ValidationError as e:
+                self.assertEqual(e.code, 'feature_classes_not_exist')
             finally:
                 f.close()
                 os.remove(filename)
