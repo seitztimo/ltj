@@ -9,6 +9,7 @@ from .validators import ZippedShapefilesValidator
 class ShapefileImport(models.Model):
     shapefiles = models.FileField(
         _('shapefiles'),
+        upload_to='shapefiles/',
         validators=[
             FileExtensionValidator(allowed_extensions=['zip']),
             ZippedShapefilesValidator(),
