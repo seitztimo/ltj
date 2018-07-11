@@ -1,0 +1,22 @@
+{% load static i18n %}
+
+<div class="row">
+    <b class="col-sm-2">{% trans "Regulation" %}</b>
+    <div class="col-sm-10">
+        <a href="{{ regulation.link | safe }}">
+        {{ regulation.name }}, {{ regulation.paragraph }}
+        </a>
+    </div>
+</div>
+<div class="row">
+    <b class="col-sm-2">{% trans "Protection value" %}</b>
+    <div class="col-sm-10">
+        {{ regulation.value }} = {{ regulation.value_explanation }}
+    </div>
+</div>
+<div class="row">
+    <b class="col-sm-2">{% trans "Date of entry" %}</b>
+    <div class="col-sm-10">
+        {{ regulation.date_of_entry | date:'d.m.Y' }}
+    </div>
+</div>
