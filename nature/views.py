@@ -27,7 +27,7 @@ class SpeciesReportView(DetailView):
         context = super().get_context_data(**kwargs)
         if self.object:
             context['feature_classes'] = {}
-            for observation in self.object.observations.all():
+            for observation in self.object.observations.open_data():
                 feature_class = observation.feature.feature_class
                 if feature_class.id not in context['feature_classes'].keys():
                     context['feature_classes'][feature_class.id] = {
