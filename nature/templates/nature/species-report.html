@@ -59,7 +59,14 @@
 
     <!-- Regulations -->
     {% if species.regulations.all %}
-        <h4 class="text-uppercase">{% trans "Regulations" %}</h4>
+        <h4 class="text-uppercase">
+            {% trans "Regulations" %}
+            <small>
+                <a href="{% url 'nature:speciesregulation-report' species.id %}">
+                    {% trans "Link" %}
+                </a>
+            </small>
+        </h4>
         <hr class="mb-2">
 
         {% for regulation in species.regulations.all %}
