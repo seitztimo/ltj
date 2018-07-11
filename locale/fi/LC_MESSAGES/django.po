@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-10 15:57+0300\n"
+"POT-Creation-Date: 2018-07-11 10:10+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -556,6 +556,15 @@ msgstr "Havaintosarjan kuvaus"
 msgid "Observation series"
 msgstr "Havaintosarja"
 
+msgid "Name"
+msgstr "Nimi"
+
+msgid "Start date"
+msgstr "Alku pvm"
+
+msgid "End date"
+msgstr "Loppu pvm"
+
 msgid "Delete all Geometries"
 msgstr "Poista kaikki geometriat"
 
@@ -585,9 +594,6 @@ msgstr "Voimaantulo"
 
 msgid "Features"
 msgstr "Kohteet"
-
-msgid "Name"
-msgstr "Nimi"
 
 msgid "Feature"
 msgstr "Kohde"

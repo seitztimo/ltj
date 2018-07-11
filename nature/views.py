@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views import View
 
-from .models import Feature, Species, Observation
+from .models import Feature, Species, ObservationSeries, Observation
 
 
 class FeatureReportView(DetailView):
@@ -36,6 +36,11 @@ class SpeciesReportView(DetailView):
                     }
                 context['feature_classes'][feature_class.id]['observations'].append(observation)
         return context
+
+
+class ObservationSeriesView(DetailView):
+    queryset = ObservationSeries.objects.all()
+    template_name = 'nature/observationseries-report.html'
 
 
 @method_decorator(login_required, name='dispatch')
