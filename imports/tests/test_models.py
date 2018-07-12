@@ -15,4 +15,4 @@ class TestShapefileImport(TestCase):
         os.remove(self.shp_import.shapefiles.path)
 
     def test__str__(self):
-        self.assertEqual(self.shp_import.__str__(), 'testshapefiles.zip')
+        self.assertEqual(self.shp_import.__str__(), 'shapefiles/testshapefiles.zip')
