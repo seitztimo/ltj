@@ -10,6 +10,19 @@
             height: 500px;
             width: 100%;
         }
+
+        hr.dashed {
+            border: none;
+            border-top: 1px dashed rgba(0, 0, 0, .1);
+        }
+
+        .row {
+            margin-bottom: .3rem;
+        }
+
+        #background-map {
+            margin-left: 15px;
+        }
     </style>
 </head>
 <body>
@@ -18,13 +31,13 @@
     <hr class="mb-2">
 
     <!-- Area and geometry -->
-    <div class="form-group row mb-0">
-        <label for="area" class="col-sm-2 col-form-label font-weight-bold">{% trans "Area (from map)" %}</label>
+    <div class="row">
+        <b class="col-sm-2">{% trans "Area (from map)" %}</b>
         <div class="col-sm-10">
-          <input type="text" readonly class="form-control-plaintext" id="area" value="{{ feature.area }} ha">
+            {{ feature.area }} ha
         </div>
     </div>
-    <div class="form-group row mb-2">
+    <div class="row mb-2">
         <label for="background-map" class="col-sm-2 col-form-label font-weight-bold">{% trans "Backgroud map" %}</label>
         <select id="background-map" class="col-sm-3 form-control" onchange="reportMap.changeLayer(this.value)">
             <option value="avoindata:Opaskartta_Helsinki">Opaskartta Helsinki</option>
@@ -40,47 +53,66 @@
     <hr class="mb-2">
 
     <!-- Feature values -->
-    <h4 class="text-uppercase">{% trans "Feature values" %}</h4>
-    <div class="row">
-        {% for value in feature.values.all %}
-            <div class="col-md-4">{{ value.value_type }}</div>
-            <div class="col-md-4">{{ value.valuator }}</div>
-            <div class="col-md-4"><a href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
-        {% endfor %}
-    </div>
-    <hr class="mb-2">
+    {% if feature.values.all %}
+        <h4 class="text-uppercase">{% trans "Feature values" %}</h4>
+        <div class="row">
+            {% for value in feature.values.all %}
+                <div class="col-md-4">{{ value.value_type }}</div>
+                <div class="col-md-4">{{ value.valuator }}</div>
+                <div class="col-md-4"><a href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
+            {% endfor %}
+        </div>
+        <hr class="mb-2">
+    {% endif %}
 
     <!-- Feature description -->
-    <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
-    <p>{{ feature.text_display|safe }}</p>
-    <hr class="mb-2">
+    {% if feature.text_display %}
+        <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
+        <p>{{ feature.text_display|safe }}</p>
+        <hr class="mb-2">
+    {% endif %}
 
-    <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
-    {% for transaction in feature.transactions.all %}
-        <div class="form-group row mb-0">
-            <label for="transaction-date" class="col-sm-2 col-form-label font-weight-bold">{% trans "Date" %}</label>
-            <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="transaction-date" value="{{ transaction.date|date:'d.m.Y' }}">
+    {% if feature.transactions.all %}
+        <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
+        {% for transaction in feature.transactions.all %}
+            <div class="row mb-0">
+                <b class="col-sm-2">{% trans "Date" %}</b>
+                <div class="col-sm-10">
+                    {{ transaction.date|date:'d.m.Y' }}
+                </div>
             </div>
-        </div>
-        <div class="form-group row mb-0">
-            <label for="transaction-type" class="col-sm-2 col-form-label font-weight-bold">{% trans "Transaction type" %}</label>
-            <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="transaction-type" value="{{ transaction.transaction_type }}">
+            <div class="form-group row mb-0">
+                <b class="col-sm-2">{% trans "Transaction type" %}</b>
+                <div class="col-sm-10">
+                    {{ transaction.transaction_type }}
+                </div>
             </div>
-        </div>
-        <div class="form-group row mb-0">
-            <p for="transaction-description" class="col-sm-2 col-form-label font-weight-bold">{% trans "Description" %}</p>
-            <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="transaction-date" value="{{ transaction.description }}">
+            <div class="form-group row mb-0">
+                <b class="col-sm-2">{% trans "Description" %}</b>
+                <div class="col-sm-10">
+                    {{ transaction.description }}
+                </div>
             </div>
-        </div>
-    {% endfor %}
-    <hr class="mb-2">
+            {% if not forloop.last %}
+                <hr class="mb-2 dashed">
+            {% endif %}
+        {% endfor %}
+        <hr class="mb-2">
+    {% endif %}
     {% if feature.observations.all %}
-        <a href="{% url 'nature:featureobservation-report' feature.id %}">
-            {% trans "Observations at this feature" %}
-        </a>
+        {% if feature.geometry.geom_type == 'Point' %}
+            <h4 class="text-uppercase">{% trans "Observations" %}</h4>
+            {% for observation in feature.observations.all %}
+                {% include "nature/stubs/observation-info.html" with observation=observation %}
+                {% if not forloop.last %}
+                    <hr class="mb-2 dashed">
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <a href="{% url 'nature:featureobservation-report' feature.id %}">
+                {% trans "Observations at this feature" %}
+            </a>
+        {% endif %}
     {% endif %}
 
     {% if feature.habitat_type_observations.all %}
