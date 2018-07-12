@@ -11,17 +11,17 @@ from .models import Feature, Species, ObservationSeries, Observation
 
 class FeatureReportView(DetailView):
     queryset = Feature.objects.open_data()
-    template_name = 'nature/feature-report.html'
+    template_name = 'nature/reports/feature-report.html'
 
 
 class ObservationReportView(DetailView):
     queryset = Observation.objects.open_data()
-    template_name = 'nature/observation-report.html'
+    template_name = 'nature/reports/observation-report.html'
 
 
 class SpeciesReportView(DetailView):
     queryset = Species.objects.open_data()
-    template_name = 'nature/species-report.html'
+    template_name = 'nature/reports/species-report.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -40,22 +40,22 @@ class SpeciesReportView(DetailView):
 
 class SpeciesRegulationReportView(DetailView):
     queryset = Species.objects.open_data()
-    template_name = 'nature/species-regulation-report.html'
+    template_name = 'nature/reports/species-regulation-report.html'
 
 
 class ObservationSeriesView(DetailView):
     queryset = ObservationSeries.objects.all()
-    template_name = 'nature/observationseries-report.html'
+    template_name = 'nature/reports/observationseries-report.html'
 
 
 class FeatureObservationView(DetailView):
     queryset = Feature.objects.open_data()
-    template_name = 'nature/featureobservation-report.html'
+    template_name = 'nature/reports/feature-observation-report.html'
 
 
 class FeatureHabitatObservationView(DetailView):
     queryset = Feature.objects.open_data()
-    template_name = 'nature/featurehabitatobservation-report.html'
+    template_name = 'nature/reports/feature-habitatobservation-report.html'
 
 
 @method_decorator(login_required, name='dispatch')

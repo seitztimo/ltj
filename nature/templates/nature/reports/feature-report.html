@@ -103,7 +103,7 @@
         {% if feature.geometry.geom_type == 'Point' %}
             <h4 class="text-uppercase">{% trans "Observations" %}</h4>
             {% for observation in feature.observations.all %}
-                {% include "nature/stubs/observation-info.html" with observation=observation %}
+                {% include "nature/reports/stubs/observation-info.html" with observation=observation %}
                 {% if not forloop.last %}
                     <hr class="mb-2 dashed">
                 {% endif %}
@@ -118,7 +118,7 @@
     {% if feature.habitat_type_observations.all %}
         {% if feature.habitat_type_observations.all|length == 1 %}
             <h4 class="text-uppercase">{% trans "Habitat type" %}</h4>
-            {% include "nature/stubs/habitatobservation-info.html" with observation=feature.habitat_type_observations.first %}
+            {% include "nature/reports/stubs/habitatobservation-info.html" with observation=feature.habitat_type_observations.first %}
         {% else %}
             <a href="{% url 'nature:featureobservation-report' feature.id %}">
                 {% trans "Habitat observations at this feature" %}

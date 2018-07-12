@@ -70,7 +70,7 @@
         <hr class="mb-2">
 
         {% for regulation in species.regulations.all %}
-            {% include 'nature/stubs/species-regulation.html' with regulation=regulation %}
+            {% include 'nature/reports/stubs/species-regulation.html' with regulation=regulation %}
             {% if not forloop.last %}
                 <hr class="mb-2 dashed">
             {% endif %}
