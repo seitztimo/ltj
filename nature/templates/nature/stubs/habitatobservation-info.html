@@ -1,0 +1,52 @@
+{% load static i18n %}
+
+<div class="row">
+    <b class="col-sm-3">{% trans "Habitat type" %}</b>
+    <div class="col-sm-9">
+        {{ observation.habitat_type.name }}
+    </div>
+</div>
+<div class="row">
+    <b class="col-sm-3">{% trans "Habitat group" %}</b>
+    <div class="col-sm-9">
+        {{ observation.habitat_type.group }}
+    </div>
+</div>
+<div class="row">
+    <b class="col-sm-3">{% trans "Habitat code" %}</b>
+    <div class="col-sm-9">
+        {{ observation.habitat_type.code }}
+    </div>
+</div>
+{% if observation.habitat_type.description %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Habitat description" %}</b>
+        <div class="col-sm-9">
+            {{ observation.habitat_type.description }}
+        </div>
+    </div>
+{% endif %}
+{% if observation.habitat_type.additional_info %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Habitat additional info" %}</b>
+        <div class="col-sm-9">
+            {{ observation.habitat_type.additional_info | safe }}
+        </div>
+    </div>
+{% endif %}
+{% if observation.observation_series.id %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Observation series" %}</b>
+        <div class="col-sm-9">
+            <a href="{% url 'nature:observationseries-report' observation.observation_series.id %}">{{ observation.observation_series.name }}</a>
+        </div>
+    </div>
+{% endif %}
+{% if observation.observation_series.id %}
+    <div class="row">
+        <b class="col-sm-3">{% trans "Group fraction" %} %</b>
+        <div class="col-sm-9">
+            {{ observation.group_fraction }}
+        </div>
+    </div>
+{% endif %}
