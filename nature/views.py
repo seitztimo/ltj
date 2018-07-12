@@ -38,9 +38,9 @@ class SpeciesReportView(DetailView):
         return context
 
 
-class SpeciesRegulationReportView(DetailView):
+class SpeciesRegulationsReportView(DetailView):
     queryset = Species.objects.open_data()
-    template_name = 'nature/reports/species-regulation-report.html'
+    template_name = 'nature/reports/species-regulations-report.html'
 
 
 class ObservationSeriesView(DetailView):
@@ -48,14 +48,14 @@ class ObservationSeriesView(DetailView):
     template_name = 'nature/reports/observationseries-report.html'
 
 
-class FeatureObservationView(DetailView):
+class FeatureObservationsView(DetailView):
     queryset = Feature.objects.open_data()
-    template_name = 'nature/reports/feature-observation-report.html'
+    template_name = 'nature/reports/feature-observations-report.html'
 
 
-class FeatureHabitatObservationView(DetailView):
+class FeatureHabitatTypeObservationsView(DetailView):
     queryset = Feature.objects.open_data()
-    template_name = 'nature/reports/feature-habitatobservation-report.html'
+    template_name = 'nature/reports/feature-habitattypeobservations-report.html'
 
 
 @method_decorator(login_required, name='dispatch')

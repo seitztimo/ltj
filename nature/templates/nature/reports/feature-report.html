@@ -109,7 +109,7 @@
                 {% endif %}
             {% endfor %}
         {% else %}
-            <a href="{% url 'nature:featureobservation-report' feature.id %}">
+            <a href="{% url 'nature:feature-observations-report' feature.id %}">
                 {% trans "Observations at this feature" %}
             </a>
         {% endif %}
@@ -118,9 +118,9 @@
     {% if feature.habitat_type_observations.all %}
         {% if feature.habitat_type_observations.all|length == 1 %}
             <h4 class="text-uppercase">{% trans "Habitat type" %}</h4>
-            {% include "nature/reports/stubs/habitatobservation-info.html" with observation=feature.habitat_type_observations.first %}
+            {% include "nature/reports/stubs/habitattypeobservation-info.html" with observation=feature.habitat_type_observations.first %}
         {% else %}
-            <a href="{% url 'nature:featureobservation-report' feature.id %}">
+            <a href="{% url 'nature:feature-habitattypeobservations-report' feature.id %}">
                 {% trans "Habitat observations at this feature" %}
             </a>
         {% endif %}
