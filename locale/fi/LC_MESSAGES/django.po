@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-12 13:35+0300\n"
+"POT-Creation-Date: 2018-07-12 15:40+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -16,6 +16,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "file"
+msgstr "tiedosto"
+
+msgid "created by"
+msgstr "digitoija"
+
+msgid "created time"
+msgstr "lisäysaika"
+
+msgid "last modified by"
+msgstr "muokkaaja"
+
+msgid "last modified time"
+msgstr "pvm editoitu"
+
+msgid "files"
+msgstr "tiedostot"
 
 #, python-brace-format
 msgid "{0} features are imported"
@@ -28,12 +46,6 @@ msgid ""
 "Zipped shapefiles that contains .shp, .shx and .dbf files with a common "
 "filename prefix"
 msgstr ""
-
-msgid "created by"
-msgstr "digitoija"
-
-msgid "created time"
-msgstr "lisäysaika"
 
 msgid "shapefile import"
 msgstr "shape-tiedoston eräajo"
@@ -225,12 +237,6 @@ msgstr "voimassa"
 
 msgid "number"
 msgstr "numero"
-
-msgid "last modified time"
-msgstr "pvm editoitu"
-
-msgid "last modified by"
-msgstr "muokkaaja"
 
 msgid "area (ha)"
 msgstr "pinta-ala"
@@ -649,6 +655,9 @@ msgstr "Suojeluarvo"
 
 msgid "Date of entry"
 msgstr "Voimaantulo"
+
+msgid "User guide"
+msgstr "Ohje"
 
 msgid "Home"
 msgstr "Etusivu"
