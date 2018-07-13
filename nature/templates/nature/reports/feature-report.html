@@ -1,9 +1,9 @@
-{% load static i18n %}<!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% extends "nature/reports/report-base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Feature Report" %} - {{ feature.get_protection_level_display }}{% endblock %}
+
+{% block extrastyles %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.css" type="text/css" media="all" rel="stylesheet">
     <style>
         #map {
@@ -24,12 +24,11 @@
             margin-left: 15px;
         }
     </style>
-</head>
-<body>
-<div class="container">
-    <h2 class="text-uppercase">{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }})</h2>
-    <hr class="mb-2">
+{% endblock %}
 
+{% block report_header %}{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }}){% endblock %}
+
+{% block report_body %}
     <!-- Area and geometry -->
     <div class="row">
         <b class="col-sm-2">{% trans "Area (from map)" %}</b>
@@ -57,7 +56,7 @@
         <h4 class="text-uppercase">{% trans "Feature values" %}</h4>
         <div class="row">
             {% for value in feature.values.all %}
-                <div class="col-md-4">{{ value.value_type }}</div>
+                <div class="col-md-4">{{ value.value }}</div>
                 <div class="col-md-4">{{ value.valuator }}</div>
                 <div class="col-md-4"><a href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
             {% endfor %}
@@ -66,8 +65,9 @@
     {% endif %}
 
     <!-- Feature description -->
-    {% if feature.text_display %}
+    {% if feature.description or feature.text_display %}
         <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
+        <p>{{ feature.description|default_if_none:"" }}</p>
         <p>{{ feature.text_display|safe }}</p>
         <hr class="mb-2">
     {% endif %}
@@ -124,18 +124,13 @@
                 {% trans "Habitat observations at this feature" %}
             </a>
         {% endif %}
-
     {% endif %}
-    <hr class="mb-2">
-    <footer>
-        <p class="mb-1">© Helsingin kaupunki</p>
-        <p>Luontotietojärjestelmä</p>
-    </footer>
-</div>
+{% endblock %}
+
+{% block extrajs %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
 <script src="{% static 'nature/js/ReportMap.js' %}"></script>
 <script type="text/javascript">
     var reportMap = new ReportMap('map', '{{ feature.geometry.geojson|safe }}');
 </script>
-</body>
-</html>
+{% endblock %}
