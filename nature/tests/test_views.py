@@ -1,10 +1,14 @@
 from unittest.mock import MagicMock, patch
 
 from django.http import QueryDict
-from django.test import TestCase, RequestFactory, override_settings
+from django.test import Client, TestCase, RequestFactory, override_settings
 from django.urls import reverse
 
-from nature.tests.factories import FeatureClassFactory, ObservationFactory
+from nature.tests.factories import (
+    FeatureClassFactory, ObservationFactory, FeatureFactory,
+    ObservationSeriesFactory, HabitatTypeObservationFactory,
+    SpeciesRegulationFactory,
+)
 from nature.tests.utils import make_user
 from ..views import FeatureWFSView, SpeciesReportView
 
@@ -96,3 +100,55 @@ class TestSpeciesReportView(TestCase):
                 'observations': [self.observation]
             }
         )
+
+
+class TestReportViews(TestCase):
+    """
+    TestCase that verifies that report views can be rendered correctly
+    """
+    def setUp(self):
+        self.client = Client()
+
+    def test_feature_report(self):
+        feature = FeatureFactory()
+        url = reverse('nature:feature-report', kwargs={'pk': feature.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_observationseries_report(self):
+        observation_series = ObservationSeriesFactory()
+        url = reverse('nature:observationseries-report', kwargs={'pk': observation_series.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_feature_observations_report(self):
+        feature = FeatureFactory()
+        ObservationFactory(feature=feature)
+        url = reverse('nature:feature-observations-report', kwargs={'pk': feature.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_feature_habitattypeobservations_report(self):
+        feature = FeatureFactory()
+        HabitatTypeObservationFactory(feature=feature)
+        url = reverse('nature:feature-habitattypeobservations-report', kwargs={'pk': feature.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_species_report(self):
+        species_regulation = SpeciesRegulationFactory()
+        url = reverse('nature:species-report', kwargs={'pk': species_regulation.species_id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_species_regulations_report(self):
+        species_regulation = SpeciesRegulationFactory()
+        url = reverse('nature:species-regulations-report', kwargs={'pk': species_regulation.species_id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_observation_report(self):
+        observation = ObservationFactory()
+        url = reverse('nature:observation-report', kwargs={'pk': observation.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

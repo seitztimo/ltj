@@ -13,26 +13,26 @@ from django.contrib.gis.geos import GEOSException
 from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
-    'ADMIN_ONLY': 1,
-    'ADMIN_AND_STAFF': 2,
+    'ADMIN': 1,
+    'OFFICE': 2,
     'PUBLIC': 3,
 }
 
 AUTHORIZATION_LEVELS = {
     'ADMIN': 1,
-    'OFFICER': 2,
+    'OFFICE': 2,
     'PUBLIC': 3,
     'OPEN_DATA': 4,
 }
 
 AUTHORIZATION_PROTECTION_MAP = {
     AUTHORIZATION_LEVELS['ADMIN']: [
-        PROTECTION_LEVELS['ADMIN_ONLY'],
-        PROTECTION_LEVELS['ADMIN_AND_STAFF'],
+        PROTECTION_LEVELS['ADMIN'],
+        PROTECTION_LEVELS['OFFICE'],
         PROTECTION_LEVELS['PUBLIC']
     ],
-    AUTHORIZATION_LEVELS['OFFICER']: [
-        PROTECTION_LEVELS['ADMIN_AND_STAFF'],
+    AUTHORIZATION_LEVELS['OFFICE']: [
+        PROTECTION_LEVELS['OFFICE'],
         PROTECTION_LEVELS['PUBLIC']
     ],
     AUTHORIZATION_LEVELS['PUBLIC']: [PROTECTION_LEVELS['PUBLIC']],
@@ -51,7 +51,7 @@ class ProtectedQuerySet(models.QuerySet):
         return self.filter_protected(AUTHORIZATION_LEVELS['ADMIN'])
 
     def for_admin_and_staff(self):
-        return self.filter_protected(AUTHORIZATION_LEVELS['OFFICER'])
+        return self.filter_protected(AUTHORIZATION_LEVELS['OFFICE'])
 
     def for_public(self):
         return self.filter_protected(AUTHORIZATION_LEVELS['PUBLIC'])
@@ -117,9 +117,9 @@ class ProtectedQuerySet(models.QuerySet):
 
 class ProtectionLevelMixin(models.Model):
     PROTECTION_LEVEL_CHOICES = (
-        (PROTECTION_LEVELS['ADMIN_ONLY'], "Administrators only"),
-        (PROTECTION_LEVELS['ADMIN_AND_STAFF'], "Administrators and staff"),
-        (PROTECTION_LEVELS['PUBLIC'], "Public"),
+        (PROTECTION_LEVELS['ADMIN'], _('Admin')),
+        (PROTECTION_LEVELS['OFFICE'], _('Office')),
+        (PROTECTION_LEVELS['PUBLIC'], _('Public')),
     )
 
     protection_level = models.IntegerField(_('protection level'), choices=PROTECTION_LEVEL_CHOICES,

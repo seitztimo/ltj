@@ -86,22 +86,6 @@ class FeatureFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'nature.Feature'
 
-    @factory.post_generation
-    def values(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.values.add(*extracted)
-
-    @factory.post_generation
-    def publications(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.publications.add(*extracted)
-
 
 class HistoricalFeatureFactory(factory.django.DjangoModelFactory):
     fid = factory.Sequence(lambda n: "hf-{0}".format(n))
@@ -145,14 +129,6 @@ class SpeciesFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'nature.Species'
 
-    @factory.post_generation
-    def regulations(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.regulations.add(*extracted)
-
 
 class ObservationFactory(factory.django.DjangoModelFactory):
     code = factory.Faker('text', max_nb_chars=100)
@@ -180,14 +156,6 @@ class HabitatTypeFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'nature.HabitatType'
-
-    @factory.post_generation
-    def regulations(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.regulations.add(*extracted)
 
 
 class HabitatTypeObservationFactory(factory.django.DjangoModelFactory):
@@ -233,6 +201,14 @@ class RegulationFactory(factory.django.DjangoModelFactory):
         model = 'nature.Regulation'
 
 
+class SpeciesRegulationFactory(factory.django.DjangoModelFactory):
+    species = factory.SubFactory(SpeciesFactory)
+    regulation = factory.SubFactory(RegulationFactory)
+
+    class Meta:
+        model = 'nature.SpeciesRegulation'
+
+
 class ConservationProgrammeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=20)
 
@@ -253,22 +229,6 @@ class ProtectionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'nature.Protection'
 
-    @factory.post_generation
-    def criteria(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.criteria.add(*extracted)
-
-    @factory.post_generation
-    def conservation_programmes(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.conservation_programmes.add(*extracted)
-
 
 class TransactionTypeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=20)
@@ -284,22 +244,6 @@ class TransactionFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'nature.Transaction'
-
-    @factory.post_generation
-    def features(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.features.add(*extracted)
-
-    @factory.post_generation
-    def regulations(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            self.regulations.add(*extracted)
 
 
 class TransactionFeatureFactory(factory.django.DjangoModelFactory):

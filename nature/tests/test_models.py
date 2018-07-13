@@ -30,11 +30,11 @@ class TestProtectionLevelProtectedQuerySet(TestCase):
     def setUp(self):
         self.feature_admin = FeatureFactory(
             name='admin',
-            protection_level=PROTECTION_LEVELS['ADMIN_ONLY'],
+            protection_level=PROTECTION_LEVELS['ADMIN'],
         )
         self.feature_admin_and_staff = FeatureFactory(
             name='admin_and_staff',
-            protection_level=PROTECTION_LEVELS['ADMIN_AND_STAFF'],
+            protection_level=PROTECTION_LEVELS['OFFICE'],
         )
         self.feature_public = FeatureFactory(
             name='public',
