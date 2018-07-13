@@ -233,6 +233,14 @@ class RegulationFactory(factory.django.DjangoModelFactory):
         model = 'nature.Regulation'
 
 
+class SpeciesRegulationFactory(factory.django.DjangoModelFactory):
+    species = factory.SubFactory(SpeciesFactory)
+    regulation = factory.SubFactory(RegulationFactory)
+
+    class Meta:
+        model = 'nature.SpeciesRegulation'
+
+
 class ConservationProgrammeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=20)
 
