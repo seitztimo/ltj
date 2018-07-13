@@ -1,11 +1,9 @@
-{% load static i18n %}
+{% extends "nature/reports/report-base.html" %}
+{% load i18n %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% block title %}{% trans "Species Report" %}{% endblock %}
+
+{% block extrastyles %}
     <style>
         hr.dashed {
             border: none;
@@ -21,15 +19,11 @@
             margin-bottom: .3rem;
         }
     </style>
-</head>
-<body>
+{% endblock %}
 
-<div class="container">
-    <div id="image-container"></div>
-    <h2 class="text-uppercase">{% trans "Species report" %}</h2>
-    <hr class="mb-2">
+{% block report_header %}{% trans "Species report" %}{% endblock %}
 
-
+{% block report_body %}
     <!-- Species -->
     <div class="row">
         <b class="col-sm-2">{% trans "Species" %}</b>
@@ -135,12 +129,5 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-        <hr class="mb-2">
     {% endif %}
-    <footer>
-        <p class="mb-1">© Helsingin kaupunki</p>
-        <p>Luontotietojärjestelmä</p>
-    </footer>
-</div>
-</body>
-</html>
+{% endblock %}
