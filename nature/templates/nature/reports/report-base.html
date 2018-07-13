@@ -1,0 +1,22 @@
+{% load static i18n %}<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% block extrastyles %}{% endblock %}
+</head>
+<body>
+<div class="container">
+    <h2 class="text-uppercase">{% block report_header %}{% endblock %}</h2>
+    <hr class="mb-2">
+    {% block report_body %}{% endblock %}
+    <hr class="mb-4">
+    <footer>
+        <p class="mb-1">© Helsingin kaupunki</p>
+        <p>Luontotietojärjestelmä</p>
+    </footer>
+    {% block extrajs %}
+    {% endblock %}
+</div>
+</body>
