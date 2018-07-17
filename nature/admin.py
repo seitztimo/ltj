@@ -131,6 +131,7 @@ class FeatureAdmin(admin.GeoModelAdmin):
     search_fields = ('feature_class__name', 'name', 'fid', 'id')
     list_filter = ('feature_class', 'active')
     form = FeatureForm
+    change_form_template = 'admin/feature.html'
     inlines = [
         ObservationInline, FeatureLinkInline, FeaturePublicationInline,
         FeatureValueInline, TransactionFeatureInline, HabitatTypeObservationInline,
