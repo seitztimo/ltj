@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-12 15:40+0300\n"
+"POT-Creation-Date: 2018-07-17 09:53+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -96,6 +96,15 @@ msgstr "Perusteet"
 
 msgid "Conservation programmes"
 msgstr "Suojeluohjelmat"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Office"
+msgstr "Virka"
+
+msgid "Public"
+msgstr "Yleisö"
 
 msgid "protection level"
 msgstr "suojaustaso"
@@ -536,6 +545,63 @@ msgstr "yleisyys"
 msgid "frequencies"
 msgstr "yleisyydet"
 
+msgid "Delete all Geometries"
+msgstr "Poista kaikki geometriat"
+
+msgid "Debugging window (serialized value)"
+msgstr "Debuggausikkuna (sarjoitettu arvo)"
+
+msgid "Feature Report - Habitat Type Observations"
+msgstr "Kohderaportti - Luontotyyppihavainnot"
+
+msgid "Feature"
+msgstr "Kohde"
+
+msgid "Habitat types"
+msgstr "Luontotyypit"
+
+msgid "Habitat type"
+msgstr "Luontotyyppi"
+
+msgid "Habitat group"
+msgstr "Luontotyyppiryhmä"
+
+msgid "Habitat code"
+msgstr "Tunnus"
+
+msgid "Habitat description"
+msgstr "Luontotyypin kuvaus"
+
+msgid "Habitat additional info"
+msgstr "Luontotyypin lisätieto"
+
+msgid "Observation series"
+msgstr "Havaintosarja"
+
+msgid "Group fraction"
+msgstr "Osuus kuviosta"
+
+msgid "Feature Report - Observations"
+msgstr "Kohderaportti - Lajihavainnot"
+
+msgid "Observations"
+msgstr "Lajihavainto"
+
+msgid "Species"
+msgstr "Laji"
+
+msgid "Species information"
+msgstr "Lajin lisätietoja"
+
+msgid "Number"
+msgstr "Lukumäärä"
+
+msgid "Observation description"
+msgstr "Havaintosarjan kuvaus"
+
+msgid "Feature Report"
+msgstr "Kohderaportti"
+
 msgid "Area (from map)"
 msgstr "Pinta-ala (kartalta)"
 
@@ -560,56 +626,20 @@ msgstr "Tapahtumatyyppi"
 msgid "Description"
 msgstr "Kuvaus"
 
-msgid "Observations"
-msgstr "Lajihavainto"
-
 msgid "Observations at this feature"
 msgstr "Kohteen lajihavainnot"
-
-msgid "Habitat type"
-msgstr "Luontotyyppi"
 
 msgid "Habitat observations at this feature"
 msgstr "Kohteen luontotyypit"
 
-msgid "Feature"
-msgstr "Kohde"
-
-msgid "Habitat types"
-msgstr "Luontotyypit"
-
-msgid "Habitat group"
-msgstr "Luontotyyppiryhmä"
-
-msgid "Habitat code"
-msgstr "Tunnus"
-
-msgid "Habitat description"
-msgstr "Luontotyypin kuvaus"
-
-msgid "Habitat additional info"
-msgstr "Luontotyypin lisätieto"
-
-msgid "Observation series"
-msgstr "Havaintosarja"
-
-msgid "Group fraction"
-msgstr "Osuus kuviosta"
-
-msgid "Species"
-msgstr "Laji"
-
-msgid "Species information"
-msgstr "Lajin lisätietoja"
-
-msgid "Number"
-msgstr "Lukumäärä"
-
-msgid "Observation description"
-msgstr "Havaintosarjan kuvaus"
+msgid "Observation Report"
+msgstr "Lajihavaintoraportti"
 
 msgid "Observation"
 msgstr "Lajihavainto"
+
+msgid "Observation Series Report"
+msgstr "Havaintosarjatraportti"
 
 msgid "Name"
 msgstr "Nimi"
@@ -620,11 +650,8 @@ msgstr "Alku pvm"
 msgid "End date"
 msgstr "Loppu pvm"
 
-msgid "Delete all Geometries"
-msgstr "Poista kaikki geometriat"
-
-msgid "Debugging window (serialized value)"
-msgstr "Debuggausikkuna (sarjoitettu arvo)"
+msgid "Species Regulations Report"
+msgstr "Lajisäädösraportti"
 
 msgid "Species regulation report"
 msgstr "Lajisäädösraportti"
@@ -635,8 +662,11 @@ msgstr "Säädökset"
 msgid "Regulation values in the nature information system"
 msgstr "Suojeluarvot luontotietojärjestelmässä"
 
+msgid "Species Report"
+msgstr "Lajiraportti"
+
 msgid "Species report"
-msgstr "Lajisäädösraportti"
+msgstr "Lajiraportti"
 
 msgid "Taxon"
 msgstr "Eliöryhmä"
