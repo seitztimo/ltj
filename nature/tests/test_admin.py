@@ -2,6 +2,7 @@ from unittest.mock import patch, MagicMock
 
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase, RequestFactory
+from django.urls import reverse
 
 from .factories import FeatureFactory, ObservationFactory, PublicationFactory
 from .utils import make_user
@@ -98,6 +99,15 @@ class TestFeatureAdmin(TestCase):
 
         inline_instances = fa.get_inline_instances(request)
         self.assertFalse(isinstance(inline_instances[-1], (ProtectionInline, SquareInline)))
+
+    def test_report(self):
+        fa = FeatureAdmin(Feature, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        report = fa.report(self.feature)
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature.id})
+        self.assertIn(url, report)
 
 
 class TestPublicationAdmin(TestCase):
