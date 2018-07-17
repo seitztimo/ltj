@@ -142,7 +142,6 @@ class FeatureAdmin(admin.GeoModelAdmin):
 
     widget = NatureOLWidget
     map_template = 'nature/openlayers-nature.html'
-    openlayers_url = 'https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
