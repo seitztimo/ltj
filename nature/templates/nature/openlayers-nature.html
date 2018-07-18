@@ -7,6 +7,11 @@
     {% endblock %}
 </style>
 
+<div id="popup" class="ol-popup">
+  <a href="javascript:{{ module }}.closeFeaturePopup()" id="popup-closer" class="ol-popup-closer"></a>
+  <div id="popup-content"></div>
+</div>
+
 <div id="{{ id }}_div_map">
     <div id="{{ id }}_map"></div>
     {% if not disabled %}<span class="clear_features"><a href="javascript:{{ module }}.clearFeatures()">{% trans "Delete all Geometries" %}</a></span>{% endif %}

@@ -49,7 +49,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
 
     function MapWidget(options) {
         this.map = null;
-        this.interactions = {draw: null, modify: null};
+        this.interactions = {draw: null, modify: null, select: null};
         this.typeChoices = false;
         this.ready = false;
 
@@ -70,6 +70,15 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         if (!options.base_layer) {
             this.options.base_layer = new ol.layer.Tile({source: new ol.source.OSM()});
         }
+
+        // feature popup
+        this.featurePopup = new ol.Overlay({
+            element: document.getElementById('popup'),
+            autoPan: true,
+            autoPanAnimation: {
+                duration: 250
+            }
+        });
 
         this.map = this.createMap();
         this.featureCollection = new ol.Collection();
@@ -173,6 +182,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         var map = new ol.Map({
             target: this.options.map_id,
             layers: [baseLayerGroup, overLayerGroup],
+            overlays: [this.featurePopup],
             view: new ol.View({
                 projection: projection,
                 zoom: this.options.default_zoom,
@@ -263,6 +273,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
                 })
             });
         });
+
         return new ol.layer.Group({
             title: 'Basemaps',
             layers: baseLayers
@@ -316,6 +327,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
                 color: colors.fill
             });
             return new ol.layer.Vector({
+                type: 'feature-wfs',
                 title: wfsLayer[1],
                 source: new ol.source.Vector({
                     format: new ol.format.GeoJSON(),
@@ -411,8 +423,47 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             type: geomType
         });
 
+        // initialize select interaction
+        this.interactions.select = new ol.interaction.Select({
+            filter: function(feature, layer) {
+                return layer && layer.get('type') === 'feature-wfs';
+            }
+        });
+        var selectedFeatures = this.interactions.select.getFeatures();
+        var self = this;
+        selectedFeatures.on('add', function(event) {
+            var feature = event.target.item(0);
+            self.showFeaturePopup(feature);
+        });
+        selectedFeatures.on('remove', function() {
+            self.closeFeaturePopup();
+        });
+
         this.map.addInteraction(this.interactions.draw);
         this.map.addInteraction(this.interactions.modify);
+        this.map.addInteraction(this.interactions.select)
+    };
+
+    MapWidget.prototype.showFeaturePopup = function(feature) {
+        var extent = feature.getGeometry().getExtent();
+        var center = [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2];
+        var content = document.getElementById('popup-content');
+        content.innerHTML = this.getFeaturePopupHtml(feature);
+        this.featurePopup.setPosition(center);
+    };
+
+    MapWidget.prototype.closeFeaturePopup = function() {
+        this.featurePopup.setPosition(undefined);
+    };
+
+    MapWidget.prototype.getFeaturePopupHtml = function(feature) {
+        var formLink = '<a target="_blank" href="/admin/nature/feature/' +
+            feature.get('id') + '/change/">Muokkaa kohde</a>';
+        var reportLink = '<a target="_blank" href="/ltj/feature-report/' + feature.get('id') + '/">Kohderaportti</a>';
+
+        return '<p><b>' + feature.get('nimi') + '</b></p>' +
+            '<p>' + formLink + '</p>' +
+            '<p>' + reportLink + '</p>';
     };
 
     MapWidget.prototype.defaultCenter = function() {

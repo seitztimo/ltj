@@ -1,5 +1,6 @@
 from django.contrib.gis import admin
 from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse
 
 from .models import (
     Feature, FeatureClass, FeatureLink, FeaturePublication,
@@ -127,10 +128,11 @@ class SquareInline(admin.StackedInline):
 @admin.register(Feature)
 class FeatureAdmin(admin.GeoModelAdmin):
     readonly_fields = ('_area', 'created_by', 'created_time', 'last_modified_by', 'last_modified_time')
-    list_display = ('id', 'feature_class', 'fid', 'name', 'active')
+    list_display = ('id', 'feature_class', 'fid', 'name', 'report', 'active')
     search_fields = ('feature_class__name', 'name', 'fid', 'id')
     list_filter = ('feature_class', 'active')
     form = FeatureForm
+    change_form_template = 'admin/feature.html'
     inlines = [
         ObservationInline, FeatureLinkInline, FeaturePublicationInline,
         FeatureValueInline, TransactionFeatureInline, HabitatTypeObservationInline,
@@ -140,7 +142,6 @@ class FeatureAdmin(admin.GeoModelAdmin):
 
     widget = NatureOLWidget
     map_template = 'nature/openlayers-nature.html'
-    openlayers_url = 'https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -176,6 +177,12 @@ class FeatureAdmin(admin.GeoModelAdmin):
     def _area(self, obj):
         return obj.formatted_area
     _area.short_description = Feature._meta.get_field('area').verbose_name
+
+    def report(self, obj):
+        url = reverse('nature:feature-report', kwargs={'pk': obj.id})
+        return '<a target="_blank" href="{0}">{1}</a>'.format(url, _('Feature report'))
+    report.allow_tags = True
+    report.short_description = _('Feature report')
 
 
 @admin.register(HabitatType)
