@@ -18,101 +18,91 @@ PROTECTION_LEVELS = {
     'PUBLIC': 3,
 }
 
-AUTHORIZATION_LEVELS = {
-    'ADMIN': 1,
-    'OFFICE': 2,
-    'PUBLIC': 3,
-    'OPEN_DATA': 4,
-}
-
-AUTHORIZATION_PROTECTION_MAP = {
-    AUTHORIZATION_LEVELS['ADMIN']: [
-        PROTECTION_LEVELS['ADMIN'],
-        PROTECTION_LEVELS['OFFICE'],
-        PROTECTION_LEVELS['PUBLIC']
-    ],
-    AUTHORIZATION_LEVELS['OFFICE']: [
-        PROTECTION_LEVELS['OFFICE'],
-        PROTECTION_LEVELS['PUBLIC']
-    ],
-    AUTHORIZATION_LEVELS['PUBLIC']: [PROTECTION_LEVELS['PUBLIC']],
-    AUTHORIZATION_LEVELS['OPEN_DATA']: [PROTECTION_LEVELS['PUBLIC']],
-}
+CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID = 'UHEX'
 
 
-class ProtectedQuerySet(models.QuerySet):
-    def __init__(self, model=None, *args, **kwargs):
-        self._model_fields = []
-        if model:
-            self._model_fields = [f.name for f in model._meta.get_fields()]
-        super().__init__(model=model, *args, **kwargs)
-
+class ProtectionLevelQuerySet(models.QuerySet):
+    """
+    QuerySet class that provide protection level filter methods
+    """
     def for_admin(self):
-        return self.filter_protected(AUTHORIZATION_LEVELS['ADMIN'])
+        return self
 
-    def for_admin_and_staff(self):
-        return self.filter_protected(AUTHORIZATION_LEVELS['OFFICE'])
+    def for_office(self):
+        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
 
     def for_public(self):
-        return self.filter_protected(AUTHORIZATION_LEVELS['PUBLIC'])
+        return self.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
 
     def open_data(self):
-        return self.filter_protected(AUTHORIZATION_LEVELS['OPEN_DATA'])
-
-    def filter_protected(self, auth_level=AUTHORIZATION_LEVELS['OPEN_DATA']):
-        protection_levels = AUTHORIZATION_PROTECTION_MAP[auth_level]
-        open_data_only = auth_level == AUTHORIZATION_LEVELS['OPEN_DATA']
-
-        filters = self._create_qs_filters(protection_levels, open_data_only)
-
-        return self.filter(**filters)
-
-    def _create_qs_filters(self, protection_levels, open_data_only):
-        filters = {}
-
-        filters.update(self._create_protection_level_filters(protection_levels=protection_levels))
-
-        if open_data_only:
-            filters.update(self._create_open_data_filters())
-        return filters
-
-    def _create_open_data_filters(self):
         """
-        Creates a queryset filter dict based on open data restrictions
-
-        If the model includes fields that have open data restrictions
-        or if the model has open data restrictions directly, those fields
-        or relations are checked in order to make sure that only open data
-        instance are included.
+        Models protected with protection level may not be related to
+        Feature or FeatureClass, which has a concept of open data. In
+        such cases, we return the public data set as open data. This is
+        useful as it provides a consistent interface for different types
+        of user roles
         """
-        filters = {}
-        if 'feature' in self._model_fields:
-            filters['feature__feature_class__open_data'] = True
-        elif 'feature_class' in self._model_fields:
-            filters['feature_class__open_data'] = True
+        return self.for_public()
 
-        if 'open_data' in self._model_fields:
-            filters['open_data'] = True
 
-        return filters
+class FeatureClassQuerySet(models.QuerySet):
+    """
+    QuerySet class for FeatureClass model
+    """
+    def open_data(self):
+        return self.filter(open_data=True)
 
-    def _create_protection_level_filters(self, protection_levels):
-        """
-        Creates a queryset filter dict base on given permission levels
 
-        If the model includes fields that have protection level restrictions
-        or if the model has protection level restrictions directly, those fields
-        or relations are checked in order to make sure that only instances
-        matching the `protection_level` parameter are included.
-        """
-        filters = {}
-        if 'feature' in self._model_fields:
-            filters['feature__protection_level__in'] = protection_levels
+class FeatureQuerySet(ProtectionLevelQuerySet):
+    """
+    QuerySet class For Feature model
+    """
+    def for_office_city_employee(self):
+        return self.for_office()
 
-        if 'protection_level' in self._model_fields:
-            filters['protection_level__in'] = protection_levels
+    def for_office_non_city_employee(self):
+        return self.for_office().exclude(feature_class_id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID)
 
-        return filters
+    def open_data(self):
+        return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
+
+
+class FeatureRelatedQuerySet(models.QuerySet):
+    """
+    QuerySet class for models that has a FK relationship to Feature model
+    """
+    def for_admin(self):
+        return self
+
+    def for_office_city_employee(self):
+        return self.filter(feature__in=Feature.objects.for_office_city_employee())
+
+    def for_office_non_city_employee(self):
+        return self.filter(feature__in=Feature.objects.for_office_non_city_employee())
+
+    def for_public(self):
+        return self.filter(feature__in=Feature.objects.for_public())
+
+    def open_data(self):
+        return self.filter(feature__in=Feature.objects.open_data())
+
+
+class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
+    """
+    Queryset class for models that has a FK relationship to Feature model
+    and has protection_level field
+    """
+    def for_office_city_employee(self):
+        return self.for_office().filter(feature__in=Feature.objects.for_office_city_employee())
+
+    def for_office_non_city_employee(self):
+        return self.for_office().filter(feature__in=Feature.objects.for_office_non_city_employee())
+
+    def for_public(self):
+        return super().for_public().filter(feature__in=Feature.objects.for_public())
+
+    def open_data(self):
+        return super().open_data().filter(feature__in=Feature.objects.open_data())
 
 
 class ProtectionLevelMixin(models.Model):
@@ -125,7 +115,7 @@ class ProtectionLevelMixin(models.Model):
     protection_level = models.IntegerField(_('protection level'), choices=PROTECTION_LEVEL_CHOICES,
                                            default=PROTECTION_LEVELS['PUBLIC'], db_column='suojaustasoid')
 
-    objects = ProtectedQuerySet.as_manager()
+    objects = ProtectionLevelQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -181,7 +171,7 @@ class FeatureValue(models.Model):
     value = models.ForeignKey(Value, models.CASCADE, db_column='arvoid', verbose_name=_('value'))
     feature = models.ForeignKey('Feature', models.CASCADE, db_column='kohdeid', verbose_name=_('feature'))
 
-    objects = ProtectedQuerySet.as_manager()
+    objects = FeatureRelatedQuerySet.as_manager()
 
     class Meta:
         db_table = 'arvo_kohde'
@@ -303,6 +293,8 @@ class AbstractFeature(ProtectionLevelMixin, models.Model):
     text = models.CharField(_('text'), max_length=40000, blank=True, null=True, db_column='teksti')
     text_www = models.CharField(_('text www'), max_length=40000, blank=True, null=True, db_column='teksti_www')
 
+    objects = FeatureQuerySet.as_manager()
+
     class Meta:
         abstract = True
 
@@ -371,7 +363,7 @@ class FeaturePublication(models.Model):
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid', verbose_name=_('feature'))
     publication = models.ForeignKey(Publication, models.CASCADE, db_column='julkid', verbose_name=_('publication'))
 
-    objects = ProtectedQuerySet.as_manager()
+    objects = FeatureRelatedQuerySet.as_manager()
 
     class Meta:
         db_table = 'kohde_julk'
@@ -388,6 +380,8 @@ class FeatureLink(ProtectionLevelMixin, models.Model):
     link_type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid', verbose_name=_('link type'))
     ordering = models.IntegerField(_('ordering'), blank=True, null=True, db_column='jarjestys')
     link_text = models.CharField(_('link text'), max_length=100, blank=True, null=True, db_column='linkin_teksti')
+
+    objects = FeatureRelatedProtectionLevelQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
@@ -445,6 +439,8 @@ class Observation(ProtectionLevelMixin, models.Model):
     created_time = models.DateTimeField(_('created time'), auto_now_add=True, db_column='pvm_luotu')
     last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True,
                                               db_column='pvm_editoitu')
+
+    objects = FeatureRelatedProtectionLevelQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
@@ -553,7 +549,7 @@ class HabitatTypeObservation(models.Model):
     last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True,
                                               db_column='pvm_editoitu')
 
-    objects = ProtectedQuerySet.as_manager()
+    objects = FeatureRelatedQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
@@ -600,7 +596,7 @@ class FeatureClass(models.Model):
     www = models.BooleanField(_('www'), default=True)
     metadata = models.CharField(_('metadata'), max_length=4000, blank=True, null=True)
 
-    objects = ProtectedQuerySet.as_manager()
+    objects = FeatureClassQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
@@ -831,7 +827,7 @@ class TransactionFeature(models.Model):
     feature = models.ForeignKey(Feature, models.CASCADE, db_column='kohdeid', verbose_name=_('feature'))
     transaction = models.ForeignKey(Transaction, models.CASCADE, db_column='tapid', verbose_name=_('transaction'))
 
-    objects = ProtectedQuerySet.as_manager()
+    objects = FeatureRelatedQuerySet.as_manager()
 
     class Meta:
         db_table = 'tapahtuma_kohde'

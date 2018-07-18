@@ -4,8 +4,6 @@ from django.test import TestCase
 from django.contrib.gis.geos import Point, Polygon
 from django.utils.translation import activate
 
-from nature.tests.fake_models import FakeFeatureClassModel, FakeFeatureModel, FakeOpenDataModel, \
-    FakeProtectionLevelModel, FakeFeatureClassProtectionLevelModel, FakeFeatureClassProtectionLevelOpenDataModel
 from .factories import (
     OriginFactory, ValueFactory, OccurrenceFactory,
     ObservationSeriesFactory, PersonFactory,
@@ -20,211 +18,272 @@ from .factories import (
     ConservationProgrammeFactory, ProtectionFactory,
     CriterionFactory, TransactionFactory,
     TransactionTypeFactory, FrequencyFactory,
-    TransactionFeatureFactory)
+    TransactionFeatureFactory, FeatureValueFactory)
 
-from ..models import Feature, FeatureClass, PROTECTION_LEVELS, Observation, ProtectedQuerySet
+from ..models import (
+    Feature, FeatureClass, PROTECTION_LEVELS,
+    CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, Observation, FeatureValue)
 
 
-class TestProtectionLevelProtectedQuerySet(TestCase):
+class TestFeatureClassQuerySet(TestCase):
 
     def setUp(self):
+        self.feature_class = FeatureClassFactory(open_data=False)
+        self.feature_class_open_data = FeatureClassFactory(open_data=True)
+
+    def test_open_data(self):
+        qs = FeatureClass.objects.open_data()
+        self.assertQuerysetEqual(qs, [repr(self.feature_class_open_data)])
+
+
+class ProtectionLevelQuerySet(TestCase):
+
+    def setUp(self):
+        self.feature_admin = FeatureFactory(protection_level=PROTECTION_LEVELS['ADMIN'])
+        self.feature_office = FeatureFactory(protection_level=PROTECTION_LEVELS['OFFICE'])
+        self.feature_public = FeatureFactory(protection_level=PROTECTION_LEVELS['PUBLIC'])
+
+    def test_for_admin(self):
+        qs = Feature.objects.for_admin()
+        expected_queryset = [
+            repr(self.feature_admin),
+            repr(self.feature_office),
+            repr(self.feature_public),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_for_office(self):
+        qs = Feature.objects.for_office()
+        expected_queryset = [
+            repr(self.feature_office),
+            repr(self.feature_public),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_for_public(self):
+        qs = Feature.objects.for_public()
+        expected_queryset = [repr(self.feature_public)]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_open_data(self):
+        qs = Feature.objects.open_data()
+        expected_queryset = [repr(self.feature_public)]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+
+class TestFeatureQuerySet(TestCase):
+
+    def setUp(self):
+        non_open_feature_class = FeatureClassFactory(open_data=False)
+        open_feature_class = FeatureClassFactory(open_data=True)
+        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
         self.feature_admin = FeatureFactory(
-            name='admin',
             protection_level=PROTECTION_LEVELS['ADMIN'],
+            feature_class=non_open_feature_class,
         )
-        self.feature_admin_and_staff = FeatureFactory(
-            name='admin_and_staff',
+        self.feature_office_city_employee = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=city_employee_feature_class,
+        )
+        self.feature_office_non_city_employee = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=non_open_feature_class,
         )
         self.feature_public = FeatureFactory(
-            name='public',
             protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=non_open_feature_class,
+        )
+        self.feature_public_open_data = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=open_feature_class,
         )
 
-        test_species = SpeciesFactory(
-            protection_level=3
+    def test_for_office_city_employee(self):
+        qs = Feature.objects.for_office_city_employee()
+        expected_queryset = [
+            repr(self.feature_office_city_employee),
+            repr(self.feature_office_non_city_employee),
+            repr(self.feature_public),
+            repr(self.feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_for_office_non_city_employee(self):
+        qs = Feature.objects.for_office_non_city_employee()
+        expected_queryset = [
+            repr(self.feature_office_non_city_employee),
+            repr(self.feature_public),
+            repr(self.feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_open_data(self):
+        qs = Feature.objects.open_data()
+        expected_queryset = [repr(self.feature_public_open_data)]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+
+class TestFeatureRelatedQuerySet(TestCase):
+
+    def setUp(self):
+        non_open_feature_class = FeatureClassFactory(open_data=False)
+        open_feature_class = FeatureClassFactory(open_data=True)
+        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        # features
+        self.feature_admin = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['ADMIN'],
+            feature_class=non_open_feature_class,
+        )
+        self.feature_office_city_employee = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=city_employee_feature_class,
+        )
+        self.feature_office_non_city_employee = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=non_open_feature_class,
+        )
+        self.feature_public = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=non_open_feature_class,
+        )
+        self.feature_public_open_data = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=open_feature_class,
+        )
+        # feature values
+        self.feature_value_admin = FeatureValueFactory(feature=self.feature_admin)
+        self.feature_value_office_city_employee = FeatureValueFactory(feature=self.feature_office_city_employee)
+        self.feature_value_office_non_city_employee = FeatureValueFactory(feature=self.feature_office_non_city_employee)
+        self.feature_value_public = FeatureValueFactory(feature=self.feature_public)
+        self.feature_value_public_open_data = FeatureValueFactory(feature=self.feature_public_open_data)
+
+    def test_for_admin(self):
+        qs = FeatureValue.objects.for_admin()
+        expected_queryset = [
+            repr(self.feature_value_admin),
+            repr(self.feature_value_office_city_employee),
+            repr(self.feature_value_office_non_city_employee),
+            repr(self.feature_value_public),
+            repr(self.feature_value_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_for_office_city_employee(self):
+        qs = FeatureValue.objects.for_office_city_employee()
+        expected_queryset = [
+            repr(self.feature_value_office_city_employee),
+            repr(self.feature_value_office_non_city_employee),
+            repr(self.feature_value_public),
+            repr(self.feature_value_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_for_office_non_city_employee(self):
+        qs = FeatureValue.objects.for_office_non_city_employee()
+        expected_queryset = [
+            repr(self.feature_value_office_non_city_employee),
+            repr(self.feature_value_public),
+            repr(self.feature_value_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_for_public(self):
+        qs = FeatureValue.objects.for_public()
+        expected_queryset = [
+            repr(self.feature_value_public),
+            repr(self.feature_value_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_open_data(self):
+        qs = FeatureValue.objects.open_data()
+        expected_queryset = [
+            repr(self.feature_value_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+
+class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
+
+    def setUp(self):
+        non_open_feature_class = FeatureClassFactory(open_data=False)
+        open_feature_class = FeatureClassFactory(open_data=True)
+        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        # related features
+        self.feature_office_city_employee = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=city_employee_feature_class,
+        )
+        self.feature_office_non_city_employee = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=non_open_feature_class,
+        )
+        self.feature_public = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=non_open_feature_class,
+        )
+        self.feature_public_open_data = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=open_feature_class,
         )
 
-        self.observation_admin = ObservationFactory(
-            feature=self.feature_admin,
-            species=test_species,
-            protection_level=3,
+        # observations
+        self.observation_office_feature_office_city_employee = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature=self.feature_office_city_employee,
         )
-        self.observation_admin_and_staff = ObservationFactory(
-            feature=self.feature_admin_and_staff,
-            species=test_species,
-            protection_level=3,
+        self.observation_office_feature_office_non_city_employee = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature=self.feature_office_non_city_employee,
         )
-        self.observation_public = ObservationFactory(
+        self.observation_public_feature_office = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature=self.feature_office_non_city_employee,
+        )
+        self.observation_public_feature_public = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature=self.feature_public,
-            species=test_species,
-            protection_level=3,
+        )
+        self.observation_public_feature_public_open_data = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature=self.feature_public_open_data,
         )
 
-    def test_for_admin(self):
-        feature_qs = Feature.objects.for_admin()
-        self.assertIn(self.feature_admin, feature_qs)
-        self.assertIn(self.feature_admin_and_staff, feature_qs)
-        self.assertIn(self.feature_public, feature_qs)
+    def test_for_office_city_employee(self):
+        qs = Observation.objects.for_office_city_employee()
+        expected_queryset = [
+            repr(self.observation_office_feature_office_city_employee),
+            repr(self.observation_office_feature_office_non_city_employee),
+            repr(self.observation_public_feature_office),
+            repr(self.observation_public_feature_public),
+            repr(self.observation_public_feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
-        observation_qs = Observation.objects.for_admin()
-        self.assertIn(self.observation_admin, observation_qs)
-        self.assertIn(self.observation_admin_and_staff, observation_qs)
-        self.assertIn(self.observation_public, observation_qs)
-
-    def test_for_admin_and_staff(self):
-        feature_qs = Feature.objects.for_admin_and_staff()
-        self.assertNotIn(self.feature_admin, feature_qs)
-        self.assertIn(self.feature_admin_and_staff, feature_qs)
-        self.assertIn(self.feature_public, feature_qs)
-
-        observation_qs = Observation.objects.for_admin_and_staff()
-        self.assertNotIn(self.observation_admin, observation_qs)
-        self.assertIn(self.observation_admin_and_staff, observation_qs)
-        self.assertIn(self.observation_public, observation_qs)
+    def test_for_office_non_city_employee(self):
+        qs = Observation.objects.for_office_non_city_employee()
+        expected_queryset = [
+            repr(self.observation_office_feature_office_non_city_employee),
+            repr(self.observation_public_feature_office),
+            repr(self.observation_public_feature_public),
+            repr(self.observation_public_feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
     def test_for_public(self):
-        feature_qs = Feature.objects.for_public()
-        self.assertNotIn(self.feature_admin, feature_qs)
-        self.assertNotIn(self.feature_admin_and_staff, feature_qs)
-        self.assertIn(self.feature_public, feature_qs)
-
-        observation_qs = Observation.objects.for_public()
-        self.assertNotIn(self.observation_admin, observation_qs)
-        self.assertNotIn(self.observation_admin_and_staff, observation_qs)
-        self.assertIn(self.observation_public, observation_qs)
+        qs = Observation.objects.for_public()
+        expected_queryset = [
+            repr(self.observation_public_feature_public),
+            repr(self.observation_public_feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
     def test_open_data(self):
-        feature_qs = Feature.objects.open_data()
-        self.assertNotIn(self.feature_admin, feature_qs)
-        self.assertNotIn(self.feature_admin_and_staff, feature_qs)
-        self.assertIn(self.feature_public, feature_qs)
-
-        observation_qs = Observation.objects.open_data()
-        self.assertNotIn(self.observation_admin, observation_qs)
-        self.assertNotIn(self.observation_admin_and_staff, observation_qs)
-        self.assertIn(self.observation_public, observation_qs)
-
-
-class TestOpenDataProtectedQuerySet(TestCase):
-
-    def setUp(self):
-        self.feature_class_open = FeatureClassFactory(
-            open_data=True
-        )
-        self.feature_class_internal = FeatureClassFactory(
-            open_data=False
-        )
-
-        self.feature_open = FeatureFactory(
-            name='feature_open',
-            protection_level=PROTECTION_LEVELS['PUBLIC'],
-            feature_class=self.feature_class_open
-        )
-        self.feature_internal = FeatureFactory(
-            name='feature_internal',
-            protection_level=PROTECTION_LEVELS['PUBLIC'],
-            feature_class=self.feature_class_internal
-        )
-
-        test_species = SpeciesFactory(
-            protection_level=3
-        )
-
-        self.observation_open = ObservationFactory(
-            feature=self.feature_open,
-            species=test_species,
-            protection_level=3,
-        )
-        self.observation_internal = ObservationFactory(
-            feature=self.feature_internal,
-            species=test_species,
-            protection_level=3,
-        )
-
-    def test_open_data(self):
-        feature_class_qs = FeatureClass.objects.open_data()
-        self.assertNotIn(self.feature_class_internal, feature_class_qs)
-        self.assertIn(self.feature_class_open, feature_class_qs)
-
-        feature_qs = Feature.objects.open_data()
-        self.assertNotIn(self.feature_internal, feature_qs)
-        self.assertIn(self.feature_open, feature_qs)
-
-        observation_qs = Observation.objects.open_data()
-        self.assertNotIn(self.observation_internal, observation_qs)
-        self.assertIn(self.observation_open, observation_qs)
-
-    def _test_method_with_positive_asserts(self, method):
-        feature_class_qs = getattr(FeatureClass.objects, method)()
-        self.assertIn(self.feature_class_internal, feature_class_qs)
-        self.assertIn(self.feature_class_open, feature_class_qs)
-
-        feature_qs = getattr(Feature.objects, method)()
-        self.assertIn(self.feature_internal, feature_qs)
-        self.assertIn(self.feature_open, feature_qs)
-
-        observation_qs = getattr(Observation.objects, method)()
-        self.assertIn(self.observation_internal, observation_qs)
-        self.assertIn(self.observation_open, observation_qs)
-
-    def test_for_admin(self):
-        self._test_method_with_positive_asserts('for_admin')
-
-    def test_for_admin_and_staff(self):
-        self._test_method_with_positive_asserts('for_admin_and_staff')
-
-    def test_for_public(self):
-        self._test_method_with_positive_asserts('for_public')
-
-
-class TestProtectedQuerySet(TestCase):
-    def setUp(self):
-        self.feature_class_qs = ProtectedQuerySet(FakeFeatureClassModel)
-        self.feature_qs = ProtectedQuerySet(FakeFeatureModel)
-        self.open_data_qs = ProtectedQuerySet(FakeOpenDataModel)
-        self.protection_level_qs = ProtectedQuerySet(FakeProtectionLevelModel)
-        self.feature_class_protection_level_qs = ProtectedQuerySet(FakeFeatureClassProtectionLevelModel)
-        self.feature_class_protection_level_open_qs = ProtectedQuerySet(FakeFeatureClassProtectionLevelOpenDataModel)
-
-    def test_filters(self):
-        protection_levels = [3]
-
-        filters = self.feature_class_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
-        self.assertEqual(filters, {
-            'feature_class__open_data': True,
-        })
-
-        filters = self.feature_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
-        self.assertEqual(filters, {
-            'feature__feature_class__open_data': True,
-            'feature__protection_level__in': protection_levels,
-        })
-
-        filters = self.open_data_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
-        self.assertEqual(filters, {
-            'open_data': True,
-        })
-
-        filters = self.protection_level_qs._create_qs_filters(protection_levels=protection_levels, open_data_only=True)
-        self.assertEqual(filters, {
-            'protection_level__in': protection_levels,
-        })
-
-        filters = self.feature_class_protection_level_qs._create_qs_filters(protection_levels=protection_levels,
-                                                                            open_data_only=True)
-        self.assertEqual(filters, {
-            'feature_class__open_data': True,
-            'protection_level__in': protection_levels
-        })
-
-        filters = self.feature_class_protection_level_open_qs._create_qs_filters(protection_levels=protection_levels,
-                                                                                 open_data_only=True)
-        self.assertEqual(filters, {
-            'feature_class__open_data': True,
-            'protection_level__in': protection_levels,
-            'open_data': True
-        })
+        qs = Observation.objects.open_data()
+        expected_queryset = [
+            repr(self.observation_public_feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
 
 class TestOrigin(TestCase):

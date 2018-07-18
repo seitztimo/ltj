@@ -101,6 +101,14 @@ class HistoricalFeatureFactory(factory.django.DjangoModelFactory):
         model = 'nature.HistoricalFeature'
 
 
+class FeatureValueFactory(factory.django.DjangoModelFactory):
+    feature = factory.SubFactory(FeatureFactory)
+    value = factory.SubFactory(ValueFactory)
+
+    class Meta:
+        model = 'nature.FeatureValue'
+
+
 class LinkTypeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=20)
 
