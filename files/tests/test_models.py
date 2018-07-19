@@ -10,7 +10,7 @@ class TestFile(TestCase):
 
     def setUp(self):
         user = make_user()
-        self.file = FileFactory(created_by=user, last_modified_by=user)
+        self.file = FileFactory(uploaded_by=user, last_modified_by=user)
 
     def tearDown(self):
         os.remove(self.file.file.path)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-17 09:53+0300\n"
+"POT-Creation-Date: 2018-07-19 13:14+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -20,11 +20,11 @@ msgstr ""
 msgid "file"
 msgstr "tiedosto"
 
-msgid "created by"
-msgstr "digitoija"
+msgid "uploaded by"
+msgstr "lataaja"
 
-msgid "created time"
-msgstr "lisäysaika"
+msgid "uploaded time"
+msgstr "ladattu"
 
 msgid "last modified by"
 msgstr "muokkaaja"
@@ -46,6 +46,12 @@ msgid ""
 "Zipped shapefiles that contains .shp, .shx and .dbf files with a common "
 "filename prefix"
 msgstr ""
+
+msgid "created by"
+msgstr "digitoija"
+
+msgid "created time"
+msgstr "lisäysaika"
 
 msgid "shapefile import"
 msgstr "shape-tiedoston eräajo"
@@ -90,6 +96,9 @@ msgstr "suojaus"
 
 msgid "square"
 msgstr "ruutu"
+
+msgid "Feature report"
+msgstr "Kohderaportti"
 
 msgid "Criteria"
 msgstr "Perusteet"
