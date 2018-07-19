@@ -9,18 +9,31 @@ from django.views import View
 from .models import Feature, Species, ObservationSeries, Observation
 
 
-class FeatureReportView(DetailView):
-    queryset = Feature.objects.open_data()
+class ProtectedReportViewMixin:
+    """
+    A report view mixin class that allows staff users
+    to access all reports, but only open data for
+    non-staff users
+    """
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.is_staff:
+            return qs
+        return qs.open_data()
+
+
+class FeatureReportView(ProtectedReportViewMixin, DetailView):
+    queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-report.html'
 
 
-class ObservationReportView(DetailView):
-    queryset = Observation.objects.open_data()
+class ObservationReportView(ProtectedReportViewMixin, DetailView):
+    queryset = Observation.objects.all()
     template_name = 'nature/reports/observation-report.html'
 
 
-class SpeciesReportView(DetailView):
-    queryset = Species.objects.open_data()
+class SpeciesReportView(ProtectedReportViewMixin, DetailView):
+    queryset = Species.objects.all()
     template_name = 'nature/reports/species-report.html'
 
     def get_context_data(self, **kwargs):
@@ -38,8 +51,8 @@ class SpeciesReportView(DetailView):
         return context
 
 
-class SpeciesRegulationsReportView(DetailView):
-    queryset = Species.objects.open_data()
+class SpeciesRegulationsReportView(ProtectedReportViewMixin, DetailView):
+    queryset = Species.objects.all()
     template_name = 'nature/reports/species-regulations-report.html'
 
 
@@ -48,13 +61,13 @@ class ObservationSeriesView(DetailView):
     template_name = 'nature/reports/observationseries-report.html'
 
 
-class FeatureObservationsView(DetailView):
-    queryset = Feature.objects.open_data()
+class FeatureObservationsView(ProtectedReportViewMixin, DetailView):
+    queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-observations-report.html'
 
 
-class FeatureHabitatTypeObservationsView(DetailView):
-    queryset = Feature.objects.open_data()
+class FeatureHabitatTypeObservationsView(ProtectedReportViewMixin, DetailView):
+    queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-habitattypeobservations-report.html'
 
 
