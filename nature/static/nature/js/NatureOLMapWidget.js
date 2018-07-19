@@ -329,6 +329,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             return new ol.layer.Vector({
                 type: 'feature-wfs',
                 title: wfsLayer[1],
+                visible: false,
                 source: new ol.source.Vector({
                     format: new ol.format.GeoJSON(),
                     url: function(extent) {
