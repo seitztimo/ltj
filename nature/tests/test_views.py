@@ -13,6 +13,51 @@ from nature.tests.utils import make_user
 from ..views import FeatureWFSView, SpeciesReportView
 
 
+class TestProtectedReportViewMixin(TestCase):
+
+    def setUp(self):
+        feature_class_open_data = FeatureClassFactory(open_data=True)
+        feature_class_non_open_data = FeatureClassFactory(open_data=False)
+        self.feature_open_data = FeatureFactory(feature_class=feature_class_open_data)
+        self.feature_non_open_data = FeatureFactory(feature_class=feature_class_non_open_data)
+        self.admin = make_user(username='test_admin', is_admin=True)
+        self.user = make_user(username='test_user', is_admin=False)
+
+    def test_admin_access_report_non_open_data_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_open_data.id})
+        self.client.force_login(self.admin)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_access_report_open_data_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_open_data.id})
+        self.client.force_login(self.admin)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_access_report_non_open_data_not_found(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_open_data.id})
+        self.client.force_login(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_user_access_report_open_data_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_open_data.id})
+        self.client.force_login(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_anonymous_user_access_report_non_open_data_not_found(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_open_data.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_anonymous_user_access_report_open_data_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_open_data.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
 class MockResponse:
 
     def __init__(self, content, content_type, status_code):
@@ -85,6 +130,7 @@ class TestSpeciesReportView(TestCase):
         factory = RequestFactory()
         view_kwargs = {'pk': self.species.pk}
         self.request = factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        self.request.user = make_user()
         self.view.request = self.request
         self.view.kwargs = view_kwargs
 
