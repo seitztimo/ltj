@@ -35,3 +35,20 @@ class TestFileAdmin(TestCase):
         self.assertEqual(file.last_modified_by, new_user)
 
         os.remove(file.file.path)
+
+    def test_get_queryset(self):
+        file_admin = FileAdmin(File, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        file_admin.get_queryset(request)
+        self.assertEqual(file_admin.request, request)
+
+    def test_url(self):
+        file_admin = FileAdmin(File, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        file = FileFactory.build()
+        file_admin.get_queryset(request)
+        self.assertEqual(file_admin.url(file), request.build_absolute_uri(file.file.url))
