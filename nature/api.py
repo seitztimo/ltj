@@ -10,8 +10,8 @@ from nature.models import (
     Abundance, Frequency, MigrationClass, Origin, BreedingDegree,
     Observation, ObservationSeries, TransactionType, Transaction, Person,
     Regulation, HabitatType, HabitatTypeObservation,
-    FeatureLink, ProtectedQuerySet,
-    FeatureValue, Occurrence, PublicationType, FeaturePublication, SpeciesRegulation, LinkType, HabitatTypeRegulation,
+    FeatureLink, FeatureValue, Occurrence, PublicationType,
+    FeaturePublication, SpeciesRegulation, LinkType, HabitatTypeRegulation,
     ProtectionConservationProgramme, TransactionRegulation, TransactionFeature)
 
 
@@ -21,8 +21,8 @@ class ProtectedManyRelatedField(relations.ManyRelatedField):
     """
 
     def to_representation(self, iterable):
-        if isinstance(iterable, ProtectedQuerySet):
-            iterable = iterable.filter_protected()
+        if hasattr(iterable, 'open_data'):
+            iterable = iterable.open_data()
 
         return super().to_representation(iterable)
 
@@ -43,9 +43,8 @@ class ProtectedHyperlinkedRelatedField(relations.HyperlinkedRelatedField):
 
     def get_queryset(self):
         qs = super().get_queryset()
-
-        if isinstance(qs, ProtectedQuerySet):
-            qs = qs.filter_protected()
+        if hasattr(qs, 'open_data'):
+            qs = qs.open_data()
 
         return qs
 
@@ -75,9 +74,8 @@ class ProtectedViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         qs = super().get_queryset()
-
-        if isinstance(qs, ProtectedQuerySet):
-            qs = qs.filter_protected()
+        if hasattr(qs, 'open_data'):
+            qs = qs.open_data()
 
         return qs
 
