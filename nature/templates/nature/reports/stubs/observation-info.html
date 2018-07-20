@@ -1,42 +1,110 @@
 {% load static i18n %}
 
 <div class="row">
-    <b class="col-sm-3">{% trans "Species" %}</b>
-    <div class="col-sm-9">
-        <a href="{% url 'nature:species-report' observation.species.id %}">
-            {{ observation.species.name_fi }} (<i>{{ observation.species.name_sci_1 }}</i>)
-        </a>
-    </div>
+    <b class="col-sm-3">{{ observation.species.name_fi }}</b>
+    <div class="col-sm-3 font-italic">{{ observation.species.name_sci_1 }}</div>
+    <div class="col-sm-6"><a target="_blank" href="{% url 'nature:species-report' observation.species.id %}">{% trans "Species report" %}</a></div>
 </div>
-{% if observation.species.additional_info %}
-    <div class="row">
-        <b class="col-sm-3">{% trans "Species information" %}</b>
-        <div class="col-sm-9">
-            {{ observation.species.additional_info }}
+
+<!-- Regulations -->
+{% with observation.species.regulations.all as regulations %}
+    {% if regulations %}
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <b class="col-sm-3">{% trans "Protection regulations" %}</b>
+            <div class="col-sm-6">
+                {% for regulation in regulations %}
+                    <p class="mb-0"><a target="_blank" href="{% url 'nature:species-regulations-report' observation.species.id %}">{{ regulation }}</a></p>
+                {% endfor %}
+            </div>
         </div>
+    {% endif %}
+{% endwith %}
+
+{% if observation.abundance and not observation.abundance.is_empty %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Abundance" %}</b>
+        <div class="col-sm-6">{{ observation.abundance }}</div>
     </div>
 {% endif %}
-{% if observation.number %}
+
+{% if observation.frequence and not observation.frequence.is_empty %}
     <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Frequence" %}</b>
+        <div class="col-sm-6">{{ observation.frequence }}</div>
+    </div>
+{% endif %}
+
+{% if observatin.observer %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Observer" %}</b>
+        <div class="col-sm-6">{{ observation.observer }}</div>
+    </div>
+{% endif %}
+
+{% if observatin.number %}
+    <div class="row">
+        <div class="col-sm-3"></div>
         <b class="col-sm-3">{% trans "Number" %}</b>
-        <div class="col-sm-9">
-            {{ observation.number }}
-        </div>
+        <div class="col-sm-6">{{ observation.number }}</div>
     </div>
 {% endif %}
+
+{% if observation.migration_class and not observation.migration_class.is_empty %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Migration class" %}</b>
+        <div class="col-sm-6">{{ observation.migration_class }}</div>
+    </div>
+{% endif %}
+
+{% if observation.origin and not observation.origin.is_empty %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Origin" %}</b>
+        <div class="col-sm-6">{{ observation.origin}}</div>
+    </div>
+{% endif %}
+
+{% if observation.breeding_degree and not observation.breeding_degree.is_empty %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Breeding degree" %}</b>
+        <div class="col-sm-6">{{ observation.breeding_degree}}</div>
+    </div>
+{% endif %}
+
 {% if observation.description %}
     <div class="row">
-        <b class="col-sm-3">{% trans "Observation description" %}</b>
-        <div class="col-sm-9">
-            {{ observation.description }}
-        </div>
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Description" %}</b>
+        <div class="col-sm-6">{{ observation.description}}</div>
     </div>
 {% endif %}
-{% if observation.series.id %}
+
+{% if observation.notes %}
     <div class="row">
-        <b class="col-sm-3">{% trans "Observation series" %}</b>
-        <div class="col-sm-9">
-            <a href="{% url 'nature:observationseries-report' observation.series.id %}">{{ observation.series.name }}</a>
-        </div>
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Notes" %}</b>
+        <div class="col-sm-6">{{ observation.notes}}</div>
+    </div>
+{% endif %}
+
+{% if observation.date %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Date" %}</b>
+        <div class="col-sm-6">{{ observation.date}}</div>
+    </div>
+{% endif %}
+
+{% if observation.occurrence and not observation.occurrence.is_empty %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Occurrence" %}</b>
+        <div class="col-sm-6">{{ observation.occurrence}}</div>
     </div>
 {% endif %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-19 13:14+0300\n"
+"POT-Creation-Date: 2018-07-20 15:36+0300\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -596,18 +596,6 @@ msgstr "Kohderaportti - Lajihavainnot"
 msgid "Observations"
 msgstr "Lajihavainto"
 
-msgid "Species"
-msgstr "Laji"
-
-msgid "Species information"
-msgstr "Lajin lisätietoja"
-
-msgid "Number"
-msgstr "Lukumäärä"
-
-msgid "Observation description"
-msgstr "Havaintosarjan kuvaus"
-
 msgid "Feature Report"
 msgstr "Kohderaportti"
 
@@ -635,11 +623,17 @@ msgstr "Tapahtumatyyppi"
 msgid "Description"
 msgstr "Kuvaus"
 
+msgid "Link"
+msgstr "Linkki"
+
 msgid "Observations at this feature"
 msgstr "Kohteen lajihavainnot"
 
 msgid "Habitat observations at this feature"
 msgstr "Kohteen luontotyypit"
+
+msgid "Material description"
+msgstr "Aineistokuvaus"
 
 msgid "Observation Report"
 msgstr "Lajihavaintoraportti"
@@ -665,6 +659,9 @@ msgstr "Lajisäädösraportti"
 msgid "Species regulation report"
 msgstr "Lajisäädösraportti"
 
+msgid "Species"
+msgstr "Laji"
+
 msgid "Regulations"
 msgstr "Säädökset"
 
@@ -680,11 +677,38 @@ msgstr "Lajiraportti"
 msgid "Taxon"
 msgstr "Eliöryhmä"
 
-msgid "Link"
-msgstr "Linkki"
-
 msgid "Features"
 msgstr "Kohde"
+
+msgid "Number"
+msgstr "Lukumäärä"
+
+msgid "Protection regulations"
+msgstr "Suojeluarvot"
+
+msgid "Abundance"
+msgstr "Runsaus"
+
+msgid "Frequence"
+msgstr "Yleisyys"
+
+msgid "Observer"
+msgstr "Havainnoija"
+
+msgid "Migration class"
+msgstr "Liikkumisluokka"
+
+msgid "Origin"
+msgstr "Alkuperä"
+
+msgid "Breeding degree"
+msgstr "Pesimisvarmuus"
+
+msgid "Notes"
+msgstr "Huomioitavaa"
+
+msgid "Occurrence"
+msgstr "Esiintymä"
 
 msgid "Regulation"
 msgstr "Säädös"

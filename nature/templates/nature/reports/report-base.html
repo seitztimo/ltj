@@ -13,8 +13,10 @@
     {% block report_body %}{% endblock %}
     <hr class="mb-4">
     <footer>
-        <p class="mb-1">© Helsingin kaupunki</p>
-        <p>Luontotietojärjestelmä</p>
+        {% block report_footer %}
+            <p class="mb-1">© Helsingin kaupunki</p>
+            <p>Luontotietojärjestelmä</p>
+        {% endblock %}
     </footer>
     {% block extrajs %}
     {% endblock %}
