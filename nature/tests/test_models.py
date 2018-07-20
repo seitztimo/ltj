@@ -294,6 +294,14 @@ class TestOrigin(TestCase):
     def test__str__(self):
         self.assertEqual(self.origin.__str__(), 'origin')
 
+    def test_is_not_empty(self):
+        self.assertFalse(self.origin.is_empty)
+
+    def test_is_empty(self):
+        self.origin.source = None
+        self.origin.explanation = None
+        self.assertTrue(self.origin.is_empty)
+
 
 class TestValue(TestCase):
 
@@ -311,6 +319,13 @@ class TestOccurrence(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.occurrence.__str__(), 'occurrence')
+
+    def test_is_not_empty(self):
+        self.assertFalse(self.occurrence.is_empty)
+
+    def test_is_empty(self):
+        self.occurrence.explanation = None
+        self.assertTrue(self.occurrence.is_empty)
 
 
 class TestObservationSeries(TestCase):
@@ -485,6 +500,15 @@ class TestMigrationClass(TestCase):
     def test__str__(self):
         self.assertEqual(self.migrationclass.__str__(), '1 = migrationclass')
 
+    def test_is_not_empty(self):
+        self.assertFalse(self.migrationclass.is_empty)
+
+    def test_is_empty(self):
+        self.migrationclass.value = None
+        self.migrationclass.source = None
+        self.migrationclass.explanation = None
+        self.assertTrue(self.migrationclass.is_empty)
+
 
 class TestLinkType(TestCase):
 
@@ -566,10 +590,19 @@ class TestFeatureClass(TestCase):
 class TestBreedingDegree(TestCase):
 
     def setUp(self):
-        self.breeding_degree = BreedingDegreeFactory(explanation='breeding degree')
+        self.breeding_degree = BreedingDegreeFactory(value=1, explanation='breeding degree')
 
     def test__str__(self):
-        self.assertEqual(self.breeding_degree.__str__(), 'breeding degree')
+        self.assertEqual(self.breeding_degree.__str__(), '1 = breeding degree')
+
+    def test_is_not_empty(self):
+        self.assertFalse(self.breeding_degree.is_empty)
+
+    def test_is_empty(self):
+        self.breeding_degree.value = None
+        self.breeding_degree.source = None
+        self.breeding_degree.explanation = None
+        self.assertTrue(self.breeding_degree)
 
 
 class TestAbundance(TestCase):
@@ -579,6 +612,15 @@ class TestAbundance(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.abundance.__str__(), '1 = abundance')
+
+    def test_is_not_empty(self):
+        self.assertFalse(self.abundance.is_empty)
+
+    def test_is_empty(self):
+        self.abundance.value = None
+        self.abundance.explanation = None
+        self.abundance.source = None
+        self.assertTrue(self.abundance.is_empty)
 
 
 class TestSquare(TestCase):
@@ -673,3 +715,12 @@ class TestFrequency(TestCase):
 
     def test__str__(self):
         self.assertEqual(self.frequency.__str__(), '1 = frequency')
+
+    def test_is_not_empty(self):
+        self.assertFalse(self.frequency.is_empty)
+
+    def test_is_empty(self):
+        self.frequency.value = None
+        self.frequency.source = None
+        self.frequency.explanation = None
+        self.assertTrue(self.frequency.is_empty)

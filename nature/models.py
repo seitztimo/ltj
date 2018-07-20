@@ -148,6 +148,16 @@ class Origin(models.Model):
     def __str__(self):
         return str(self.explanation)
 
+    @property
+    def is_empty(self):
+        """Return True if this object is empty, i.e. all fields are empty
+
+        In the imported LTJ database, there exist this kind of empty records
+        that represent non-exist item, which can be selected for a ForeignKey
+        field that reference this model.
+        """
+        return not any([self.source, self.explanation])
+
 
 class Value(models.Model):
     explanation = models.CharField(_('explanation'), max_length=50, blank=True, null=True, db_column='selite')
@@ -191,6 +201,16 @@ class Occurrence(models.Model):
 
     def __str__(self):
         return str(self.explanation)
+
+    @property
+    def is_empty(self):
+        """Return True if this object is empty, i.e. all fields are empty
+
+        In the imported LTJ database, there exist this kind of empty records
+        that represent non-exist item, which can be selected for a ForeignKey
+        field that reference this model.
+        """
+        return not self.explanation
 
 
 class ObservationSeries(models.Model):
@@ -507,6 +527,16 @@ class MigrationClass(models.Model):
     def __str__(self):
         return '{0} = {1}'.format(self.value, self.explanation)
 
+    @property
+    def is_empty(self):
+        """Return True if this object is empty, i.e. all fields are empty
+
+        In the imported LTJ database, there exist this kind of empty records
+        that represent non-exist item, which can be selected for a ForeignKey
+        field that reference this model.
+        """
+        return not any([self.value, self.source, self.explanation])
+
 
 class LinkType(models.Model):
     name = models.CharField(_('name'), max_length=20, blank=True, null=True, db_column='nimi')  # type name
@@ -628,7 +658,17 @@ class BreedingDegree(models.Model):
         verbose_name_plural = _('breeding degrees')
 
     def __str__(self):
-        return str(self.explanation)
+        return '{0} = {1}'.format(self.value, self.explanation)
+
+    @property
+    def is_empty(self):
+        """Return True if this object is empty, i.e. all fields are empty
+
+        In the imported LTJ database, there exist this kind of empty records
+        that represent non-exist item, which can be selected for a ForeignKey
+        field that reference this model.
+        """
+        return not any([self.value, self.source, self.explanation])
 
 
 class Abundance(models.Model):
@@ -644,6 +684,16 @@ class Abundance(models.Model):
 
     def __str__(self):
         return '{0} = {1}'.format(self.value, self.explanation)
+
+    @property
+    def is_empty(self):
+        """Return True if this object is empty, i.e. all fields are empty
+
+        In the imported LTJ database, there exist this kind of empty records
+        that represent non-exist item, which can be selected for a ForeignKey
+        field that reference this model.
+        """
+        return not any([self.value, self.source, self.explanation])
 
 
 class Square(models.Model):
@@ -865,3 +915,13 @@ class Frequency(models.Model):
 
     def __str__(self):
         return '{0} = {1}'.format(self.value, self.explanation)
+
+    @property
+    def is_empty(self):
+        """Return True if this object is empty, i.e. all fields are empty
+
+        In the imported LTJ database, there exist this kind of empty records
+        that represent non-exist item, which can be selected for a ForeignKey
+        field that reference this model.
+        """
+        return not any([self.value, self.source, self.explanation])
