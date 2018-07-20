@@ -6,6 +6,14 @@
     <div class="col-sm-6"><a target="_blank" href="{% url 'nature:species-report' observation.species.id %}">{% trans "Species report" %}</a></div>
 </div>
 
+{% if observation.series_id %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <b class="col-sm-3">{% trans "Observation series" %}</b>
+        <div class="col-sm-6"><a href="{% url 'nature:observationseries-report' observation.series.id %}">{{ observation.series.name }}</a></div>
+    </div>
+{% endif %}
+
 <!-- Regulations -->
 {% with observation.species.regulations.all as regulations %}
     {% if regulations %}
@@ -37,7 +45,7 @@
     </div>
 {% endif %}
 
-{% if observatin.observer %}
+{% if observation.observer %}
     <div class="row">
         <div class="col-sm-3"></div>
         <b class="col-sm-3">{% trans "Observer" %}</b>
@@ -45,7 +53,7 @@
     </div>
 {% endif %}
 
-{% if observatin.number %}
+{% if observation.number %}
     <div class="row">
         <div class="col-sm-3"></div>
         <b class="col-sm-3">{% trans "Number" %}</b>
