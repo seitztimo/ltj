@@ -4,10 +4,28 @@ from django.contrib.admin.sites import AdminSite
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 
-from .factories import FeatureFactory, ObservationFactory, PublicationFactory
+from .factories import FeatureFactory, ObservationFactory, PublicationFactory, SpeciesFactory
 from .utils import make_user
-from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin, ProtectionInline, SquareInline
-from ..models import Feature, Publication
+from ..admin import FeatureAdmin, ObservationInline, PublicationAdmin, ProtectionInline, SquareInline, SpeciesAdmin
+from ..models import Feature, Publication, Species
+
+
+class TestSpeciesAdmin(TestCase):
+
+    def setUp(self):
+        self.user = make_user()
+        self.species = SpeciesFactory()
+        self.site = AdminSite()
+        self.factory = RequestFactory()
+
+    def test_report(self):
+        fa = SpeciesAdmin(Species, self.site)
+        request = self.factory.get('/fake-url/')
+        request.user = self.user
+
+        report = fa.report(self.species)
+        url = reverse('nature:species-report', kwargs={'pk': self.species.id})
+        self.assertIn(url, report)
 
 
 class TestObservationInline(TestCase):
