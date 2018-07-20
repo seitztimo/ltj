@@ -669,7 +669,7 @@ class TestTransactionType(TestCase):
 class TestFrequency(TestCase):
 
     def setUp(self):
-        self.frequency = FrequencyFactory(explanation='frequency')
+        self.frequency = FrequencyFactory(value=1, explanation='frequency')
 
     def test__str__(self):
-        self.assertEqual(self.frequency.__str__(), 'frequency')
+        self.assertEqual(self.frequency.__str__(), '1 = frequency')

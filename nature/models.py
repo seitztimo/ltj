@@ -864,4 +864,4 @@ class Frequency(models.Model):
         verbose_name_plural = _('frequencies')
 
     def __str__(self):
-        return str(self.explanation)
+        return '{0} = {1}'.format(self.value, self.explanation)
