@@ -18,11 +18,18 @@ from .widgets import NatureOLWidget
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name_fi', 'name_sci_1', 'name_subspecies_1', 'code')
+    list_display = ('id', 'name_fi', 'name_sci_1', 'name_subspecies_1', 'code', 'report')
     search_fields = ('name_fi', 'name_sci_1', 'name_subspecies_1', 'code', 'id')
     list_filter = ('taxon', 'taxon_1')
     actions = None
     form = SpeciesForm
+    change_form_template = 'admin/species.html'
+
+    def report(self, obj):
+        url = reverse('nature:species-report', kwargs={'pk': obj.id})
+        return '<a target="_blank" href="{0}">{1}</a>'.format(url, _('Species report'))
+    report.allow_tags = True
+    report.short_description = _('Species report')
 
 
 @admin.register(ObservationSeries)
