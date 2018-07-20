@@ -127,6 +127,13 @@
     {% endif %}
 {% endblock %}
 
+{% block report_footer %}
+    {% if feature.feature_class.metadata %}
+        <p class="mb-2"><a target="_blank" href="{{ feature.feature_class.metadata }}">{% trans "Material description" %}</a></p>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}
+
 {% block extrajs %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
 <script src="{% static 'nature/js/ReportMap.js' %}"></script>
