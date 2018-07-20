@@ -643,7 +643,7 @@ class Abundance(models.Model):
         verbose_name_plural = _('abundance')
 
     def __str__(self):
-        return str(self.explanation)
+        return '{0} = {1}'.format(self.value, self.explanation)
 
 
 class Square(models.Model):

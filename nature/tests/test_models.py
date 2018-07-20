@@ -575,10 +575,10 @@ class TestBreedingDegree(TestCase):
 class TestAbundance(TestCase):
 
     def setUp(self):
-        self.abundance = AbundanceFactory(explanation='abundance')
+        self.abundance = AbundanceFactory(value=1, explanation='abundance')
 
     def test__str__(self):
-        self.assertEqual(self.abundance.__str__(), 'abundance')
+        self.assertEqual(self.abundance.__str__(), '1 = abundance')
 
 
 class TestSquare(TestCase):
