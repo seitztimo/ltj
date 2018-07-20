@@ -480,10 +480,10 @@ class TestSpecies(TestCase):
 class TestMigrationClass(TestCase):
 
     def setUp(self):
-        self.migrationclass = MigrationClassFactory(explanation='migrationclass')
+        self.migrationclass = MigrationClassFactory(value=1, explanation='migrationclass')
 
     def test__str__(self):
-        self.assertEqual(self.migrationclass.__str__(), 'migrationclass')
+        self.assertEqual(self.migrationclass.__str__(), '1 = migrationclass')
 
 
 class TestLinkType(TestCase):

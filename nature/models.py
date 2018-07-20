@@ -505,7 +505,7 @@ class MigrationClass(models.Model):
         verbose_name_plural = _('migration class')
 
     def __str__(self):
-        return str(self.explanation)
+        return '{0} = {1}'.format(self.value, self.explanation)
 
 
 class LinkType(models.Model):
