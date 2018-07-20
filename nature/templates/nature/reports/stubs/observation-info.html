@@ -37,11 +37,11 @@
     </div>
 {% endif %}
 
-{% if observation.frequence and not observation.frequence.is_empty %}
+{% if observation.frequency and not observation.frequency.is_empty %}
     <div class="row">
         <div class="col-sm-3"></div>
         <b class="col-sm-3">{% trans "Frequence" %}</b>
-        <div class="col-sm-6">{{ observation.frequence }}</div>
+        <div class="col-sm-6">{{ observation.frequency }}</div>
     </div>
 {% endif %}
 
