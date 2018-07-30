@@ -65,6 +65,12 @@ class FeatureObservationsReportView(ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-observations-report.html'
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.object:
+            context_data['feature_observations'] = self.object.observations.all().order_by('species__name_fi')
+        return context_data
+
 
 class FeatureHabitatTypeObservationsReportView(ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()

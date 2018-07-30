@@ -10,7 +10,7 @@ from nature.tests.factories import (
     SpeciesRegulationFactory,
 )
 from nature.tests.utils import make_user
-from ..views import FeatureWFSView, SpeciesReportView
+from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReportView
 
 
 class TestProtectedReportViewMixin(TestCase):
@@ -146,6 +146,22 @@ class TestSpeciesReportView(TestCase):
                 'observations': [self.observation]
             }
         )
+
+
+class TestFeatureObservationsReportView(TestCase):
+
+    def setUp(self):
+        self.feature = FeatureFactory()
+        self.view = FeatureObservationsReportView()
+        self.factory = RequestFactory()
+
+    def test_get_content_data(self):
+        request = self.factory.get(reverse('nature:feature-observations-report', kwargs={'pk': self.feature.id}))
+        request.user = make_user()
+        self.view.request = request
+        self.view.object = self.feature
+        context_data = self.view.get_context_data()
+        self.assertEqual(context_data['feature_observations'].query.order_by, ['species__name_fi'])
 
 
 class TestReportViews(TestCase):
