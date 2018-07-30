@@ -33,11 +33,11 @@
     </div>
 
     <hr class="mb-4">
-    {% if feature.observations.all %}
+    {% if feature_observations %}
         <h4 class="text-uppercase">{% trans "Observations" %}</h4>
         <hr class="mb-2">
 
-        {% for observation in feature.observations.all %}
+        {% for observation in feature_observations %}
             {% include "nature/reports/stubs/observation-info.html" with observation=observation %}
             {% if not forloop.last %}
                 <hr class="mb-2 dashed">
