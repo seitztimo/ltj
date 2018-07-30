@@ -56,17 +56,17 @@ class SpeciesRegulationsReportView(ProtectedReportViewMixin, DetailView):
     template_name = 'nature/reports/species-regulations-report.html'
 
 
-class ObservationSeriesView(DetailView):
+class ObservationSeriesReportView(DetailView):
     queryset = ObservationSeries.objects.all()
     template_name = 'nature/reports/observationseries-report.html'
 
 
-class FeatureObservationsView(ProtectedReportViewMixin, DetailView):
+class FeatureObservationsReportView(ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-observations-report.html'
 
 
-class FeatureHabitatTypeObservationsView(ProtectedReportViewMixin, DetailView):
+class FeatureHabitatTypeObservationsReportView(ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-habitattypeobservations-report.html'
 
