@@ -266,7 +266,7 @@ msgid "text www"
 msgstr "teksti www"
 
 msgid "feature class"
-msgstr "luokkatunnus"
+msgstr "kohdeluokka"
 
 msgid "features"
 msgstr "kohteet"
