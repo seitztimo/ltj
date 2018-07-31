@@ -76,15 +76,27 @@
     {% if observations %}
         <h4 class="text-uppercase">{% trans "Features" %}</h4>
         {% for observation in observations %}
-            {% ifchanged observation.feature.feature_class %}
-                {% if not forloop.first %}
-                    <hr class="mb-3 strong">
-                {% endif %}
-                <h5 class="text-uppercase">{{ observation.feature.feature_class.name }}</h5>
-                <hr class="mb-2 strong">
-            {% else %}
-                <hr class="mb-2 dashed">
-            {% endifchanged %}
+            {% with observation.feature.feature_class as feature_class %}
+                {% ifchanged feature_class %}
+                    {% if not forloop.first %}
+                        <hr class="mb-3 strong">  {# seperator between feature classes #}
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-sm-2 font-weight-bold text-uppercase">{% trans "feature class" %}</div>
+                        <div class="col-sm-10 text-uppercase">{% firstof feature_class.super_class feature_class %}</div>
+                    </div>
+                    {% if feature_class.super_class %}
+                        {# if feature class has a super_class, its actuallyclass is displayed as subclass  #}
+                        <div class="row">
+                            <div class="col-sm-2 font-weight-bold text-uppercase">{% trans "subclass" %}</div>
+                            <div class="col-sm-10 text-uppercase">{{ feature_class }}</div>
+                        </div>
+                    {% endif %}
+                    <hr class="mb-2 strong">
+                {% else %}
+                    <hr class="mb-2 dashed">
+                {% endifchanged %}
+            {% endwith %}
 
             <div class="row">
                 <b class="col-sm-2">{% trans "Name" %}</b>
