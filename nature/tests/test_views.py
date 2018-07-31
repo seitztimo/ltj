@@ -8,7 +8,7 @@ from nature.tests.factories import (
     FeatureClassFactory, ObservationFactory, FeatureFactory,
     ObservationSeriesFactory, HabitatTypeObservationFactory,
     SpeciesRegulationFactory,
-)
+    SpeciesFactory)
 from nature.tests.utils import make_user
 from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReportView
 
@@ -122,29 +122,40 @@ class TestFeatureWFSView(TestCase):
 class TestSpeciesReportView(TestCase):
 
     def setUp(self):
-        self.observation = ObservationFactory()
-        self.species = self.observation.species
-        self.feature_class = self.observation.feature.feature_class
+        self.species = SpeciesFactory()
+        feature_class = FeatureClassFactory(open_data=False)
+        feature = FeatureFactory(feature_class=feature_class)
+        self.observation = ObservationFactory(feature=feature, species=self.species)
+
+        feature_class_open_data = FeatureClassFactory(open_data=True)
+        feature_open_data = FeatureFactory(feature_class=feature_class_open_data)
+        self.observation_open_data = ObservationFactory(feature=feature_open_data, species=self.species)
 
         self.view = SpeciesReportView()
         factory = RequestFactory()
         view_kwargs = {'pk': self.species.pk}
         self.request = factory.get(reverse('nature:species-report', kwargs=view_kwargs))
-        self.request.user = make_user()
-        self.view.request = self.request
-        self.view.kwargs = view_kwargs
 
-    def test_get_context_data(self):
-        self.view.get(self.request)
+    def test_get_context_data_for_staff(self):
+        self.request.user = make_user(is_admin=True)
+        self.view.request = self.request
+        self.view.object = self.species
         context = self.view.get_context_data()
-        self.assertEqual(len(context['feature_classes']), 1)
-        self.assertTrue(context['feature_classes'][self.feature_class.id])
-        self.assertEqual(
-            context['feature_classes'][self.feature_class.id],
-            {
-                'name': self.feature_class.name,
-                'observations': [self.observation]
-            }
+        self.assertQuerysetEqual(
+            context['observations'],
+            [repr(self.observation), repr(self.observation_open_data)],
+            ordered=False,
+        )
+
+    def test_get_context_data_for_non_staff(self):
+        self.request.user = make_user(is_admin=False)
+        self.view.request = self.request
+        self.view.object = self.species
+        context = self.view.get_context_data()
+        self.assertQuerysetEqual(
+            context['observations'],
+            [repr(self.observation_open_data)],
+            ordered=False,
         )
 
 

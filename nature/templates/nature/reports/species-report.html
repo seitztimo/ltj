@@ -73,61 +73,59 @@
     {% endif %}
 
     <!-- Features -->
-    {% if feature_classes %}
+    {% if observations %}
         <h4 class="text-uppercase">{% trans "Features" %}</h4>
-        <hr class="mb-3">
+        {% for observation in observations %}
+            {% ifchanged observation.feature.feature_class %}
+                {% if not forloop.first %}
+                    <hr class="mb-3 strong">
+                {% endif %}
+                <h5 class="text-uppercase">{{ observation.feature.feature_class.name }}</h5>
+                <hr class="mb-2 strong">
+            {% else %}
+                <hr class="mb-2 dashed">
+            {% endifchanged %}
 
-        {% for feature_class_id, feature_class in feature_classes.items %}
-            {% if not forloop.first %}
-                <hr class="mb-3 strong">
+            <div class="row">
+                <b class="col-sm-2">{% trans "Name" %}</b>
+                <div class="col-sm-10">
+                    {{ observation.feature.name }}
+                </div>
+            </div>
+
+            <div class="row">
+                <b class="col-sm-2">{% trans "Feature" %}</b>
+                <div class="col-sm-10">
+                    <a href="{% url 'nature:feature-report' observation.feature.id %}">{{ observation.feature.id }}</a>
+                </div>
+            </div>
+
+            {% if observation.series.id %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Observation series" %}</b>
+                    <div class="col-sm-10">
+                        <a href="{% url 'nature:observationseries-report' observation.series.id %}">{{ observation.series.name }}</a>
+                    </div>
+                </div>
             {% endif %}
-            <h5 class="text-uppercase">{{ feature_class.name }}</h5>
-            <hr class="mb-2 strong">
-            {% for observation in feature_class.observations %}
+
+            {% if observation.number %}
                 <div class="row">
-                    <b class="col-sm-2">{% trans "Name" %}</b>
+                    <b class="col-sm-2">{% trans "Number" %}</b>
                     <div class="col-sm-10">
-                        {{ observation.feature.name }}
+                        {{ observation.number }}
                     </div>
                 </div>
+            {% endif %}
 
+            {% if observation.description %}
                 <div class="row">
-                    <b class="col-sm-2">{% trans "Feature" %}</b>
+                    <b class="col-sm-2">{% trans "Description" %}</b>
                     <div class="col-sm-10">
-                        <a href="{% url 'nature:feature-report' observation.feature.id %}">{{ observation.feature.id }}</a>
+                        {{ observation.description }}
                     </div>
                 </div>
-
-                {% if observation.series.id %}
-                    <div class="row">
-                        <b class="col-sm-2">{% trans "Observation series" %}</b>
-                        <div class="col-sm-10">
-                            <a href="{% url 'nature:observationseries-report' observation.series.id %}">{{ observation.series.name }}</a>
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if observation.number %}
-                    <div class="row">
-                        <b class="col-sm-2">{% trans "Number" %}</b>
-                        <div class="col-sm-10">
-                            {{ observation.number }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if observation.description %}
-                    <div class="row">
-                        <b class="col-sm-2">{% trans "Description" %}</b>
-                        <div class="col-sm-10">
-                            {{ observation.description }}
-                        </div>
-                    </div>
-                {% endif %}
-                {% if not forloop.last %}
-                    <hr class="mb-2 dashed">
-                {% endif %}
-            {% endfor %}
+            {% endif %}
         {% endfor %}
     {% endif %}
 {% endblock %}

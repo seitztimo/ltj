@@ -39,16 +39,15 @@ class SpeciesReportView(ProtectedReportViewMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.object:
-            context['feature_classes'] = {}
-            for observation in self.object.observations.open_data():
-                feature_class = observation.feature.feature_class
-                if feature_class.id not in context['feature_classes'].keys():
-                    context['feature_classes'][feature_class.id] = {
-                        'name': feature_class.name,
-                        'observations': [],
-                    }
-                context['feature_classes'][feature_class.id]['observations'].append(observation)
+            context['observations'] = self.get_ordered_observations()
         return context
+
+    def get_ordered_observations(self):
+        if self.request.user.is_staff:
+            queryset = self.object.observations.all()
+        else:
+            queryset = self.object.observations.open_data()
+        return queryset.select_related('feature__feature_class').order_by('feature__feature_class__name')
 
 
 class SpeciesRegulationsReportView(ProtectedReportViewMixin, DetailView):
