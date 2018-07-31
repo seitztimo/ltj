@@ -72,7 +72,7 @@
         <hr class="mb-4">
     {% endif %}
 
-    <!-- Features -->
+    <!-- Features observations -->
     {% if observations %}
         <h4 class="text-uppercase">{% trans "Features" %}</h4>
         {% for observation in observations %}
@@ -86,7 +86,7 @@
                         <div class="col-sm-10 text-uppercase">{% firstof feature_class.super_class feature_class %}</div>
                     </div>
                     {% if feature_class.super_class %}
-                        {# if feature class has a super_class, its actuallyclass is displayed as subclass  #}
+                        {# if feature class has a super_class, feature class is displayed as subclass  #}
                         <div class="row">
                             <div class="col-sm-2 font-weight-bold text-uppercase">{% trans "subclass" %}</div>
                             <div class="col-sm-10 text-uppercase">{{ feature_class }}</div>
@@ -121,21 +121,83 @@
                 </div>
             {% endif %}
 
+            {% if observation.abundance and not observation.abundance.is_empty %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Abundance" %}</b>
+                    <div class="col-sm-10">{{ observation.abundance }}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.frequency and not observation.frequency.is_empty %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Frequence" %}</b>
+                    <div class="col-sm-10">{{ observation.frequency }}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.observer %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Observer" %}</b>
+                    <div class="col-sm-10">{{ observation.observer }}</div>
+                </div>
+            {% endif %}
+
             {% if observation.number %}
                 <div class="row">
                     <b class="col-sm-2">{% trans "Number" %}</b>
-                    <div class="col-sm-10">
-                        {{ observation.number }}
-                    </div>
+                    <div class="col-sm-10">{{ observation.number }}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.migration_class and not observation.migration_class.is_empty %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Migration class" %}</b>
+                    <div class="col-sm-10">{{ observation.migration_class }}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.origin and not observation.origin.is_empty %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Origin" %}</b>
+                    <div class="col-sm-10">{{ observation.origin}}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.breeding_degree and not observation.breeding_degree.is_empty %}
+                <div class="row">
+                    <b class="col-sm-2">{% trans "Breeding degree" %}</b>
+                    <div class="col-sm-10">{{ observation.breeding_degree}}</div>
                 </div>
             {% endif %}
 
             {% if observation.description %}
                 <div class="row">
                     <b class="col-sm-2">{% trans "Description" %}</b>
-                    <div class="col-sm-10">
-                        {{ observation.description }}
-                    </div>
+                    <div class="col-sm-10">{{ observation.description}}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.notes %}
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <b class="col-sm-3">{% trans "Notes" %}</b>
+                    <div class="col-sm-6">{{ observation.notes}}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.date %}
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <b class="col-sm-3">{% trans "Date" %}</b>
+                    <div class="col-sm-6">{{ observation.date}}</div>
+                </div>
+            {% endif %}
+
+            {% if observation.occurrence and not observation.occurrence.is_empty %}
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <b class="col-sm-3">{% trans "Occurrence" %}</b>
+                    <div class="col-sm-6">{{ observation.occurrence}}</div>
                 </div>
             {% endif %}
         {% endfor %}
