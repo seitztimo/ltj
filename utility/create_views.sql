@@ -1,4 +1,6 @@
--- Sannan muokkaukset: virkaversion tasoihin laitettu kohde.teksti (ei näytetä kohde.teksti_www:tä). Lisätty uusia tasoja. 
+-- Sannan muokkaukset 27.9.2018: 
+-- virkaversion tasoihin laitettu kohde.teksti (ei näytetä kohde.teksti_www:tä).
+-- Lisätty uusia tasoja: uhanalaiset luontotyypit virka ja avoin
 
 -- Sisäiset kääpäkohteet
 
@@ -611,7 +613,7 @@ CREATE OR REPLACE VIEW ltj.uhanal_luontotyypit AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-  WHERE (((kohde.luokkatunnus)::text = 'MUU'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
+  WHERE (((kohde.luokkatunnus)::text = 'UHLT'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Julkiset arvokääpäkohteet:
 
@@ -1156,3 +1158,30 @@ CREATE OR REPLACE VIEW ltj_avoin.vesi_vesikasvilinjat AS
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
   WHERE (((kohde.luokkatunnus)::text = 'LITO'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
+                                                                                      
+-- Julkiset uhanalaiset luontotyypit:
+
+CREATE OR REPLACE VIEW ltj_avoin.uhanal_luontotyypit AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+        CASE
+            WHEN (NOT ((kohde.teksti_www)::text = ''::text)) THEN kohde.teksti_www
+            ELSE kohde.teksti
+        END AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=345&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'UHLT'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));                                                                                      
