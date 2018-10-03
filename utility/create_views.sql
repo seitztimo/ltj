@@ -1,6 +1,8 @@
 -- Sannan muokkaukset 27.9.2018, 2.10.2019: 
 -- virkaversion tasoihin laitettu kohde.teksti (ei näytetä kohde.teksti_www:tä).
--- lisätty uusia tasoja: uhanalaiset luontotyypit virka ja avoin, lahokaviosammalen elinympäristöt virka ja avoin, tärkeät lintualueet virka ja avoin
+-- lisätty uusia tasoja: uhanalaiset luontotyypit virka ja avoin, lahokaviosammalen elinympäristöt virka ja avoin
+-- tärkeät lintualueet virka ja avoin, biotooppikohteet virka ja avoin, kunnostetut purokohteet virka
+-- ekologiset yhteydet, metsäverkosto
 
 -- Sisäiset kääpäkohteet
 
@@ -29,7 +31,7 @@ CREATE OR REPLACE VIEW ltj.arvo_kaapakohteet AS
      JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
      JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'KAAP'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
-
+                                                                                      
 -- Sisäiset arvoliito-oravat:
 
 CREATE OR REPLACE VIEW ltj.arvo_liito_orava AS
@@ -661,7 +663,103 @@ CREATE OR REPLACE VIEW ltj.tarkeat_lintualueet AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-  WHERE (((kohde.luokkatunnus)::text = 'LK2'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));                                                                           
+  WHERE (((kohde.luokkatunnus)::text = 'LK2'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));     
+                                                                                     
+-- Sisäiset biotooppikohteet
+
+CREATE OR REPLACE VIEW ltj.biotoopit AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+    kohde.teksti AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=180&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'BK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
+                                                                                    
+-- Sisäiset kunnostetut purokohdat
+
+CREATE OR REPLACE VIEW ltj.kunnostetut_purokohdat AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+    kohde.teksti AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=308&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'KUNN'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
+                                                                                      
+-- Sisäiset ekologisten yhteyksien verkosto
+
+CREATE OR REPLACE VIEW ltj.ekologiset_yhteydet AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+    kohde.teksti AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=322&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'VYHT'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
+                                                                                      
+ -- Sisäiset metsäverkosto
+
+CREATE OR REPLACE VIEW ltj.metsaverkosto AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+    kohde.teksti AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=322&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'MVER'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
                                                                                       
 -- Julkiset arvokääpäkohteet:
 
@@ -1236,7 +1334,7 @@ CREATE OR REPLACE VIEW ltj_avoin.uhanal_luontotyypit AS
                                                                                       
  -- Julkiset lahokaviosammalen elinympäristöt
                                                                                       
- CREATE OR REPLACE VIEW ltj.lahokaviosammal_elinymparistot AS
+ CREATE OR REPLACE VIEW ltj_avoin.lahokaviosammal_elinymparistot AS
   SELECT kohde.id,
     kohde.tunnus,
     kohde.luokkatunnus,
@@ -1263,7 +1361,7 @@ CREATE OR REPLACE VIEW ltj_avoin.uhanal_luontotyypit AS
                                                                                       
    -- Julkiset tärkeät lintualueet 2017:
 
-CREATE OR REPLACE VIEW ltj.tarkeat_lintualueet AS
+CREATE OR REPLACE VIEW ltj_avoin.tarkeat_lintualueet AS
  SELECT kohde.id,
     kohde.tunnus,
     kohde.luokkatunnus,
@@ -1287,3 +1385,85 @@ CREATE OR REPLACE VIEW ltj.tarkeat_lintualueet AS
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
   WHERE (((kohde.luokkatunnus)::text = 'LK2'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));  
+                                                                                     
+  
+ -- Julkiset biotooppikohteet
+
+CREATE OR REPLACE VIEW ltj_avoin.biotoopit AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+      CASE
+            WHEN (NOT ((kohde.teksti_www)::text = ''::text)) THEN kohde.teksti_www
+            ELSE kohde.teksti
+        END AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=180&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'BK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
+                                                                                    
+-- Julkiset ekologisten yhteyksien verkosto
+
+CREATE OR REPLACE VIEW ltj_avoin.ekologiset_yhteydet AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+       CASE
+            WHEN (NOT ((kohde.teksti_www)::text = ''::text)) THEN kohde.teksti_www
+            ELSE kohde.teksti
+        END AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=322&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'VYHT'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
+                                                                                      
+-- Julkiset metsäverkosto
+
+CREATE OR REPLACE VIEW ltj_avoin.metsaverkosto AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
+       CASE
+            WHEN (NOT ((kohde.teksti_www)::text = ''::text)) THEN kohde.teksti_www
+            ELSE kohde.teksti
+        END AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=322&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'MVER'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
