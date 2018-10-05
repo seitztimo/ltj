@@ -1,9 +1,3 @@
--- Sannan muokkaukset 27.9.2018, 2.10.2019: 
--- virkaversion tasoihin laitettu kohde.teksti (ei näytetä kohde.teksti_www:tä).
--- lisätty uusia tasoja: uhanalaiset luontotyypit virka ja avoin, lahokaviosammalen elinympäristöt virka ja avoin
--- tärkeät lintualueet virka ja avoin, biotooppikohteet virka ja avoin, kunnostetut purokohteet virka
--- ekologiset yhteydet, metsäverkosto
-
 -- Sisäiset kääpäkohteet
 
 CREATE OR REPLACE VIEW ltj.arvo_kaapakohteet AS
