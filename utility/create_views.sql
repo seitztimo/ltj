@@ -22,8 +22,8 @@ CREATE OR REPLACE VIEW ltj.arvo_kaapakohteet AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'KAAP'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
                                                                                       
 -- Sisäiset arvoliito-oravat:
@@ -98,8 +98,8 @@ CREATE OR REPLACE VIEW ltj.arvo_tarkeat_lepakkoalueet AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'LEPA'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Sisäiset matelija ja sammakkoeläinkohteet:
@@ -126,8 +126,8 @@ CREATE OR REPLACE VIEW ltj.arvo_tarkeat_matelija_ja_sammakkoelainkohteet AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'MASA'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Sisäiset arvokkaat geologiset:
@@ -154,8 +154,8 @@ CREATE OR REPLACE VIEW ltj.arvokkaat_geologiset AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'GK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Sisäiset arvokkaat kasvit:
@@ -182,8 +182,8 @@ CREATE OR REPLACE VIEW ltj.arvokkaat_kasvikohteet AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'KK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Sisäiset arvokkaat linnut:
@@ -210,8 +210,8 @@ CREATE OR REPLACE VIEW ltj.arvokkaat_lintukohteet AS
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'LK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
 -- Sisäiset muut eläinhavainnot:
@@ -414,8 +414,8 @@ CREATE OR REPLACE VIEW ltj.rauh_suojellut_luontotyypit AS
    FROM ((((public.kohde
      JOIN public.suojelu ON ((kohde.id = suojelu.id)))
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.suo_peruste ON ((suojelu.id = suo_peruste.suoid)))
-     JOIN public.suoperuste ON ((suo_peruste.perusteid = suoperuste.id)))
+     LEFT JOIN public.suo_peruste ON ((suojelu.id = suo_peruste.suoid)))
+     LEFT JOIN public.suoperuste ON ((suo_peruste.perusteid = suoperuste.id)))
   WHERE (((kohde.luokkatunnus)::text = 'LslLt'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
   -- Sisäiset suojellut lajikohteet:
@@ -778,8 +778,8 @@ CREATE OR REPLACE VIEW ltj_avoin.arvo_kaapakohteet AS
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=163&l=fi'::text AS metadata
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'KAAP'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset arvoliito-oravat:
@@ -851,8 +851,8 @@ CREATE OR REPLACE VIEW ltj_avoin.arvo_tarkeat_lepakkoalueet AS
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=160&l=fi'::text AS metadata
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'LEPA'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset tärkeät matelija ja sammakkoeläinkohteet:
@@ -878,8 +878,8 @@ CREATE OR REPLACE VIEW ltj_avoin.arvo_tarkeat_matelija_ja_sammakkoelainkohteet A
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=161&l=fi'::text AS metadata
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'MASA'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset arvokkaat geologiset kohteet:
@@ -905,8 +905,8 @@ CREATE OR REPLACE VIEW ltj_avoin.arvokkaat_geologiset AS
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=162&l=fi'::text AS metadata
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'GK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset arvokkaat kasvikohteet:
@@ -932,8 +932,8 @@ CREATE OR REPLACE VIEW ltj_avoin.arvokkaat_kasvikohteet AS
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=153&l=fi'::text AS metadata
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'KK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset arvokkaat lintukohteet:
@@ -959,8 +959,8 @@ CREATE OR REPLACE VIEW ltj_avoin.arvokkaat_lintukohteet AS
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=159&l=fi'::text AS metadata
    FROM (((public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
-     JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
+     LEFT JOIN public.arvo_kohde ON ((kohde.id = arvo_kohde.kohdeid)))
+     LEFT JOIN public.arvo ON ((arvo_kohde.arvoid = arvo.id)))
   WHERE (((kohde.luokkatunnus)::text = 'LK'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset muut eläinhavainnot:
@@ -1133,8 +1133,8 @@ CREATE OR REPLACE VIEW ltj_avoin.rauh_suojellut_luontotyypit AS
    FROM ((((public.kohde
      JOIN public.suojelu ON ((kohde.id = suojelu.id)))
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-     JOIN public.suo_peruste ON ((suojelu.id = suo_peruste.suoid)))
-     JOIN public.suoperuste ON ((suo_peruste.perusteid = suoperuste.id)))
+     LEFT JOIN public.suo_peruste ON ((suojelu.id = suo_peruste.suoid)))
+     LEFT JOIN public.suoperuste ON ((suo_peruste.perusteid = suoperuste.id)))
   WHERE (((kohde.luokkatunnus)::text = 'LslLt'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
 -- Julkiset suojellut lajikohteet:
