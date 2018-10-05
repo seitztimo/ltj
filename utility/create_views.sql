@@ -364,9 +364,9 @@ CREATE OR REPLACE VIEW ltj.rauh_luonnonsuojeluohjelma AS
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
   WHERE (((kohde.luokkatunnus)::text = 'Kaava'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
 
--- Sisäiset rauhoitetut naturat:
+-- Sisäiset rauhoitetut naturat aluemaiset:
 
-CREATE OR REPLACE VIEW ltj.rauh_natura AS
+CREATE OR REPLACE VIEW ltj.rauh_natura_aluemaiset AS
  SELECT kohde.id,
     kohde.tunnus,
     kohde.luokkatunnus,
@@ -380,13 +380,37 @@ CREATE OR REPLACE VIEW ltj.rauh_natura AS
     kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
-    kohde.geometry1,
     kohde.teksti AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata,
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-  WHERE (((kohde.luokkatunnus)::text = 'Natur'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1));
+  WHERE (((kohde.luokkatunnus)::text = 'Natur'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1) AND
+  ((GeometryType(geometry1))::text Like '%POLYGON'::text));
+                                                                                       
+-- Sisäiset rauhoitetut naturat viivamaiset:
+                 
+ CREATE OR REPLACE VIEW ltj.rauh_natura_viivamaiset AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.digitoija,
+    kohde.muokkaaja,
+    kohde.suojaustasoid,
+    kohde.pinta_ala AS pinta_ala_ha,
+    kohde.teksti AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata,
+    ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+  WHERE (((kohde.luokkatunnus)::text = 'Natur'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid <> 1) AND
+  ((GeometryType(geometry1))::text Like '%LINE%'::text));
 
 -- Sisäiset suojellut luontotyypit:
 
@@ -1085,7 +1109,7 @@ CREATE OR REPLACE VIEW ltj_avoin.rauh_luonnonsuojeluohjelma AS
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
   WHERE (((kohde.luokkatunnus)::text = 'Kaava'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
 
--- Julkiset rauhoitetut naturat:
+-- Julkiset rauhoitetut naturat aluemaiset:
 
 CREATE OR REPLACE VIEW ltj_avoin.rauh_natura AS
  SELECT kohde.id,
@@ -1098,15 +1122,38 @@ CREATE OR REPLACE VIEW ltj_avoin.rauh_natura AS
     kohde.digipvm,
     kohde.pvm_editoitu,
     kohde.pinta_ala AS pinta_ala_ha,
-    kohde.geometry1,
-        CASE
+       CASE
             WHEN (NOT ((kohde.teksti_www)::text = ''::text)) THEN kohde.teksti_www
             ELSE kohde.teksti
         END AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata
    FROM (public.kohde
      JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
-  WHERE (((kohde.luokkatunnus)::text = 'Natur'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3));
+    WHERE (((kohde.luokkatunnus)::text = 'Natur'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3) AND
+  ((GeometryType(geometry1))::text Like '%POLYGON'::text));
+                 
+-- Julkiset rauhoitetut naturat viivamaiset:
+
+CREATE OR REPLACE VIEW ltj_avoin.rauh_natura_viivamaiset AS
+ SELECT kohde.id,
+    kohde.tunnus,
+    kohde.luokkatunnus,
+    luokka.nimi AS luokan_nimi,
+    kohde.nimi,
+    kohde.kuvaus,
+    kohde.huom,
+    kohde.digipvm,
+    kohde.pvm_editoitu,
+    kohde.pinta_ala AS pinta_ala_ha,
+       CASE
+            WHEN (NOT ((kohde.teksti_www)::text = ''::text)) THEN kohde.teksti_www
+            ELSE kohde.teksti
+        END AS kohdeteksti,
+    'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata
+   FROM (public.kohde
+     JOIN public.luokka ON (((luokka.tunnus)::text = (kohde.luokkatunnus)::text)))
+    WHERE (((kohde.luokkatunnus)::text = 'Natur'::text) AND (kohde.voimassa = true) AND (kohde.suojaustasoid = 3) AND
+  ((GeometryType(geometry1))::text Like '%LINE%'::text));
 
 -- Julkiset suojellut luontotyypit:
 
