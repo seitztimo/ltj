@@ -23,9 +23,9 @@ env = environ.Env(
 )
 
 # .env file, should load only in development environment
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
-if READ_DOT_ENV_FILE:
-    env_file = root('.env')
+DISABLE_CONFIG_FILES = env.bool('DJANGO_DISABLE_CONFIG_FILES', default=False)
+if not DISABLE_CONFIG_FILES:
+    env_file = root('config.env')
     env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY')
