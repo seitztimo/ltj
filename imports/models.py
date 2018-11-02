@@ -16,7 +16,7 @@ class ShapefileImport(models.Model):
         ],
         help_text=_('Zipped shapefiles that contains .shp, .shx and .dbf files with a common filename prefix')
     )
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('created by'))
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('created by'), on_delete=models.CASCADE)
     created_time = models.DateTimeField(_('created time'), auto_now_add=True, null=True, blank=True)
 
     class Meta:
