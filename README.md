@@ -10,7 +10,7 @@ along the form of a database developed in the City of Helsinki during several
 years. It is not particularly specific to Helsinki and should be usable
 elsewhere as well.
 
-Data in LTJ is accessed throught its ReST-like API. In addition there is a
+Data in LTJ is accessed throught its REST-like API. In addition there is a
 reasonably functional admnistration site implemented using Django admin.
 In case you are not familiar with Django admin, it is a simple forms based
 editor of Web 1.0 style.
