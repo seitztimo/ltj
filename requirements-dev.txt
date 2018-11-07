@@ -5,6 +5,6 @@ flake8==3.6.0
 # unit tests / coverage report
 coverage==4.5.1
 factory-boy==2.11.1
-pytest==3.9.3
+pytest==3.10.0
 pytest-cov==2.6.0
 pytest-django==3.4.3
