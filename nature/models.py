@@ -127,13 +127,6 @@ class PermissiveGeometryField(models.GeometryField):
     and GeoJSON do not support curved geometries.
     """
 
-    def from_db_value(self, value, expression, connection, context):
-        try:
-            value = super().from_db_value(value, expression, connection, context)
-        except GEOSException:
-            value = None
-        return value
-
 
 class Origin(models.Model):
     explanation = models.CharField(_('explanation'), max_length=50, blank=True, null=True, db_column='selitys')
