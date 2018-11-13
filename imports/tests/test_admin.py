@@ -16,6 +16,7 @@ class TestShapefileImportAdmin(TestCase):
         self.user = make_user()
         self.site = AdminSite()
         self.factory = RequestFactory()
+        self.shp_import = ShapefileImportFactory.build()
 
     @patch('imports.admin.messages.add_message')
     @patch('imports.importers.ShapefileImporter.import_features')
@@ -24,10 +25,10 @@ class TestShapefileImportAdmin(TestCase):
         request = self.factory.get('/fake-url/')
         request.user = self.user
 
-        shp_import = ShapefileImportFactory.build()
-        shp_import_admin.save_model(request, shp_import, None, None)
-        self.assertEqual(shp_import.created_by, self.user)
-        mock_import.assert_called_once_with(shp_import.shapefiles)
+        shp_import_admin.save_model(request, self.shp_import, None, None)
+        self.assertEqual(self.shp_import.created_by, self.user)
+        mock_import.assert_called_once_with(self.shp_import.shapefiles)
         mock_add_message.assert_called()
 
-        os.remove(shp_import.shapefiles.path)
+    def tearDown(self):
+        os.remove(self.shp_import.shapefiles.path)

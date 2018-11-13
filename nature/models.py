@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import GEOSException
 from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
@@ -126,13 +125,6 @@ class PermissiveGeometryField(models.GeometryField):
     Required to catch exceptions if curved geometries are encountered. Currently, the GEOS library, GeoDjango
     and GeoJSON do not support curved geometries.
     """
-
-    def from_db_value(self, value, expression, connection, context):
-        try:
-            value = super().from_db_value(value, expression, connection, context)
-        except GEOSException:
-            value = None
-        return value
 
 
 class Origin(models.Model):

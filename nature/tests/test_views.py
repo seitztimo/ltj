@@ -172,7 +172,7 @@ class TestFeatureObservationsReportView(TestCase):
         self.view.request = request
         self.view.object = self.feature
         context_data = self.view.get_context_data()
-        self.assertEqual(context_data['feature_observations'].query.order_by, ['species__name_fi'])
+        self.assertEqual(list(context_data['feature_observations'].query.order_by), ['species__name_fi'])
 
 
 class TestReportViews(TestCase):

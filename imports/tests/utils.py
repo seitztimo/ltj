@@ -1,7 +1,7 @@
 import os
 import zipfile
-
 import shapefile
+from django.conf import settings
 
 from ..importers import SHAPEFILE_FIELD_MAPPING
 
@@ -27,19 +27,20 @@ class ZippedShapefilesGenerator:
 
     @classmethod
     def create_shapefiles(cls, features):
-        shp_writer = shapefile.Writer(shapeType=shapefile.POINT)
-        shp_writer.fields = cls.shape_fields
-        for feature in features:
-            shp_writer.point(*feature.geometry)
-            shp_writer.record(*cls._get_record(feature))
-        target = shp_writer.save()
-
-        with zipfile.ZipFile('testshapefiles.zip', 'w') as zfile:
-            shapefiles = ['{0}.{1}'.format(target, ext) for ext in ['shp', 'shx', 'dbf']]
-            for file in shapefiles:
-                zfile.write(file)
-                os.remove(file)
-            return zfile.filename
+        with zipfile.ZipFile(settings.MEDIA_ROOT + '/shapefiles/testshapefiles.zip', 'w') as zfile:
+            shapefiles = ['{}.{}'.format(zfile.filename.split('.')[0], ext) for ext in ['shp', 'shx', 'dbf']]
+            for shp_file in shapefiles:
+                shp_writer = shapefile.Writer(shp_file, shapeType=shapefile.POINT)
+                shp_writer.fields = cls.shape_fields
+                for feature in features:
+                    shp_writer.point(*feature.geometry)
+                    shp_writer.record(*cls._get_record(feature))
+                shp_writer.close()
+                zfile.write(shp_file, shp_file.split('/')[-1])
+            zfile.close()
+            for shp_file in shapefiles:
+                os.remove(shp_file)
+        return zfile.filename
 
     @classmethod
     def _get_record(cls, feature):

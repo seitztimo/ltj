@@ -1,4 +1,3 @@
-import json
 import zipfile
 
 import shapefile
@@ -79,5 +78,7 @@ class ShapefileImporter:
 
     @classmethod
     def _get_feature_geometry(cls, shape):
-        geojson = json.dumps(shape.__geo_interface__)
-        return GEOSGeometry(geojson, srid=settings.SRID)
+        shape_type = shape.__geo_interface__['type'].upper()
+        coordinates = '{}'.format(shape.__geo_interface__['coordinates']).replace(',', ' ')
+        geostr = 'SRID={};{}{}'.format(settings.SRID, shape_type, coordinates)
+        return GEOSGeometry(geostr, srid=settings.SRID)
