@@ -91,15 +91,8 @@
                     {% endif %}
                     <div class="row">
                         <div class="col-sm-2 font-weight-bold text-uppercase">{% trans "feature class" %}</div>
-                        <div class="col-sm-10 text-uppercase">{% firstof feature_class.super_class feature_class %}</div>
+                        <div class="col-sm-10 text-uppercase">{{ feature_class }}</div>
                     </div>
-                    {% if feature_class.super_class %}
-                        {# if feature class has a super_class, feature class is displayed as subclass  #}
-                        <div class="row">
-                            <div class="col-sm-2 font-weight-bold text-uppercase">{% trans "subclass" %}</div>
-                            <div class="col-sm-10 text-uppercase">{{ feature_class }}</div>
-                        </div>
-                    {% endif %}
                     <hr class="mb-2 strong">
                 {% else %}
                     <hr class="mb-2 dashed">
@@ -140,13 +133,6 @@
                 <div class="row">
                     <b class="col-sm-2">{% trans "Frequence" %}</b>
                     <div class="col-sm-10">{{ observation.frequency }}</div>
-                </div>
-            {% endif %}
-
-            {% if observation.observer %}
-                <div class="row">
-                    <b class="col-sm-2">{% trans "Observer" %}</b>
-                    <div class="col-sm-10">{{ observation.observer }}</div>
                 </div>
             {% endif %}
 
