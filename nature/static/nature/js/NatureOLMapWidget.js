@@ -275,7 +275,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         });
 
         return new ol.layer.Group({
-            title: 'Basemaps',
+            title: 'Pohjakartat',
             layers: baseLayers
         });
     };
@@ -350,7 +350,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         });
 
         return new ol.layer.Group({
-            title: 'Overlays',
+            title: 'Tausta-aineistot',
             layers: layers
         });
     };
