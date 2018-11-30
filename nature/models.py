@@ -43,6 +43,16 @@ class ProtectionLevelQuerySet(models.QuerySet):
         """
         return self.for_public()
 
+    def www(self):
+        """
+        Models protected with protection level may not be related to
+        Feature or FeatureClass, which has a concept of www. In
+        such cases, we return the public data set as www. This is
+        useful as it provides a consistent interface for different types
+        of user roles
+        """
+        return self.for_public()
+
 
 class FeatureClassQuerySet(models.QuerySet):
     """
@@ -69,7 +79,7 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
 
     def www(self):
-        return super().open_data().filter(feature_class__in=FeatureClass.objects.www())
+        return super().www().filter(feature_class__in=FeatureClass.objects.www())
 
 
 class FeatureRelatedQuerySet(models.QuerySet):
