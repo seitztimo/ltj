@@ -16,8 +16,8 @@ from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReport
 class TestProtectedReportViewMixin(TestCase):
 
     def setUp(self):
-        feature_class_open_data = FeatureClassFactory(open_data=True)
-        feature_class_non_open_data = FeatureClassFactory(open_data=False)
+        feature_class_open_data = FeatureClassFactory(www=True)
+        feature_class_non_open_data = FeatureClassFactory(www=False)
         self.feature_open_data = FeatureFactory(feature_class=feature_class_open_data)
         self.feature_non_open_data = FeatureFactory(feature_class=feature_class_non_open_data)
         self.admin = make_user(username='test_admin', is_admin=True)
