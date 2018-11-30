@@ -51,6 +51,9 @@ class FeatureClassQuerySet(models.QuerySet):
     def open_data(self):
         return self.filter(open_data=True)
 
+    def www(self):
+        return self.filter(www=True)
+
 
 class FeatureQuerySet(ProtectionLevelQuerySet):
     """
@@ -64,6 +67,9 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
+
+    def www(self):
+        return super().open_data().filter(feature_class__in=FeatureClass.objects.www())
 
 
 class FeatureRelatedQuerySet(models.QuerySet):

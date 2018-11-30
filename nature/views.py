@@ -19,7 +19,7 @@ class ProtectedReportViewMixin:
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
-        return qs.open_data()
+        return qs.www()
 
 
 class FeatureReportView(ProtectedReportViewMixin, DetailView):
