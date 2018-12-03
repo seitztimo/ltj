@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-20 15:36+0300\n"
+"POT-Creation-Date: 2018-12-03 11:51+0200\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -17,716 +17,1011 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: files/models.py:7 files/models.py:16
 msgid "file"
 msgstr "tiedosto"
 
+#: files/models.py:8
 msgid "uploaded by"
 msgstr "lataaja"
 
+#: files/models.py:10
 msgid "uploaded time"
 msgstr "ladattu"
 
+#: files/models.py:11 nature/models.py:323 nature/models.py:867
 msgid "last modified by"
 msgstr "muokkaaja"
 
+#: files/models.py:13 nature/models.py:321 nature/models.py:473
+#: nature/models.py:592
 msgid "last modified time"
 msgstr "pvm editoitu"
 
+#: files/models.py:17
 msgid "files"
 msgstr "tiedostot"
 
+#: imports/admin.py:20
 #, python-brace-format
 msgid "{0} features are imported"
 msgstr ""
 
+#: imports/models.py:11
 msgid "shapefiles"
 msgstr "shape-tiedostot"
 
+#: imports/models.py:17
 msgid ""
 "Zipped shapefiles that contains .shp, .shx and .dbf files with a common "
 "filename prefix"
 msgstr ""
 
+#: imports/models.py:19 nature/models.py:320
 msgid "created by"
 msgstr "digitoija"
 
+#: imports/models.py:21 nature/models.py:261 nature/models.py:318
+#: nature/models.py:472 nature/models.py:591
 msgid "created time"
 msgstr "lisäysaika"
 
+#: imports/models.py:24
 msgid "shapefile import"
 msgstr "shape-tiedoston eräajo"
 
+#: imports/models.py:25
 msgid "shapefile imports"
 msgstr "shape-tiedostojen eräajot"
 
+#: imports/validators.py:16
 #, python-format
 msgid "%(filename)s is not a valid zip file."
 msgstr ""
 
+#: imports/validators.py:17
 msgid "Files do not have a common filename prefix."
 msgstr ""
 
+#: imports/validators.py:18
 msgid ".shp, .shx and .dbf files are required."
 msgstr ""
 
+#: imports/validators.py:19
 #, python-format
 msgid ""
 "Fields not allowed: %(fields)s. Allowed shapefile fields are: "
 "%(allowed_fields)s."
 msgstr ""
 
+#: imports/validators.py:20
 #, python-format
 msgid "Feature classes do not exist: %(feature_classes)s."
 msgstr ""
 
+#: ltj/urls.py:28
 msgid "Luontotietojärjestelmä site admin"
 msgstr "Luontotietojärjestelmä-sivuston ylläpito"
 
+#: ltj/urls.py:29
 msgid "Luontotietojärjestelmä administration"
 msgstr "Luontotietojärjestelmä ylläpito"
 
+#: nature/admin.py:31 nature/admin.py:33 nature/templates/admin/species.html:5
+#: nature/templates/nature/reports/species-report.html:24
+#: nature/templates/nature/reports/stubs/observation-info.html:6
+msgid "Species report"
+msgstr "Lajiraportti"
+
+#: nature/admin.py:106
 msgid "Feature transaction"
 msgstr "Tapahtuma"
 
+#: nature/admin.py:107 nature/templates/nature/reports/feature-report.html:76
 msgid "Feature transactions"
 msgstr "Tapahtumat"
 
+#: nature/admin.py:121 nature/admin.py:122 nature/models.py:769
+#: nature/models.py:813 nature/models.py:822
 msgid "protection"
 msgstr "suojaus"
 
+#: nature/admin.py:129 nature/admin.py:130 nature/models.py:724
 msgid "square"
 msgstr "ruutu"
 
+#: nature/admin.py:191 nature/admin.py:193
+#: nature/templates/admin/feature.html:5
 msgid "Feature report"
 msgstr "Kohderaportti"
 
+#: nature/forms.py:61
 msgid "Criteria"
 msgstr "Perusteet"
 
+#: nature/forms.py:66
 msgid "Conservation programmes"
 msgstr "Suojeluohjelmat"
 
+#: nature/models.py:129
 msgid "Admin"
 msgstr "Admin"
 
+#: nature/models.py:130
 msgid "Office"
 msgstr "Virka"
 
+#: nature/models.py:131
+#| msgid "Office"
+msgid "Office Hki"
+msgstr "Virka Hki"
+
+#: nature/models.py:132
 msgid "Public"
 msgstr "Yleisö"
 
+#: nature/models.py:135 nature/models.py:784
 msgid "protection level"
 msgstr "suojaustaso"
 
+#: nature/models.py:152 nature/models.py:176 nature/models.py:207
+#: nature/models.py:530 nature/models.py:663 nature/models.py:688
+#: nature/models.py:779 nature/models.py:919
 msgid "explanation"
 msgstr "selitys"
 
+#: nature/models.py:153 nature/models.py:531 nature/models.py:664
+#: nature/models.py:689 nature/models.py:920
 msgid "source"
 msgstr "lähde"
 
+#: nature/models.py:158 nature/models.py:464
 msgid "origin"
 msgstr "alkuperä"
 
+#: nature/models.py:159
 msgid "origins"
 msgstr "alkuperä"
 
+#: nature/models.py:177
 msgid "value class"
 msgstr "luokka"
 
+#: nature/models.py:178
 msgid "valuator"
 msgstr "arvottaja"
 
+#: nature/models.py:179 nature/models.py:469 nature/models.py:869
 msgid "date"
 msgstr "pvm"
 
+#: nature/models.py:180 nature/models.py:285 nature/models.py:411
+#: nature/models.py:514 nature/models.py:741 nature/models.py:872
 msgid "link"
 msgstr "linkki"
 
+#: nature/models.py:185 nature/models.py:194 nature/models.py:532
+#: nature/models.py:665 nature/models.py:690 nature/models.py:736
+#: nature/models.py:921
 msgid "value"
 msgstr "arvo"
 
+#: nature/models.py:186 nature/models.py:355
 msgid "values"
 msgstr "arvot"
 
+#: nature/models.py:195 nature/models.py:362 nature/models.py:382
+#: nature/models.py:396 nature/models.py:410 nature/models.py:447
+#: nature/models.py:582 nature/models.py:890
 msgid "feature"
 msgstr "kohde"
 
+#: nature/models.py:202
 msgid "feature value"
 msgstr "arvoluokka"
 
+#: nature/models.py:203
 msgid "feature values"
 msgstr "arvoluokat"
 
+#: nature/models.py:212 nature/models.py:471
 msgid "occurrence"
 msgstr "esiintymä"
 
+#: nature/models.py:213
 msgid "occurrences"
 msgstr "esiintymät"
 
+#: nature/models.py:230 nature/models.py:275 nature/models.py:298
+#: nature/models.py:314 nature/models.py:555 nature/models.py:608
+#: nature/models.py:632 nature/models.py:732 nature/models.py:754
+#: nature/models.py:906
 msgid "name"
 msgstr "nimi"
 
+#: nature/models.py:232 nature/models.py:267 nature/models.py:871
 msgid "person"
 msgstr "henkilö"
 
+#: nature/models.py:233 nature/models.py:315 nature/models.py:467
+#: nature/models.py:610 nature/models.py:864
 msgid "description"
 msgstr "kuvaus"
 
+#: nature/models.py:234
 msgid "start date"
 msgstr "alku pvm"
 
+#: nature/models.py:235
 msgid "end date"
 msgstr "loppu pvm"
 
+#: nature/models.py:236
 msgid "method"
 msgstr "menetelmä"
 
+#: nature/models.py:237 nature/models.py:256 nature/models.py:316
+#: nature/models.py:468
 msgid "notes"
 msgstr "huomioitavaa"
 
+#: nature/models.py:238 nature/models.py:511 nature/models.py:586
+#: nature/models.py:611 nature/models.py:633 nature/models.py:718
+#: nature/models.py:734 nature/models.py:800
 msgid "additional info"
 msgstr "lisätieto"
 
+#: nature/models.py:240 nature/models.py:739
 msgid "valid"
 msgstr "voimassa"
 
+#: nature/models.py:245 nature/models.py:246 nature/models.py:590
 msgid "observation series"
 msgstr "havaintosarjat"
 
+#: nature/models.py:253
 msgid "surname"
 msgstr "sukunimi"
 
+#: nature/models.py:254
 msgid "first name"
 msgstr "etunimi"
 
+#: nature/models.py:255
 msgid "expertise"
 msgstr "asiantuntemus"
 
+#: nature/models.py:257
 msgid "company"
 msgstr "yritys"
 
+#: nature/models.py:258
 msgid "public servant"
 msgstr "viranomainen"
 
+#: nature/models.py:259
 msgid "telephone"
 msgstr "puhnro"
 
+#: nature/models.py:260
 msgid "email"
 msgstr "sähköposti"
 
+#: nature/models.py:268
 msgid "persons"
 msgstr "henkilöt"
 
+#: nature/models.py:276
 msgid "author"
 msgstr "tekija"
 
+#: nature/models.py:277 nature/models.py:451
 msgid "series"
 msgstr "sarja"
 
+#: nature/models.py:278
 msgid "place of printing"
 msgstr "painopaikka"
 
+#: nature/models.py:280
 msgid "year"
 msgstr "vuosi"
 
+#: nature/models.py:281
 msgid "additional information"
 msgstr "lisätieto"
 
+#: nature/models.py:284 nature/models.py:303
 msgid "publication type"
 msgstr "julktyyppi"
 
+#: nature/models.py:290 nature/models.py:397
 msgid "publication"
 msgstr "julkaisu"
 
+#: nature/models.py:291 nature/models.py:357
 msgid "publications"
 msgstr "julkaisut"
 
+#: nature/models.py:304
 msgid "publication types"
 msgstr "julkaisutyyppejä"
 
+#: nature/models.py:312
 msgid "fid"
 msgstr "tunnus"
 
+#: nature/models.py:313
 msgid "geometry"
 msgstr "geometria"
 
+#: nature/models.py:317
 msgid "active"
 msgstr "voimassa"
 
+#: nature/models.py:319 nature/models.py:458 nature/models.py:715
 msgid "number"
 msgstr "numero"
 
+#: nature/models.py:325
 msgid "area (ha)"
 msgstr "pinta-ala"
 
+#: nature/models.py:326 nature/models.py:412
 msgid "text"
 msgstr "teksti"
 
+#: nature/models.py:327
 msgid "text www"
 msgstr "teksti www"
 
+#: nature/models.py:354 nature/models.py:379 nature/models.py:647
+#: nature/templates/nature/reports/species-report.html:93
 msgid "feature class"
 msgstr "kohdeluokka"
 
+#: nature/models.py:363 nature/models.py:874
 msgid "features"
 msgstr "kohteet"
 
+#: nature/models.py:380
 msgid "archived time"
 msgstr "historia pvm"
 
+#: nature/models.py:387
 msgid "historical feature"
 msgstr "kohdehistoria"
 
+#: nature/models.py:388
 msgid "historical features"
 msgstr "kohdehistoria"
 
+#: nature/models.py:404
 msgid "feature publication"
 msgstr "julkaisu"
 
+#: nature/models.py:405
 msgid "feature publications"
 msgstr "julkaisut"
 
+#: nature/models.py:413 nature/models.py:560
 msgid "link type"
 msgstr "linkkityyppi"
 
+#: nature/models.py:414
 msgid "ordering"
 msgstr "järjestys"
 
+#: nature/models.py:415
 msgid "link text"
 msgstr "linkin teksti"
 
+#: nature/models.py:422
 msgid "feature link"
 msgstr "kohdelinkki"
 
+#: nature/models.py:423
 msgid "feature links"
 msgstr "kohdelinkit"
 
+#: nature/models.py:431 nature/models.py:449 nature/models.py:521
+#: nature/models.py:522
 msgid "species"
 msgstr "laji"
 
+#: nature/models.py:432 nature/models.py:571 nature/models.py:746
+#: nature/models.py:853
 msgid "regulation"
 msgstr "säädös"
 
+#: nature/models.py:437
 msgid "species regulation"
 msgstr "lajisäädös"
 
+#: nature/models.py:438
 msgid "species regulations"
 msgstr "lajisäädökset"
 
+#: nature/models.py:442 nature/models.py:513 nature/models.py:609
 msgid "code"
 msgstr "havaintokoodi"
 
+#: nature/models.py:445
 msgid "uri"
 msgstr "uri"
 
+#: nature/models.py:453 nature/models.py:695 nature/models.py:696
 msgid "abundance"
 msgstr "runsaus"
 
+#: nature/models.py:455
 msgid "frequence"
 msgstr "yleisyys"
 
+#: nature/models.py:457
 msgid "observer"
 msgstr "havainnoija"
 
+#: nature/models.py:462 nature/models.py:537 nature/models.py:538
 msgid "migration class"
 msgstr "liikkumisluokka"
 
+#: nature/models.py:466 nature/models.py:670
 msgid "breeding degree"
 msgstr "pesimisvarmuus"
 
+#: nature/models.py:481
 msgid "observation"
 msgstr "lajihavainto"
 
+#: nature/models.py:482
 msgid "observations"
 msgstr "lajihavainnot"
 
+#: nature/models.py:489
 msgid "taxon"
 msgstr "ryhmä"
 
+#: nature/models.py:490
 msgid "taxon 1"
 msgstr "eliöryhmä 1"
 
+#: nature/models.py:491
 msgid "taxon 2"
 msgstr "eliöryhmä 2"
 
+#: nature/models.py:492
 msgid "order (fi)"
 msgstr "lahko (suomi)"
 
+#: nature/models.py:493
 msgid "order (la)"
 msgstr "lahko (tieteellinen)"
 
+#: nature/models.py:494
 msgid "family (fi)"
 msgstr "heimo (suomi)"
 
+#: nature/models.py:495
 msgid "family (la)"
 msgstr "heimo (tieteellinen)"
 
+#: nature/models.py:496
 msgid "name (fi)"
 msgstr "nimi (suomi)"
 
+#: nature/models.py:497
 msgid "name 2 (fi)"
 msgstr "nimi 2 (suomi)"
 
+#: nature/models.py:498
 msgid "scientific name 1"
 msgstr "tieteellinen nimi 1"
 
+#: nature/models.py:499
 msgid "scientific name 2"
 msgstr "tieteellinen nimi 2"
 
+#: nature/models.py:500
 msgid "subspecies 1"
 msgstr "alalaji 1"
 
+#: nature/models.py:501
 msgid "subscecies 2"
 msgstr "alalaji 2"
 
+#: nature/models.py:502
 msgid "author 1"
 msgstr "auktori 1"
 
+#: nature/models.py:503
 msgid "author 2"
 msgstr "auktori 2"
 
+#: nature/models.py:504
 msgid "name abbreviated 1"
 msgstr "nimilyhennys 1"
 
+#: nature/models.py:506
 msgid "name abbreviated 2"
 msgstr "nimilyhennys 2"
 
+#: nature/models.py:508
 msgid "name (sv)"
 msgstr "nimi (ruotsi)"
 
+#: nature/models.py:509
 msgid "name (en)"
 msgstr "nimi (englanti)"
 
+#: nature/models.py:510
 msgid "registry date"
 msgstr "rekisteri pvm"
 
+#: nature/models.py:516 nature/models.py:615 nature/models.py:747
+#: nature/models.py:799 nature/models.py:876
 msgid "regulations"
 msgstr "säädökset"
 
+#: nature/models.py:561
 msgid "link types"
 msgstr "linkkityypit"
 
+#: nature/models.py:570 nature/models.py:584 nature/models.py:620
 msgid "habitat type"
 msgstr "luontotyyppi"
 
+#: nature/models.py:576
 msgid "habitat type regulation"
 msgstr "luontotyyppisäädös"
 
+#: nature/models.py:577
 msgid "habitat type regulations"
 msgstr "luontotyyppisäädökset"
 
+#: nature/models.py:585
 msgid "group fraction"
 msgstr "osuus kuviosta"
 
+#: nature/models.py:600
 msgid "habitat type observation"
 msgstr "luontotyyppihavainto"
 
+#: nature/models.py:601
 msgid "habitat type observations"
 msgstr "luontotyyppihavainnot"
 
+#: nature/models.py:613
 msgid "group"
 msgstr "käyttöoikeusryhmä"
 
+#: nature/models.py:621
 msgid "habitat types"
 msgstr "luontotyypit"
 
+#: nature/models.py:631 nature/models.py:714 nature/models.py:793
 msgid "id"
 msgstr "id"
 
+#: nature/models.py:636
 msgid "super class"
 msgstr "päätunnus"
 
+#: nature/models.py:637
 msgid "reporting"
 msgstr "raportointi"
 
+#: nature/models.py:638
 msgid "open data"
 msgstr "avoin data"
 
+#: nature/models.py:639
 msgid "www"
 msgstr "www"
 
+#: nature/models.py:640
 msgid "metadata"
 msgstr "metadata"
 
+#: nature/models.py:648
 msgid "feature classes"
 msgstr "kohdeluokat"
 
+#: nature/models.py:671
 msgid "breeding degrees"
 msgstr "pesimisvarmuudet"
 
+#: nature/models.py:716
 msgid "degree of determination"
 msgstr "selvitysaste"
 
+#: nature/models.py:725
 msgid "squares"
 msgstr "ruudut"
 
+#: nature/models.py:733
 msgid "paragraph"
 msgstr "pykälä"
 
+#: nature/models.py:737
 msgid "value explanation"
 msgstr "arvon selitys"
 
+#: nature/models.py:740
 msgid "date of entry"
 msgstr "voimaantulo"
 
+#: nature/models.py:759 nature/models.py:824
 msgid "conservation programme"
 msgstr "suojeluohjelma"
 
+#: nature/models.py:760 nature/models.py:807
 msgid "conservation programmes"
 msgstr "suojeluohjelmat"
 
+#: nature/models.py:768 nature/models.py:834 nature/models.py:842
 msgid "criterion"
 msgstr "peruste"
 
+#: nature/models.py:774
 msgid "protection criterion"
 msgstr "suojausperuste"
 
+#: nature/models.py:775
 msgid "protection criteria"
 msgstr "suojausperusteet"
 
+#: nature/models.py:785
 msgid "protection levels"
 msgstr "suojaustaso"
 
+#: nature/models.py:794
 msgid "reported area"
 msgstr "ilmoitettu pinta-ala"
 
+#: nature/models.py:796
 msgid "land area"
 msgstr "maapinta-ala"
 
+#: nature/models.py:797
 msgid "water area"
 msgstr "vesipinta-ala"
 
+#: nature/models.py:798
 msgid "hiking"
 msgstr "liikkuminen"
 
+#: nature/models.py:803 nature/models.py:843
 msgid "criteria"
 msgstr "perusteet"
 
+#: nature/models.py:814
 msgid "protections"
 msgstr "suojelu"
 
+#: nature/models.py:829
 msgid "protection conservation programme"
 msgstr "suojeluohjelma"
 
+#: nature/models.py:830
 msgid "protection conservation programmes"
 msgstr "suojeluohjelmat"
 
+#: nature/models.py:835
 msgid "specific criterion"
 msgstr "tarkka peruste"
 
+#: nature/models.py:837
 msgid "subscriterion"
 msgstr "alaperuste"
 
+#: nature/models.py:852 nature/models.py:881 nature/models.py:891
 msgid "transaction"
 msgstr "tapahtuma"
 
+#: nature/models.py:858
 msgid "transaction regulation"
 msgstr "tapahtumasäädös"
 
+#: nature/models.py:859
 msgid "transaction regulations"
 msgstr "tapahtumasäädökset"
 
+#: nature/models.py:863
 msgid "register id"
 msgstr "diaari nro"
 
+#: nature/models.py:866 nature/models.py:911
 msgid "transaction type"
 msgstr "tapahtumatyyppi"
 
+#: nature/models.py:882
 msgid "transactions"
 msgstr "tapahtumat"
 
+#: nature/models.py:885
 #, python-brace-format
 msgid "Transaction #{0}"
 msgstr "Tapahtuma #{0}"
 
+#: nature/models.py:898
 msgid "transaction feature"
 msgstr "kohteen tapahtuma"
 
+#: nature/models.py:899
 msgid "transaction features"
 msgstr "kohteen tapahtumat"
 
+#: nature/models.py:912
 msgid "transaction types"
 msgstr "tapahtumatyyppi"
 
+#: nature/models.py:926
 msgid "frequency"
 msgstr "yleisyys"
 
+#: nature/models.py:927
 msgid "frequencies"
 msgstr "yleisyydet"
 
+#: nature/templates/nature/openlayers-nature.html:17
 msgid "Delete all Geometries"
 msgstr "Poista kaikki geometriat"
 
+#: nature/templates/nature/openlayers-nature.html:18
 msgid "Debugging window (serialized value)"
 msgstr "Debuggausikkuna (sarjoitettu arvo)"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:4
 msgid "Feature Report - Habitat Type Observations"
 msgstr "Kohderaportti - Luontotyyppihavainnot"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:29
+#: nature/templates/nature/reports/feature-observations-report.html:29
+#: nature/templates/nature/reports/species-report.html:110
 msgid "Feature"
 msgstr "Kohde"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:37
 msgid "Habitat types"
 msgstr "Luontotyypit"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:42
+#: nature/templates/nature/reports/feature-report.html:128
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:4
 msgid "Habitat type"
 msgstr "Luontotyyppi"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:48
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:10
 msgid "Habitat group"
 msgstr "Luontotyyppiryhmä"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:54
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:16
 msgid "Habitat code"
 msgstr "Tunnus"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:61
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:23
 msgid "Habitat description"
 msgstr "Luontotyypin kuvaus"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:69
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:31
 msgid "Habitat additional info"
 msgstr "Luontotyypin lisätieto"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:77
+#: nature/templates/nature/reports/species-report.html:118
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:39
+#: nature/templates/nature/reports/stubs/observation-info.html:12
 msgid "Observation series"
 msgstr "Havaintosarja"
 
+#: nature/templates/nature/reports/feature-habitattypeobservations-report.html:85
+#: nature/templates/nature/reports/stubs/habitattypeobservation-info.html:47
 msgid "Group fraction"
 msgstr "Osuus kuviosta"
 
+#: nature/templates/nature/reports/feature-observations-report.html:4
 msgid "Feature Report - Observations"
 msgstr "Kohderaportti - Lajihavainnot"
 
+#: nature/templates/nature/reports/feature-observations-report.html:37
+#: nature/templates/nature/reports/feature-report.html:112
 msgid "Observations"
 msgstr "Lajihavainto"
 
+#: nature/templates/nature/reports/feature-report.html:4
 msgid "Feature Report"
 msgstr "Kohderaportti"
 
+#: nature/templates/nature/reports/feature-report.html:34
 msgid "Area (from map)"
 msgstr "Pinta-ala (kartalta)"
 
+#: nature/templates/nature/reports/feature-report.html:40
 msgid "Backgroud map"
 msgstr "Taustakartta"
 
+#: nature/templates/nature/reports/feature-report.html:56
 msgid "Feature values"
 msgstr "Arvoluokat"
 
+#: nature/templates/nature/reports/feature-report.html:61
 msgid "Value type basics"
 msgstr "Arvoluokituksen perusteet "
 
+#: nature/templates/nature/reports/feature-report.html:69
 msgid "Feature description"
 msgstr "Kohdekuvaus"
 
+#: nature/templates/nature/reports/feature-report.html:79
+#: nature/templates/nature/reports/species-report.html:183
+#: nature/templates/nature/reports/stubs/observation-info.html:99
 msgid "Date"
 msgstr "Pvm"
 
+#: nature/templates/nature/reports/feature-report.html:85
 msgid "Transaction type"
 msgstr "Tapahtumatyyppi"
 
+#: nature/templates/nature/reports/feature-report.html:91
+#: nature/templates/nature/reports/observationseries-report.html:35
+#: nature/templates/nature/reports/species-report.html:169
+#: nature/templates/nature/reports/stubs/observation-info.html:83
 msgid "Description"
 msgstr "Kuvaus"
 
+#: nature/templates/nature/reports/feature-report.html:100
+#: nature/templates/nature/reports/species-report.html:56
+#: nature/templates/nature/reports/species-report.html:68
 msgid "Link"
 msgstr "Linkki"
 
+#: nature/templates/nature/reports/feature-report.html:121
 msgid "Observations at this feature"
 msgstr "Kohteen lajihavainnot"
 
+#: nature/templates/nature/reports/feature-report.html:132
 msgid "Habitat observations at this feature"
 msgstr "Kohteen luontotyypit"
 
+#: nature/templates/nature/reports/feature-report.html:140
 msgid "Material description"
 msgstr "Aineistokuvaus"
 
+#: nature/templates/nature/reports/observation-report.html:4
 msgid "Observation Report"
 msgstr "Lajihavaintoraportti"
 
+#: nature/templates/nature/reports/observation-report.html:6
 msgid "Observation"
 msgstr "Lajihavainto"
 
+#: nature/templates/nature/reports/observationseries-report.html:4
 msgid "Observation Series Report"
 msgstr "Havaintosarjatraportti"
 
+#: nature/templates/nature/reports/observationseries-report.html:28
+#: nature/templates/nature/reports/species-report.html:103
 msgid "Name"
 msgstr "Nimi"
 
+#: nature/templates/nature/reports/observationseries-report.html:43
 msgid "Start date"
 msgstr "Alku pvm"
 
+#: nature/templates/nature/reports/observationseries-report.html:51
 msgid "End date"
 msgstr "Loppu pvm"
 
+#: nature/templates/nature/reports/species-regulations-report.html:4
 msgid "Species Regulations Report"
 msgstr "Lajisäädösraportti"
 
+#: nature/templates/nature/reports/species-regulations-report.html:19
 msgid "Species regulation report"
 msgstr "Lajisäädösraportti"
 
+#: nature/templates/nature/reports/species-regulations-report.html:24
+#: nature/templates/nature/reports/species-report.html:29
 msgid "Species"
 msgstr "Laji"
 
+#: nature/templates/nature/reports/species-regulations-report.html:36
+#: nature/templates/nature/reports/species-report.html:65
 msgid "Regulations"
 msgstr "Säädökset"
 
+#: nature/templates/nature/reports/species-regulations-report.html:48
 msgid "Regulation values in the nature information system"
 msgstr "Suojeluarvot luontotietojärjestelmässä"
 
+#: nature/templates/nature/reports/species-report.html:4
 msgid "Species Report"
 msgstr "Lajiraportti"
 
-msgid "Species report"
-msgstr "Lajiraportti"
-
+#: nature/templates/nature/reports/species-report.html:37
 msgid "Taxon"
 msgstr "Eliöryhmä"
 
+#: nature/templates/nature/reports/species-report.html:85
 msgid "Features"
 msgstr "Kohde"
 
-msgid "Number"
-msgstr "Lukumäärä"
-
-msgid "Protection regulations"
-msgstr "Suojeluarvot"
-
+#: nature/templates/nature/reports/species-report.html:127
+#: nature/templates/nature/reports/stubs/observation-info.html:35
 msgid "Abundance"
 msgstr "Runsaus"
 
+#: nature/templates/nature/reports/species-report.html:134
+#: nature/templates/nature/reports/stubs/observation-info.html:43
 msgid "Frequence"
 msgstr "Yleisyys"
 
-msgid "Observer"
-msgstr "Havainnoija"
+#: nature/templates/nature/reports/species-report.html:141
+#: nature/templates/nature/reports/stubs/observation-info.html:51
+msgid "Number"
+msgstr "Lukumäärä"
 
+#: nature/templates/nature/reports/species-report.html:148
+#: nature/templates/nature/reports/stubs/observation-info.html:59
 msgid "Migration class"
 msgstr "Liikkumisluokka"
 
+#: nature/templates/nature/reports/species-report.html:155
+#: nature/templates/nature/reports/stubs/observation-info.html:67
 msgid "Origin"
 msgstr "Alkuperä"
 
+#: nature/templates/nature/reports/species-report.html:162
+#: nature/templates/nature/reports/stubs/observation-info.html:75
 msgid "Breeding degree"
 msgstr "Pesimisvarmuus"
 
+#: nature/templates/nature/reports/species-report.html:176
+#: nature/templates/nature/reports/stubs/observation-info.html:91
 msgid "Notes"
 msgstr "Huomioitavaa"
 
+#: nature/templates/nature/reports/species-report.html:190
+#: nature/templates/nature/reports/stubs/observation-info.html:107
 msgid "Occurrence"
 msgstr "Esiintymä"
 
+#: nature/templates/nature/reports/stubs/observation-info.html:22
+msgid "Protection regulations"
+msgstr "Suojeluarvot"
+
+#: nature/templates/nature/reports/stubs/species-regulation.html:4
 msgid "Regulation"
 msgstr "Säädös"
 
+#: nature/templates/nature/reports/stubs/species-regulation.html:12
 msgid "Protection value"
 msgstr "Suojeluarvo"
 
+#: nature/templates/nature/reports/stubs/species-regulation.html:18
 msgid "Date of entry"
 msgstr "Voimaantulo"
 
+#: templates/admin/base_site.html:11
 msgid "User guide"
 msgstr "Ohje"
 
+#: templates/registration/logged_out.html:4
 msgid "Home"
 msgstr "Etusivu"
 
+#: templates/registration/logged_out.html:8
 msgid "You can send feedback by email to ltj.ymk@hel.fi"
 msgstr "Voit lähettää palautetta osoitteeseen ltj.ymk@hel.fi"
 
+#: templates/registration/logged_out.html:10
 msgid "Log in again"
 msgstr "Kirjaudu uudelleen sisään"
+
+#~ msgid "Observer"
+#~ msgstr "Havainnoija"

@@ -15,6 +15,7 @@ PROTECTION_LEVELS = {
     'ADMIN': 1,
     'OFFICE': 2,
     'PUBLIC': 3,
+    'OFFICE_HKI': 4,
 }
 
 CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID = 'UHEX'
@@ -29,6 +30,9 @@ class ProtectionLevelQuerySet(models.QuerySet):
 
     def for_office(self):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+
+    def for_office_hki(self):
+        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE_HKI'])
 
     def for_public(self):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
@@ -124,6 +128,7 @@ class ProtectionLevelMixin(models.Model):
     PROTECTION_LEVEL_CHOICES = (
         (PROTECTION_LEVELS['ADMIN'], _('Admin')),
         (PROTECTION_LEVELS['OFFICE'], _('Office')),
+        (PROTECTION_LEVELS['OFFICE_HKI'], _('Office Hki')),
         (PROTECTION_LEVELS['PUBLIC'], _('Public')),
     )
 
