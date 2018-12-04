@@ -13,9 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
     'ADMIN': 1,
-    'OFFICE': 2,
-    'PUBLIC': 3,
-    'OFFICE_HKI': 4,
+    'OFFICE_HKI': 2,
+    'OFFICE': 3,
+    'PUBLIC': 4,
 }
 
 CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID = 'UHEX'
@@ -28,11 +28,11 @@ class ProtectionLevelQuerySet(models.QuerySet):
     def for_admin(self):
         return self
 
-    def for_office(self):
-        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-
     def for_office_hki(self):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE_HKI'])
+
+    def for_office(self):
+        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
 
     def for_public(self):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
@@ -74,7 +74,7 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
     QuerySet class For Feature model
     """
     def for_office_city_employee(self):
-        return self.for_office()
+        return self.for_office_hki()
 
     def for_office_non_city_employee(self):
         return self.for_office().exclude(feature_class_id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID)
@@ -112,7 +112,7 @@ class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
     and has protection_level field
     """
     def for_office_city_employee(self):
-        return self.for_office().filter(feature__in=Feature.objects.for_office_city_employee())
+        return self.for_office_hki().filter(feature__in=Feature.objects.for_office_city_employee())
 
     def for_office_non_city_employee(self):
         return self.for_office().filter(feature__in=Feature.objects.for_office_non_city_employee())
