@@ -61,7 +61,7 @@ class ProtectionLevelQuerySet(TestCase):
             repr(self.feature_public),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
-    
+
     def test_for_office_hki(self):
         qs = Feature.objects.for_office_hki()
         expected_queryset = [
