@@ -34,9 +34,9 @@ class ProtectedReportViewMixin:
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
-        elif 'ltj_admin' in self.groups or 'HELS000627\Paikkatietovipunen_ltj_admin' in self.groups:
+        elif 'ltj_admin' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_admin' in self.groups:
             return qs.for_admin()
-        elif 'ltj_virka_hki' in self.groups or 'HELS000627\Paikkatietovipunen_ltj_virka' in self.groups:
+        elif 'ltj_virka_hki' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_virka' in self.groups:
             return qs.for_office_hki()
         elif 'ltj_virka' in self.groups:
             return qs.for_office()
