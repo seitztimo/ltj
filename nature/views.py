@@ -17,6 +17,9 @@ class ProtectedReportViewMixin:
     non-staff users
     """
 
+    def __init__(self):
+        self.groups = None
+
     def get(self, request, pk):
         if 'HTTP_SIGNATURE' and 'HTTP_DATE' and 'HTTP_HOST' and 'HTTP_X_FORWARDED_GROUPS' in request.META:
             received_signature = request.META['HTTP_SIGNATURE']
@@ -34,14 +37,14 @@ class ProtectedReportViewMixin:
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
-        elif 'ltj_admin' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_admin' in self.groups:
-            return qs.for_admin()
-        elif 'ltj_virka_hki' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_virka' in self.groups:
-            return qs.for_office_hki()
-        elif 'ltj_virka' in self.groups:
-            return qs.for_office()
-        else:
-            return qs.www()
+        if self.groups:
+            if 'ltj_admin' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_admin' in self.groups:
+                return qs.for_admin()
+            elif 'ltj_virka_hki' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_virka' in self.groups:
+                return qs.for_office_hki()
+            elif 'ltj_virka' in self.groups:
+                return qs.for_office()
+        return qs.www()
 
 
 class FeatureReportView(ProtectedReportViewMixin, DetailView):
