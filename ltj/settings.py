@@ -8,6 +8,7 @@ BASE_DIR = root()
 env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, ''),
+    SHARED_SECRET=(str, ''),
     ALLOWED_HOSTS=(list, []),
     ADMINS=(list, []),
     DATABASE_URL=(str, 'postgis:///ltj'),

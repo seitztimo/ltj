@@ -1,12 +1,13 @@
 import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views import View
 
 from .models import Feature, Species, ObservationSeries, Observation
+from .utils import signature_is_valid
 
 
 class ProtectedReportViewMixin:
@@ -15,11 +16,32 @@ class ProtectedReportViewMixin:
     to access all reports, but only open data for
     non-staff users
     """
+
+    def get(self, request, pk):
+        if 'HTTP_SIGNATURE' and 'HTTP_DATE' and 'HTTP_HOST' and 'HTTP_X_FORWARDED_GROUPS' in request.META:
+            received_signature = request.META['HTTP_SIGNATURE']
+            date = request.META['HTTP_DATE']
+            host = request.META['HTTP_HOST']
+            groups_string = request.META['HTTP_X_FORWARDED_GROUPS']
+            request_line = '{0} {1} {2}'.format(request.META['REQUEST_METHOD'], request.get_full_path(), 'HTTP/1.1')
+            if signature_is_valid(date, host, groups_string, request_line, received_signature):
+                self.groups = groups_string.split(';')
+            else:
+                raise Http404
+        return super().get(request)
+
     def get_queryset(self):
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
-        return qs.www()
+        elif 'ltj_admin' in self.groups or 'HELS000627\Paikkatietovipunen_ltj_admin' in self.groups:
+            return qs.for_admin()
+        elif 'ltj_virka_hki' in self.groups or 'HELS000627\Paikkatietovipunen_ltj_virka' in self.groups:
+            return qs.for_office_hki()
+        elif 'ltj_virka' in self.groups:
+            return qs.for_office()
+        else:
+            return qs.www()
 
 
 class FeatureReportView(ProtectedReportViewMixin, DetailView):
