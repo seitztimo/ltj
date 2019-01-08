@@ -85,6 +85,9 @@ msgstr "Luontotietojärjestelmä-sivuston ylläpito"
 msgid "Luontotietojärjestelmä administration"
 msgstr "Luontotietojärjestelmä ylläpito"
 
+msgid "Species report"
+msgstr "Lajiraportti"
+
 msgid "Feature transaction"
 msgstr "Tapahtuma"
 
@@ -111,6 +114,9 @@ msgstr "Admin"
 
 msgid "Office"
 msgstr "Virka"
+
+msgid "Office Hki"
+msgstr "Virka Hki"
 
 msgid "Public"
 msgstr "Yleisö"
@@ -671,20 +677,11 @@ msgstr "Suojeluarvot luontotietojärjestelmässä"
 msgid "Species Report"
 msgstr "Lajiraportti"
 
-msgid "Species report"
-msgstr "Lajiraportti"
-
 msgid "Taxon"
 msgstr "Eliöryhmä"
 
 msgid "Features"
 msgstr "Kohde"
-
-msgid "Number"
-msgstr "Lukumäärä"
-
-msgid "Protection regulations"
-msgstr "Suojeluarvot"
 
 msgid "Abundance"
 msgstr "Runsaus"
@@ -692,8 +689,8 @@ msgstr "Runsaus"
 msgid "Frequence"
 msgstr "Yleisyys"
 
-msgid "Observer"
-msgstr "Havainnoija"
+msgid "Number"
+msgstr "Lukumäärä"
 
 msgid "Migration class"
 msgstr "Liikkumisluokka"
@@ -709,6 +706,9 @@ msgstr "Huomioitavaa"
 
 msgid "Occurrence"
 msgstr "Esiintymä"
+
+msgid "Protection regulations"
+msgstr "Suojeluarvot"
 
 msgid "Regulation"
 msgstr "Säädös"
@@ -730,3 +730,6 @@ msgstr "Voit lähettää palautetta osoitteeseen ltj.ymk@hel.fi"
 
 msgid "Log in again"
 msgstr "Kirjaudu uudelleen sisään"
+
+#~ msgid "Observer"
+#~ msgstr "Havainnoija"

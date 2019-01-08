@@ -2,6 +2,7 @@ import datetime
 
 import factory
 from django.contrib.gis.geos import Point
+from nature.models import PROTECTION_LEVELS
 
 
 class OriginFactory(factory.django.DjangoModelFactory):
@@ -81,7 +82,7 @@ class FeatureFactory(factory.django.DjangoModelFactory):
     geometry = Point(1, 1)
     name = factory.Faker('text', max_nb_chars=80)
     active = True
-    protection_level = 3
+    protection_level = PROTECTION_LEVELS['PUBLIC']
 
     class Meta:
         model = 'nature.Feature'
@@ -93,7 +94,7 @@ class HistoricalFeatureFactory(factory.django.DjangoModelFactory):
     geometry = Point(1, 1)
     name = factory.Faker('text', max_nb_chars=80)
     active = True
-    protection_level = 3
+    protection_level = PROTECTION_LEVELS['PUBLIC']
     archived_time = factory.Faker('date_time_this_year', before_now=True, tzinfo=datetime.timezone.utc)
     feature = factory.SubFactory(FeatureFactory)
 
@@ -121,7 +122,7 @@ class FeatureLinkFactory(factory.django.DjangoModelFactory):
     link = factory.Faker('paragraph')
     text = factory.Faker('paragraph')
     link_type = factory.SubFactory(LinkTypeFactory)
-    protection_level = 3
+    protection_level = PROTECTION_LEVELS['PUBLIC']
 
     class Meta:
         model = 'nature.FeatureLink'
@@ -132,7 +133,7 @@ class SpeciesFactory(factory.django.DjangoModelFactory):
     taxon_1 = factory.Faker('text', max_nb_chars=50)
     taxon_2 = factory.Faker('text', max_nb_chars=50)
     name_fi = factory.Faker('text', max_nb_chars=150)
-    protection_level = 3
+    protection_level = PROTECTION_LEVELS['PUBLIC']
 
     class Meta:
         model = 'nature.Species'
@@ -143,7 +144,7 @@ class ObservationFactory(factory.django.DjangoModelFactory):
     feature = factory.SubFactory(FeatureFactory)
     species = factory.SubFactory(SpeciesFactory)
     series = factory.SubFactory(ObservationSeriesFactory)
-    protection_level = 3
+    protection_level = PROTECTION_LEVELS['PUBLIC']
 
     class Meta:
         model = 'nature.Observation'
@@ -248,7 +249,7 @@ class TransactionTypeFactory(factory.django.DjangoModelFactory):
 class TransactionFactory(factory.django.DjangoModelFactory):
     register_id = factory.Faker('text', max_nb_chars=20)
     transaction_type = factory.SubFactory(TransactionTypeFactory)
-    protection_level = 3
+    protection_level = PROTECTION_LEVELS['PUBLIC']
 
     class Meta:
         model = 'nature.Transaction'

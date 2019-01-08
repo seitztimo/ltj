@@ -8,6 +8,7 @@ BASE_DIR = root()
 env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, ''),
+    SHARED_SECRET=(str, ''),
     ALLOWED_HOSTS=(list, []),
     ADMINS=(list, []),
     DATABASE_URL=(str, 'postgis:///ltj'),
@@ -29,6 +30,7 @@ if not DISABLE_CONFIG_FILES:
     env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY')
+SHARED_SECRET = env('SHARED_SECRET')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 ADMINS = env('ADMINS')

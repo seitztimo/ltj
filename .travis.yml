@@ -30,6 +30,7 @@ env:
   global:
     - DEBUG=True
     - SECRET_KEY="t*CRj!:?{O!C~SsIix5w?Vc%ki[VODDp5vjim97)XQMJY\+d8Gud%qTY/$B>taz"
+    - SHARED_SECRET="con4yAYDMkXxXf5gf2nOlpmmwJ1ctfRlq8CYxMiEqBgF1zuuP0q3r9M8416GQlKK"
 
 script:
   - flake8
