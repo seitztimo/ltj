@@ -16,34 +16,38 @@ class ProtectedReportViewMixin:
     to access all reports, but only open data for
     non-staff users
     """
+    ADMIN_GROUPS = {'ltj_admin', r'HELS000627\Paikkatietovipunen_ltj_admin'}
+    OFFICE_HKI_GROUPS = {'ltj_virka_hki', r'HELS000627\Paikkatietovipunen_ltj_virka'}
+    OFFICE_GROUPS = {'ltj_virka'}
 
-    def __init__(self):
-        self.groups = None
+    HMAC_REQUIRED_HEADERS = {'HTTP_SIGNATURE', 'HTTP_DATE', 'HTTP_HOST', 'HTTP_X_FORWARDED_GROUPS'}
 
-    def get(self, request, pk):
-        if 'HTTP_SIGNATURE' and 'HTTP_DATE' and 'HTTP_HOST' and 'HTTP_X_FORWARDED_GROUPS' in request.META:
+    def get(self, request, *args, **kwargs):
+        if self.HMAC_REQUIRED_HEADERS.issubset(set(request.META.keys())):
             received_signature = request.META['HTTP_SIGNATURE']
             date = request.META['HTTP_DATE']
             host = request.META['HTTP_HOST']
             groups_string = request.META['HTTP_X_FORWARDED_GROUPS']
             request_line = '{0} {1} {2}'.format(request.META['REQUEST_METHOD'], request.get_full_path(), 'HTTP/1.1')
-            if signature_is_valid(date, host, groups_string, request_line, received_signature):
-                self.groups = groups_string.split(';')
-            else:
+            if not signature_is_valid(date, host, groups_string, request_line, received_signature):
                 raise Http404
-        return super().get(request)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
-        if self.groups:
-            if 'ltj_admin' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_admin' in self.groups:
-                return qs.for_admin()
-            elif 'ltj_virka_hki' in self.groups or r'HELS000627\Paikkatietovipunen_ltj_virka' in self.groups:
-                return qs.for_office_hki()
-            elif 'ltj_virka' in self.groups:
-                return qs.for_office()
+
+        # customized queryset based on hmac user groups
+        group_string = self.request.META.get('HTTP_X_FORWARDED_GROUPS', '')
+        groups = set(group_string.split(';'))
+        if groups.intersection(self.ADMIN_GROUPS):
+            return qs.for_admin()
+        elif groups.intersection(self.OFFICE_HKI_GROUPS):
+            return qs.for_office_hki()
+        elif groups.intersection(self.OFFICE_GROUPS):
+            return qs.for_office()
+
         return qs.www()
 
 
