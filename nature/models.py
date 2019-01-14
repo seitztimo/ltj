@@ -13,9 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
     'ADMIN': 1,
-    'OFFICE_HKI': 2,
-    'OFFICE': 3,
-    'PUBLIC': 4,
+    'OFFICE': 2,
+    'PUBLIC': 3,
 }
 
 CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID = 'UHEX'
@@ -29,10 +28,19 @@ class ProtectionLevelQuerySet(models.QuerySet):
         return self
 
     def for_office_hki(self):
-        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE_HKI'])
+        """For office users who work for City of Helsinki"""
+        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
 
     def for_office(self):
-        return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        """For office users who do not work for City of Helsinki
+
+        For models protected by protection levels but not related
+        to Feature or FeatureClass model, for_office_hki and for_office
+        returns the exact same queryset. But for Feature or FeatureClass
+        related models, the queryset should be furthermore filtered by
+        excluding UHEX features
+        """
+        return self.for_office_hki()
 
     def for_public(self):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
@@ -73,11 +81,12 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
     """
     QuerySet class For Feature model
     """
-    def for_office_city_employee(self):
-        return self.for_office_hki()
+    def for_office(self):
+        """ For office users that do not work for City of Helsinki
 
-    def for_office_non_city_employee(self):
-        return self.for_office().exclude(feature_class_id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID)
+        These users do not have access to UHEX features
+        """
+        return super().for_office().exclude(feature_class_id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID)
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
@@ -89,15 +98,16 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
 class FeatureRelatedQuerySet(models.QuerySet):
     """
     QuerySet class for models that has a FK relationship to Feature model
+    but not protected by a protection_level field
     """
     def for_admin(self):
         return self
 
-    def for_office_city_employee(self):
-        return self.filter(feature__in=Feature.objects.for_office_city_employee())
+    def for_office_hki(self):
+        return self.filter(feature__in=Feature.objects.for_office_hki())
 
-    def for_office_non_city_employee(self):
-        return self.filter(feature__in=Feature.objects.for_office_non_city_employee())
+    def for_office(self):
+        return self.filter(feature__in=Feature.objects.for_office())
 
     def for_public(self):
         return self.filter(feature__in=Feature.objects.for_public())
@@ -111,11 +121,11 @@ class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
     Queryset class for models that has a FK relationship to Feature model
     and has protection_level field
     """
-    def for_office_city_employee(self):
-        return self.for_office_hki().filter(feature__in=Feature.objects.for_office_city_employee())
+    def for_office_hki(self):
+        return super().for_office_hki().filter(feature__in=Feature.objects.for_office_hki())
 
-    def for_office_non_city_employee(self):
-        return self.for_office().filter(feature__in=Feature.objects.for_office_non_city_employee())
+    def for_office(self):
+        return super().for_office().filter(feature__in=Feature.objects.for_office())
 
     def for_public(self):
         return super().for_public().filter(feature__in=Feature.objects.for_public())
@@ -128,7 +138,6 @@ class ProtectionLevelMixin(models.Model):
     PROTECTION_LEVEL_CHOICES = (
         (PROTECTION_LEVELS['ADMIN'], _('Admin')),
         (PROTECTION_LEVELS['OFFICE'], _('Office')),
-        (PROTECTION_LEVELS['OFFICE_HKI'], _('Office Hki')),
         (PROTECTION_LEVELS['PUBLIC'], _('Public')),
     )
 
