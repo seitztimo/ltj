@@ -22,7 +22,7 @@ from .factories import (
 
 from ..models import (
     Feature, FeatureClass, PROTECTION_LEVELS,
-    CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, Observation, FeatureValue)
+    OFFICE_HKI_ONLY_FEATURE_CLASS_ID, Observation, FeatureValue)
 
 
 class TestFeatureClassQuerySet(TestCase):
@@ -76,14 +76,14 @@ class TestFeatureQuerySet(TestCase):
     def setUp(self):
         non_open_feature_class = FeatureClassFactory(open_data=False)
         open_feature_class = FeatureClassFactory(open_data=True)
-        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
         self.feature_admin = FeatureFactory(
             protection_level=PROTECTION_LEVELS['ADMIN'],
             feature_class=non_open_feature_class,
         )
         self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature_class=city_employee_feature_class,
+            feature_class=office_hki_feature_class,
         )
         self.feature_office = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
@@ -128,7 +128,7 @@ class TestFeatureRelatedQuerySet(TestCase):
     def setUp(self):
         non_open_feature_class = FeatureClassFactory(open_data=False)
         open_feature_class = FeatureClassFactory(open_data=True)
-        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
         # features
         self.feature_admin = FeatureFactory(
             protection_level=PROTECTION_LEVELS['ADMIN'],
@@ -136,7 +136,7 @@ class TestFeatureRelatedQuerySet(TestCase):
         )
         self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature_class=city_employee_feature_class,
+            feature_class=office_hki_feature_class,
         )
         self.feature_office = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
@@ -208,11 +208,11 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
     def setUp(self):
         non_open_feature_class = FeatureClassFactory(open_data=False)
         open_feature_class = FeatureClassFactory(open_data=True)
-        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
         # related features
         self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature_class=city_employee_feature_class,
+            feature_class=office_hki_feature_class,
         )
         self.feature_office = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],

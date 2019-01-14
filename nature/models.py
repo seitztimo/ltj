@@ -17,7 +17,7 @@ PROTECTION_LEVELS = {
     'PUBLIC': 3,
 }
 
-CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID = 'UHEX'
+OFFICE_HKI_ONLY_FEATURE_CLASS_ID = 'UHEX'
 
 
 class ProtectionLevelQuerySet(models.QuerySet):
@@ -86,7 +86,7 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
 
         These users do not have access to UHEX features
         """
-        return super().for_office().exclude(feature_class_id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID)
+        return super().for_office().exclude(feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID)
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
