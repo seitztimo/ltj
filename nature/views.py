@@ -1,51 +1,33 @@
 import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views import View
 
+from nature.hmac import HMACAuth
 from .models import Feature, Species, ObservationSeries, Observation
-from .utils import signature_is_valid
 
 
 class ProtectedReportViewMixin:
+    """View mixin for protected reports
+
+    Allow accessing all reports for staff users and public reports
+    for non-staff users. If the requests is a hmac request, the
+    reports are filtered based on forwarded authorization groups.
     """
-    A report view mixin class that allows staff users
-    to access all reports, but only open data for
-    non-staff users
-    """
-    ADMIN_GROUPS = {'ltj_admin', r'HELS000627\Paikkatietovipunen_ltj_admin'}
-    OFFICE_HKI_GROUPS = {'ltj_virka_hki', r'HELS000627\Paikkatietovipunen_ltj_virka'}
-    OFFICE_GROUPS = {'ltj_virka'}
-
-    HMAC_REQUIRED_HEADERS = {'HTTP_SIGNATURE', 'HTTP_DATE', 'HTTP_HOST', 'HTTP_X_FORWARDED_GROUPS'}
-
-    def get(self, request, *args, **kwargs):
-        if self.HMAC_REQUIRED_HEADERS.issubset(set(request.META.keys())):
-            received_signature = request.META['HTTP_SIGNATURE']
-            date = request.META['HTTP_DATE']
-            host = request.META['HTTP_HOST']
-            groups_string = request.META['HTTP_X_FORWARDED_GROUPS']
-            request_line = '{0} {1} {2}'.format(request.META['REQUEST_METHOD'], request.get_full_path(), 'HTTP/1.1')
-            if not signature_is_valid(date, host, groups_string, request_line, received_signature):
-                raise Http404
-        return super().get(request, *args, **kwargs)
-
     def get_queryset(self):
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
 
-        # customized queryset based on hmac user groups
-        group_string = self.request.META.get('HTTP_X_FORWARDED_GROUPS', '')
-        groups = set(group_string.split(';'))
-        if groups.intersection(self.ADMIN_GROUPS):
+        hmac_auth = HMACAuth(self.request)
+        if hmac_auth.has_admin_group:
             return qs.for_admin()
-        elif groups.intersection(self.OFFICE_HKI_GROUPS):
+        elif hmac_auth.has_office_hki_group:
             return qs.for_office_hki()
-        elif groups.intersection(self.OFFICE_GROUPS):
+        elif hmac_auth.has_office_group:
             return qs.for_office()
 
         return qs.www()
