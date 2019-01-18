@@ -1,7 +1,7 @@
 {% extends "nature/reports/report-base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Observation Report" %} - {{ observation.get_protection_level_display }}{% endblock %}
+{% block title %}{% trans "Observation Report" %} - {{ user_role }}{% endblock %}
 
 {% block report_header %}{% trans "Observation" %}{% endblock %}
 

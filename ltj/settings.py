@@ -8,6 +8,7 @@ BASE_DIR = root()
 env = environ.Env(
     DEBUG=(bool, False),
     SECRET_KEY=(str, ''),
+    SHARED_SECRET=(str, ''),
     ALLOWED_HOSTS=(list, []),
     ADMINS=(list, []),
     DATABASE_URL=(str, 'postgis:///ltj'),
@@ -29,6 +30,7 @@ if not DISABLE_CONFIG_FILES:
     env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY')
+SHARED_SECRET = env('SHARED_SECRET')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 ADMINS = env('ADMINS')
@@ -87,13 +89,12 @@ if env('SENTRY_DSN'):
     }
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

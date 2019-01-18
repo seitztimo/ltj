@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import GEOSException
 from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
@@ -18,7 +17,7 @@ PROTECTION_LEVELS = {
     'PUBLIC': 3,
 }
 
-CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID = 'UHEX'
+OFFICE_HKI_ONLY_FEATURE_CLASS_ID = 'UHEX'
 
 
 class ProtectionLevelQuerySet(models.QuerySet):
@@ -28,8 +27,20 @@ class ProtectionLevelQuerySet(models.QuerySet):
     def for_admin(self):
         return self
 
-    def for_office(self):
+    def for_office_hki(self):
+        """For office users who work for City of Helsinki"""
         return self.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+
+    def for_office(self):
+        """For office users who do not work for City of Helsinki
+
+        For models protected by protection levels but not related
+        to Feature or FeatureClass model, for_office_hki and for_office
+        returns the exact same queryset. But for Feature or FeatureClass
+        related models, the queryset should be furthermore filtered by
+        excluding UHEX features
+        """
+        return self.for_office_hki()
 
     def for_public(self):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
@@ -44,6 +55,16 @@ class ProtectionLevelQuerySet(models.QuerySet):
         """
         return self.for_public()
 
+    def www(self):
+        """
+        Models protected with protection level may not be related to
+        Feature or FeatureClass, which has a concept of www. In
+        such cases, we return the public data set as www. This is
+        useful as it provides a consistent interface for different types
+        of user roles
+        """
+        return self.for_public()
+
 
 class FeatureClassQuerySet(models.QuerySet):
     """
@@ -52,33 +73,41 @@ class FeatureClassQuerySet(models.QuerySet):
     def open_data(self):
         return self.filter(open_data=True)
 
+    def www(self):
+        return self.filter(www=True)
+
 
 class FeatureQuerySet(ProtectionLevelQuerySet):
     """
     QuerySet class For Feature model
     """
-    def for_office_city_employee(self):
-        return self.for_office()
+    def for_office(self):
+        """ For office users that do not work for City of Helsinki
 
-    def for_office_non_city_employee(self):
-        return self.for_office().exclude(feature_class_id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID)
+        These users do not have access to UHEX features
+        """
+        return super().for_office().exclude(feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID)
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
+
+    def www(self):
+        return super().www().filter(feature_class__in=FeatureClass.objects.www())
 
 
 class FeatureRelatedQuerySet(models.QuerySet):
     """
     QuerySet class for models that has a FK relationship to Feature model
+    but not protected by a protection_level field
     """
     def for_admin(self):
         return self
 
-    def for_office_city_employee(self):
-        return self.filter(feature__in=Feature.objects.for_office_city_employee())
+    def for_office_hki(self):
+        return self.filter(feature__in=Feature.objects.for_office_hki())
 
-    def for_office_non_city_employee(self):
-        return self.filter(feature__in=Feature.objects.for_office_non_city_employee())
+    def for_office(self):
+        return self.filter(feature__in=Feature.objects.for_office())
 
     def for_public(self):
         return self.filter(feature__in=Feature.objects.for_public())
@@ -92,11 +121,11 @@ class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
     Queryset class for models that has a FK relationship to Feature model
     and has protection_level field
     """
-    def for_office_city_employee(self):
-        return self.for_office().filter(feature__in=Feature.objects.for_office_city_employee())
+    def for_office_hki(self):
+        return super().for_office_hki().filter(feature__in=Feature.objects.for_office_hki())
 
-    def for_office_non_city_employee(self):
-        return self.for_office().filter(feature__in=Feature.objects.for_office_non_city_employee())
+    def for_office(self):
+        return super().for_office().filter(feature__in=Feature.objects.for_office())
 
     def for_public(self):
         return super().for_public().filter(feature__in=Feature.objects.for_public())
@@ -126,13 +155,6 @@ class PermissiveGeometryField(models.GeometryField):
     Required to catch exceptions if curved geometries are encountered. Currently, the GEOS library, GeoDjango
     and GeoJSON do not support curved geometries.
     """
-
-    def from_db_value(self, value, expression, connection, context):
-        try:
-            value = super().from_db_value(value, expression, connection, context)
-        except GEOSException:
-            value = None
-        return value
 
 
 class Origin(models.Model):

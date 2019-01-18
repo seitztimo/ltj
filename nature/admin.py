@@ -1,5 +1,6 @@
 from django.contrib.gis import admin
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
 from django.urls import reverse
 
 from .models import (
@@ -27,7 +28,7 @@ class SpeciesAdmin(admin.ModelAdmin):
 
     def report(self, obj):
         url = reverse('nature:species-report', kwargs={'pk': obj.id})
-        return '<a target="_blank" href="{0}">{1}</a>'.format(url, _('Species report'))
+        return format_html('<a target="_blank" href="{0}">{1}</a>'.format(url, _('Species report')))
     report.allow_tags = True
     report.short_description = _('Species report')
 
@@ -187,7 +188,7 @@ class FeatureAdmin(admin.GeoModelAdmin):
 
     def report(self, obj):
         url = reverse('nature:feature-report', kwargs={'pk': obj.id})
-        return '<a target="_blank" href="{0}">{1}</a>'.format(url, _('Feature report'))
+        return format_html('<a target="_blank" href="{0}">{1}</a>'.format(url, _('Feature report')))
     report.allow_tags = True
     report.short_description = _('Feature report')
 

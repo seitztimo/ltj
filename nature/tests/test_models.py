@@ -22,7 +22,7 @@ from .factories import (
 
 from ..models import (
     Feature, FeatureClass, PROTECTION_LEVELS,
-    CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, Observation, FeatureValue)
+    OFFICE_HKI_ONLY_FEATURE_CLASS_ID, Observation, FeatureValue)
 
 
 class TestFeatureClassQuerySet(TestCase):
@@ -76,16 +76,16 @@ class TestFeatureQuerySet(TestCase):
     def setUp(self):
         non_open_feature_class = FeatureClassFactory(open_data=False)
         open_feature_class = FeatureClassFactory(open_data=True)
-        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
         self.feature_admin = FeatureFactory(
             protection_level=PROTECTION_LEVELS['ADMIN'],
             feature_class=non_open_feature_class,
         )
-        self.feature_office_city_employee = FeatureFactory(
+        self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature_class=city_employee_feature_class,
+            feature_class=office_hki_feature_class,
         )
-        self.feature_office_non_city_employee = FeatureFactory(
+        self.feature_office = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
             feature_class=non_open_feature_class,
         )
@@ -98,20 +98,20 @@ class TestFeatureQuerySet(TestCase):
             feature_class=open_feature_class,
         )
 
-    def test_for_office_city_employee(self):
-        qs = Feature.objects.for_office_city_employee()
+    def test_for_office_hki(self):
+        qs = Feature.objects.for_office_hki()
         expected_queryset = [
-            repr(self.feature_office_city_employee),
-            repr(self.feature_office_non_city_employee),
+            repr(self.feature_office_hki),
+            repr(self.feature_office),
             repr(self.feature_public),
             repr(self.feature_public_open_data),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
-    def test_for_office_non_city_employee(self):
-        qs = Feature.objects.for_office_non_city_employee()
+    def test_for_office(self):
+        qs = Feature.objects.for_office()
         expected_queryset = [
-            repr(self.feature_office_non_city_employee),
+            repr(self.feature_office),
             repr(self.feature_public),
             repr(self.feature_public_open_data),
         ]
@@ -128,17 +128,17 @@ class TestFeatureRelatedQuerySet(TestCase):
     def setUp(self):
         non_open_feature_class = FeatureClassFactory(open_data=False)
         open_feature_class = FeatureClassFactory(open_data=True)
-        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
         # features
         self.feature_admin = FeatureFactory(
             protection_level=PROTECTION_LEVELS['ADMIN'],
             feature_class=non_open_feature_class,
         )
-        self.feature_office_city_employee = FeatureFactory(
+        self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature_class=city_employee_feature_class,
+            feature_class=office_hki_feature_class,
         )
-        self.feature_office_non_city_employee = FeatureFactory(
+        self.feature_office = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
             feature_class=non_open_feature_class,
         )
@@ -152,8 +152,8 @@ class TestFeatureRelatedQuerySet(TestCase):
         )
         # feature values
         self.feature_value_admin = FeatureValueFactory(feature=self.feature_admin)
-        self.feature_value_office_city_employee = FeatureValueFactory(feature=self.feature_office_city_employee)
-        self.feature_value_office_non_city_employee = FeatureValueFactory(feature=self.feature_office_non_city_employee)
+        self.feature_value_office_hki = FeatureValueFactory(feature=self.feature_office_hki)
+        self.feature_value_office = FeatureValueFactory(feature=self.feature_office)
         self.feature_value_public = FeatureValueFactory(feature=self.feature_public)
         self.feature_value_public_open_data = FeatureValueFactory(feature=self.feature_public_open_data)
 
@@ -161,27 +161,27 @@ class TestFeatureRelatedQuerySet(TestCase):
         qs = FeatureValue.objects.for_admin()
         expected_queryset = [
             repr(self.feature_value_admin),
-            repr(self.feature_value_office_city_employee),
-            repr(self.feature_value_office_non_city_employee),
+            repr(self.feature_value_office_hki),
+            repr(self.feature_value_office),
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
-    def test_for_office_city_employee(self):
-        qs = FeatureValue.objects.for_office_city_employee()
+    def test_for_office_hki(self):
+        qs = FeatureValue.objects.for_office_hki()
         expected_queryset = [
-            repr(self.feature_value_office_city_employee),
-            repr(self.feature_value_office_non_city_employee),
+            repr(self.feature_value_office_hki),
+            repr(self.feature_value_office),
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
-    def test_for_office_non_city_employee(self):
-        qs = FeatureValue.objects.for_office_non_city_employee()
+    def test_for_office(self):
+        qs = FeatureValue.objects.for_office()
         expected_queryset = [
-            repr(self.feature_value_office_non_city_employee),
+            repr(self.feature_value_office),
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
         ]
@@ -208,13 +208,13 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
     def setUp(self):
         non_open_feature_class = FeatureClassFactory(open_data=False)
         open_feature_class = FeatureClassFactory(open_data=True)
-        city_employee_feature_class = FeatureClassFactory(id=CITY_EMPLOYEE_ONLY_FEATURE_CLASS_ID, open_data=False)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
         # related features
-        self.feature_office_city_employee = FeatureFactory(
+        self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature_class=city_employee_feature_class,
+            feature_class=office_hki_feature_class,
         )
-        self.feature_office_non_city_employee = FeatureFactory(
+        self.feature_office = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
             feature_class=non_open_feature_class,
         )
@@ -228,17 +228,17 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
         )
 
         # observations
-        self.observation_office_feature_office_city_employee = ObservationFactory(
+        self.observation_office_feature_office_hki = ObservationFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature=self.feature_office_city_employee,
+            feature=self.feature_office_hki,
         )
-        self.observation_office_feature_office_non_city_employee = ObservationFactory(
+        self.observation_office_feature_office = ObservationFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
-            feature=self.feature_office_non_city_employee,
+            feature=self.feature_office,
         )
         self.observation_public_feature_office = ObservationFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
-            feature=self.feature_office_non_city_employee,
+            feature=self.feature_office,
         )
         self.observation_public_feature_public = ObservationFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
@@ -249,21 +249,21 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
             feature=self.feature_public_open_data,
         )
 
-    def test_for_office_city_employee(self):
-        qs = Observation.objects.for_office_city_employee()
+    def test_for_office_hki(self):
+        qs = Observation.objects.for_office_hki()
         expected_queryset = [
-            repr(self.observation_office_feature_office_city_employee),
-            repr(self.observation_office_feature_office_non_city_employee),
+            repr(self.observation_office_feature_office_hki),
+            repr(self.observation_office_feature_office),
             repr(self.observation_public_feature_office),
             repr(self.observation_public_feature_public),
             repr(self.observation_public_feature_public_open_data),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
-    def test_for_office_non_city_employee(self):
-        qs = Observation.objects.for_office_non_city_employee()
+    def test_for_office(self):
+        qs = Observation.objects.for_office()
         expected_queryset = [
-            repr(self.observation_office_feature_office_non_city_employee),
+            repr(self.observation_office_feature_office),
             repr(self.observation_public_feature_office),
             repr(self.observation_public_feature_public),
             repr(self.observation_public_feature_public_open_data),

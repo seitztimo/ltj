@@ -23,20 +23,24 @@ class FeatureForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': '80'})
         }
         help_texts = {
-            'geometry': 'Määrittele paikka kartalle alueena tai pisteinä.<br />'
-                        'Voit luoda erimuotoisia alueita oikeasta ylänurkasta löytyvien geometriatyökalujen avulla. '
-                        '<br />Voit vaihtaa karttapohjan geometriatyökalujen alta löytyvällä painikkeella. <br />'
-                        'Jos olet muokkaamassa kohdetta, valitse "Poista kaikki geometriat" vaihtaaksesi geometriat.',
+            'geometry': (
+                'Uuden kohteen digitoiminen: valitse geometriatyyppi kartan yläkulmasta ja digitoi kohde. <br />'
+                'Kohdetta voi muokata tarttumalla hiirellä kohteen reunasta. <br />'
+                'Voit vaihtaa karttapohjan geometriatyökalujen alta löytyvällä painikkeella. <br />'
+                'Valitsemalla "Poista kaikki geometriat" voit korvata vanhan geometrian uudella.'
+            ),
             'feature_class': 'Mihin kohdeluokkaan kohde kuuluu',
-            'fid': 'Kohdetunnus, seka kirjaimia että numeroita',
+            'fid': 'Kohdetunnus, voi sisältää numeroita, kirjaimia ja merkkejä',
             'name': 'Kohteen nimi, esim. Harakan etelakarki tai Maununneva. Nimi mieluiten sijaintia kuvaava',
             'description': 'Kohteen lyhyt kuvaus tai pidempi kuvaileva nimi',
             'notes': 'Kohteen tietoihin tai geometriaan liittyvää huomionarvoista tietoa',
-            'active': 'Kohde voimassa / ei. oletuksena ”kyllä”',
+            'active': 'Kohde voimassa / ei. Oletuksena ”kyllä”',
             'number': 'Apukentta mm. uusien aineistojen tuontia ja kohteiden erilaisia luokitteluja varten',
             'text': 'Kohteen kuvausteksti',
-            'text_www': 'Kohteen kuvausteksti, julkinen. Jos kenttä ”teksti_www” on tyhjä,'
-                        'kentän ”teksti” sisältö on julkinen.',
+            'text_www': (
+                'Kohteen kuvausteksti, julkinen. Jos kenttä ”teksti_www” on tyhjä, '
+                'kentän ”teksti” sisältö on julkinen.'
+            ),
 
         }
 
@@ -49,7 +53,7 @@ class HabitatTypeObservationInlineForm(forms.ModelForm):
         help_texts = {
             'group_fraction': 'Luontotyypin osuus kuviosta prosentteina',
             'additional_info': 'Muuta tietoa luontotyyppihavainnosta',
-            'observation_series': 'Havaintosarjan id (havaintosarja-taulusta), vierasavain',
+            'observation_series': 'Havaintosarja, johon havainto kuuluu',
             'created_time': 'Havaintorivin luontihetki, automaattinen',
             'last_modified_time': 'Havaintorivin editointihetki, automaattinen',
         }
@@ -114,7 +118,7 @@ class SquareInlineForm(forms.ModelForm):
 class ValueForm(forms.ModelForm):
     class Meta:
         help_texts = {
-            'value_type': 'Arvoluokka, esim. 1, 2 ja 3 tai i, ii ja iii',
+            'value': 'Arvoluokka, esim. 1, 2 ja 3 tai I, II ja III',
             'explanation': 'Kertoo, mitä luokitus tarkoittaa, esim. paikallisesti tai alueellisesti arvokas',
             'valuator': 'Arvotuksen tekijä',
             'date': 'Päivämäärä',
@@ -154,8 +158,8 @@ class PublicationForm(forms.ModelForm):
             'author': 'Julkaisun tekijä / tekijät',
             'series': 'Sarja, jossa julkaistu',
             'place_of_printing': 'Painopaikka',
-            'year': 'Julkaisuvuosi /julkaisuvuodet',
-            'additional_info': 'Lisätietoa julkaisusta, esim. julkaistu myös ruotsiksi, isbn-numero,',
+            'year': 'Julkaisuvuosi',
+            'additional_info': 'Lisätietoa julkaisusta, esim. julkaistu myös ruotsiksi, isbn-numero',
             'link': 'Linkki julkaisuun tai siihen liittyvään dokumenttiin',
         }
 
@@ -215,9 +219,11 @@ class SpeciesForm(forms.ModelForm):
                         'joiden nimistö on vastikään vaihtunut tai muutoksia on odotettavissa.',
             'author_2': 'Rinnakkainen tai vanha auktori, lahde ja vuosi. voi olla useita. voi olla viittaus vanhaa '
                         'nimistöä käyttävään kirjaan/listaan.',
-            'name_abbreviated_1': 'Kasvit: nimilyhenne Metsätähden mukaan. pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
-                                  'Linnut: tieteellisen nimen mukainen lyhenne.',
-            'name_abbreviated_2': 'Kasvit: nimilyhenne Kurton mukaan. Pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
+            'name_abbreviated_1': (
+                'Kasvit: biotooppikartoituksessa 2001 käytetty lyhenne, pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
+                'Linnut: tieteellisen nimen mukainen lyhenne.'
+            ),
+            'name_abbreviated_2': 'Kasvit: mm. HelFlorassa käytetty lyhenne. Pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
                                   'Linnut: aikaisemman tiet nimen mukainen lyhenne 3+3',
             'name_sv': 'Ruotsinkielinen nimi',
             'name_en': 'Englanninkielinen nimi',
@@ -295,7 +301,7 @@ class TransactionForm(forms.ModelForm):
         help_texts = {
             'register_id': 'Asiakirjojen diaarinro',
             'description': 'Tapahtuman kuvaus',
-            'transaction_type': 'tapahtumatyyppi-taulun id, vierasavain. kertoo onko tapahtuma esim. päätös tai '
+            'transaction_type': 'tapahtumatyyppi-taulun id, vierasavain. Kertoo onko tapahtuma esim. päätös tai '
                                 'tutkimus',
             'last_modified_by': 'Tapahtumaan liittyvien tietojen päivittäjä',
             'date': 'Tapahtuman päivämäärä',

@@ -1,7 +1,7 @@
 {% extends "nature/reports/report-base.html" %}
 {% load i18n static %}
 
-{% block title %}{% trans "Feature Report" %} - {{ feature.get_protection_level_display }}{% endblock %}
+{% block title %}{% trans "Feature Report" %} - {{ user_role }}{% endblock %}
 
 {% block extrastyles %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.css" type="text/css" media="all" rel="stylesheet">
@@ -68,7 +68,7 @@
     {% if feature.description or feature.text_display %}
         <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
         <p>{{ feature.description|default_if_none:"" }}</p>
-        <p>{{ feature.text_display|safe }}</p>
+        <p>{{ feature.text_display|default_if_none:""|safe }}</p>
         <hr class="mb-2">
     {% endif %}
 

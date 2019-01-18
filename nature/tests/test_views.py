@@ -3,7 +3,10 @@ from unittest.mock import MagicMock, patch
 from django.http import QueryDict
 from django.test import Client, TestCase, RequestFactory, override_settings
 from django.urls import reverse
+from django.utils.translation import activate
+from freezegun import freeze_time
 
+from nature.models import PROTECTION_LEVELS, OFFICE_HKI_ONLY_FEATURE_CLASS_ID
 from nature.tests.factories import (
     FeatureClassFactory, ObservationFactory, FeatureFactory,
     ObservationSeriesFactory, HabitatTypeObservationFactory,
@@ -13,11 +16,164 @@ from nature.tests.utils import make_user
 from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReportView
 
 
+@override_settings(SHARED_SECRET='test-secret-key', ALLOWED_HOSTS=['localhost'])
+class TestFeatureReportHMACAuth(TestCase):
+
+    def setUp(self):
+        activate('fi')
+        feature_class_office_hki = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID)
+        self.feature_admin = FeatureFactory(protection_level=PROTECTION_LEVELS['ADMIN'])
+        self.feature_office_hki = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature_class=feature_class_office_hki,
+        )
+        self.feature_office = FeatureFactory(protection_level=PROTECTION_LEVELS['OFFICE'])
+        self.feature_public = FeatureFactory(protection_level=PROTECTION_LEVELS['PUBLIC'])
+
+    @freeze_time('2019-01-17 12:00:00')
+    def test_hmac_admin_group_can_access_all_reports(self):
+        headers = {
+            'HTTP_HOST': 'localhost',
+            'HTTP_DATE': 'Fri, 17 Jan 2019 12:00:00 GMT',
+            'HTTP_REQUEST_LINE': 'GET /test-path HTTP/1.1',
+            'HTTP_X_FORWARDED_GROUPS': 'ltj_admin',
+            'HTTP_PROXY_AUTHORIZATION': (
+                'hmac '
+                'username="ltj", '
+                'algorithm="hmac-sha256", '
+                'headers="host date request-line x-forwarded-groups", '
+                'signature="IxMslVab+oyOZwloianoQDsV5WkzPYlzWgyEbvybGGU="'
+            ),
+        }
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_admin.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office_hki.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
+
+    @freeze_time('2019-01-17 12:00:00')
+    def test_hmac_office_hki_group_can_access_non_admin_reports(self):
+        headers = {
+            'HTTP_HOST': 'localhost',
+            'HTTP_DATE': 'Fri, 17 Jan 2019 12:00:00 GMT',
+            'HTTP_REQUEST_LINE': 'GET /test-path HTTP/1.1',
+            'HTTP_X_FORWARDED_GROUPS': 'ltj_virka_hki',
+            'HTTP_PROXY_AUTHORIZATION': (
+                'hmac '
+                'username="ltj", '
+                'algorithm="hmac-sha256", '
+                'headers="host date request-line x-forwarded-groups", '
+                'signature="TWu+GOyJipcU0yI+P+baZjJlxRf15bjR6aLBGp4qgEc="'
+            ),
+        }
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_admin.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office_hki.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka Hki</title>'.encode('utf-8'), response.content)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka Hki</title>'.encode('utf-8'), response.content)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka Hki</title>'.encode('utf-8'), response.content)
+
+    @freeze_time('2019-01-17 12:00:00')
+    def test_hmac_office_group_can_access_office_and_public_reports(self):
+        headers = {
+            'HTTP_HOST': 'localhost',
+            'HTTP_DATE': 'Fri, 17 Jan 2019 12:00:00 GMT',
+            'HTTP_REQUEST_LINE': 'GET /test-path HTTP/1.1',
+            'HTTP_X_FORWARDED_GROUPS': 'ltj_virka',
+            'HTTP_PROXY_AUTHORIZATION': (
+                'hmac '
+                'username="ltj", '
+                'algorithm="hmac-sha256", '
+                'headers="host date request-line x-forwarded-groups", '
+                'signature="QnEwM4vSpaCwFFIqFfTXrA29+JM9vhV3F2qvwERZxsk="'
+            ),
+        }
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_admin.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office_hki.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka</title>'.encode('utf-8'), response.content)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka</title>'.encode('utf-8'), response.content)
+
+    @freeze_time('2019-01-17 12:00:00')
+    def test_hmac_unauthorized_group_can_access_public_reports(self):
+        headers = {
+            'HTTP_HOST': 'localhost',
+            'HTTP_DATE': 'Fri, 17 Jan 2019 12:00:00 GMT',
+            'HTTP_REQUEST_LINE': 'GET /test-path HTTP/1.1',
+            'HTTP_X_FORWARDED_GROUPS': 'unauthorized_group',
+            'HTTP_PROXY_AUTHORIZATION': (
+                'hmac '
+                'username="ltj", '
+                'algorithm="hmac-sha256", '
+                'headers="host date request-line x-forwarded-groups", '
+                'signature="YnL36A5onS7CjpNvgUcyJ29O6twqqkyIQ1k0i4v+Q7M="'
+            ),
+        }
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_admin.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office_hki.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 404)
+
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Yleisö</title>'.encode('utf-8'), response.content)
+
+
 class TestProtectedReportViewMixin(TestCase):
 
     def setUp(self):
-        feature_class_open_data = FeatureClassFactory(open_data=True)
-        feature_class_non_open_data = FeatureClassFactory(open_data=False)
+        feature_class_open_data = FeatureClassFactory(www=True)
+        feature_class_non_open_data = FeatureClassFactory(www=False)
         self.feature_open_data = FeatureFactory(feature_class=feature_class_open_data)
         self.feature_non_open_data = FeatureFactory(feature_class=feature_class_non_open_data)
         self.admin = make_user(username='test_admin', is_admin=True)
@@ -172,7 +328,7 @@ class TestFeatureObservationsReportView(TestCase):
         self.view.request = request
         self.view.object = self.feature
         context_data = self.view.get_context_data()
-        self.assertEqual(context_data['feature_observations'].query.order_by, ['species__name_fi'])
+        self.assertEqual(list(context_data['feature_observations'].query.order_by), ['species__name_fi'])
 
 
 class TestReportViews(TestCase):
