@@ -2,15 +2,53 @@
 [![codecov](https://codecov.io/gh/City-of-Helsinki/ltj/branch/master/graph/badge.svg)](https://codecov.io/gh/City-of-Helsinki/ltj)
 [![Requirements](https://requires.io/github/City-of-Helsinki/ltj/requirements.svg?branch=master)](https://requires.io/github/City-of-Helsinki/ltj/requirements/?branch=master)
 
-# ltj
-City of Helsinki nature database and API
+# City of Helsinki nature database and API (LTJ)
 
+LTJ is a backend service for storing and retrieving data about important
+natural sites and observations thereof. This information is structured
+along the form of a database developed in the City of Helsinki during several
+years. It is not particularly specific to Helsinki and should be usable
+elsewhere as well.
 
-## Development
+Data in LTJ is accessed throught its REST-like API. In addition there is a
+reasonably functional admnistration site implemented using Django admin.
+In case you are not familiar with Django admin, it is a simple forms based
+editor of Web 1.0 style.
 
-### Database
+LTJ also has support for displaying HTML-formatted reports for natural
+sites. These are designed for linking from the Helsinki map service
+(kartta.hel.fi).
+ 
+## Installation
 
-Adding postgis extention to default template;
+This applies to both development and simple production scale (nature
+information is, sadly, not very popular). Note that you won't need to
+follow this approach if you have your own favorite Python process.
+
+### Prerequisites
+
+* Python 3
+* PostgreSQL with PostGIS (other databases are not tested at all)
+
+### Configuration
+
+LTJ uses environment variables for its configuration. These are particularly
+nice in container environments or other managed environments (like Heroku).
+
+However for development, setting the environment variables is a bit
+annoying. In this case you will want to create `config.env` in the root
+of the source (ie. same place as this README). Start by renaming
+`config.env.example` to `config.env`. The example file should
+contain every setting currently available and commonly used
+values thereof.
+
+### Preparing the database
+
+LTJ uses PostGIS for storing the geometries (areas on map) and/or points
+(locations on map) of natural phenomena. Therefore you need to have the
+PostGIS extension installed and enable for the database.
+
+Begin by adding enabling PostGIS extension for the default template;
 
     sudo -u postgres psql -d template1 -c "CREATE EXTENSION IF NOT EXISTS postgis;"
 
@@ -61,7 +99,7 @@ Run tests with coverage report
 Open htmlcov/index.html for the coverage report.
 
 
-## Translations
+### Translations
 
 To compile the Finnish translations run
 
