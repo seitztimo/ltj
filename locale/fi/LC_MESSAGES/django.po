@@ -431,7 +431,7 @@ msgid "habitat type observations"
 msgstr "luontotyyppihavainnot"
 
 msgid "group"
-msgstr "käyttöoikeusryhmä"
+msgstr "luontotyyppiryhmä"
 
 msgid "habitat types"
 msgstr "luontotyypit"
