@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.views import View
+from django.utils.translation import ugettext as _
 
 from nature.hmac import HMACAuth
 from .models import Feature, Species, ObservationSeries, Observation
@@ -22,7 +23,7 @@ class ProtectedReportViewMixin:
         if self.request.user.is_staff:
             return qs
 
-        hmac_auth = HMACAuth(self.request)
+        hmac_auth = self._get_hmac_auth()
         if hmac_auth.has_admin_group:
             return qs.for_admin()
         elif hmac_auth.has_office_hki_group:
@@ -31,6 +32,27 @@ class ProtectedReportViewMixin:
             return qs.for_office()
 
         return qs.www()
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        hmac_auth = self._get_hmac_auth()
+        if self.request.user.is_staff or hmac_auth.has_admin_group:
+            user_role = _('Admin')
+        elif hmac_auth.has_office_hki_group:
+            user_role = _('Office Hki')
+        elif hmac_auth.has_office_group:
+            user_role = _('Office')
+        else:
+            user_role = _('Public')
+        context_data['user_role'] = user_role
+
+        return context_data
+
+    def _get_hmac_auth(self):
+        if not hasattr(self, '_hmac_auth'):
+            self._hmac_auth = HMACAuth(self.request)
+        return self._hmac_auth
 
 
 class FeatureReportView(ProtectedReportViewMixin, DetailView):
