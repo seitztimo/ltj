@@ -23,10 +23,12 @@ class FeatureForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'size': '80'})
         }
         help_texts = {
-            'geometry': 'Uuden kohteen digitoiminen: valitse geometriatyyppi kartan yläkulmasta ja digitoi kohde. <br />'
-                        'Kohdetta voi muokata tarttumalla hiirellä kohteen reunasta. <br />'
-                        'Voit vaihtaa karttapohjan geometriatyökalujen alta löytyvällä painikkeella. <br />'
-                        'Valitsemalla "Poista kaikki geometriat" voit korvata vanhan geometrian uudella.',
+            'geometry': (
+                'Uuden kohteen digitoiminen: valitse geometriatyyppi kartan yläkulmasta ja digitoi kohde. <br />'
+                'Kohdetta voi muokata tarttumalla hiirellä kohteen reunasta. <br />'
+                'Voit vaihtaa karttapohjan geometriatyökalujen alta löytyvällä painikkeella. <br />'
+                'Valitsemalla "Poista kaikki geometriat" voit korvata vanhan geometrian uudella.'
+            ),
             'feature_class': 'Mihin kohdeluokkaan kohde kuuluu',
             'fid': 'Kohdetunnus, voi sisältää numeroita, kirjaimia ja merkkejä',
             'name': 'Kohteen nimi, esim. Harakan etelakarki tai Maununneva. Nimi mieluiten sijaintia kuvaava',
@@ -35,7 +37,10 @@ class FeatureForm(forms.ModelForm):
             'active': 'Kohde voimassa / ei. Oletuksena ”kyllä”',
             'number': 'Apukentta mm. uusien aineistojen tuontia ja kohteiden erilaisia luokitteluja varten',
             'text': 'Kohteen kuvausteksti',
-            'text_www': 'Kohteen kuvausteksti, julkinen. Jos kenttä ”teksti_www” on tyhjä, kentän ”teksti” sisältö on julkinen.',
+            'text_www': (
+                'Kohteen kuvausteksti, julkinen. Jos kenttä ”teksti_www” on tyhjä, '
+                'kentän ”teksti” sisältö on julkinen.'
+            ),
 
         }
 
@@ -214,8 +219,10 @@ class SpeciesForm(forms.ModelForm):
                         'joiden nimistö on vastikään vaihtunut tai muutoksia on odotettavissa.',
             'author_2': 'Rinnakkainen tai vanha auktori, lahde ja vuosi. voi olla useita. voi olla viittaus vanhaa '
                         'nimistöä käyttävään kirjaan/listaan.',
-            'name_abbreviated_1': 'Kasvit: biotooppikartoituksessa 2001 käytetty lyhenne, pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
-                                  'Linnut: tieteellisen nimen mukainen lyhenne.',
+            'name_abbreviated_1': (
+                'Kasvit: biotooppikartoituksessa 2001 käytetty lyhenne, pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
+                'Linnut: tieteellisen nimen mukainen lyhenne.'
+            ),
             'name_abbreviated_2': 'Kasvit: mm. HelFlorassa käytetty lyhenne. Pääosin muotoa 4+4, myös 4+3, 3+4 ja 3+3. '
                                   'Linnut: aikaisemman tiet nimen mukainen lyhenne 3+3',
             'name_sv': 'Ruotsinkielinen nimi',
