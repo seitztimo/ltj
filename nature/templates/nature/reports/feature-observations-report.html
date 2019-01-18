@@ -1,7 +1,7 @@
 {% extends 'nature/reports/report-base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Feature Report - Observations" %} - {{ feature.get_protection_level_display }}{% endblock %}
+{% block title %}{% trans "Feature Report - Observations" %} - {{ user_role }}{% endblock %}
 
 {% block extrastyles %}
     <style>

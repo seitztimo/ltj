@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 from django.http import QueryDict
 from django.test import Client, TestCase, RequestFactory, override_settings
 from django.urls import reverse
+from django.utils.translation import activate
 from freezegun import freeze_time
 
 from nature.models import PROTECTION_LEVELS, OFFICE_HKI_ONLY_FEATURE_CLASS_ID
@@ -19,6 +20,7 @@ from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReport
 class TestFeatureReportHMACAuth(TestCase):
 
     def setUp(self):
+        activate('fi')
         feature_class_office_hki = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID)
         self.feature_admin = FeatureFactory(protection_level=PROTECTION_LEVELS['ADMIN'])
         self.feature_office_hki = FeatureFactory(
@@ -47,18 +49,22 @@ class TestFeatureReportHMACAuth(TestCase):
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_admin.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
 
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_office_hki.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
 
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
 
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Admin</title>'.encode('utf-8'), response.content)
 
     @freeze_time('2019-01-17 12:00:00')
     def test_hmac_office_hki_group_can_access_non_admin_reports(self):
@@ -83,14 +89,17 @@ class TestFeatureReportHMACAuth(TestCase):
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_office_hki.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka Hki</title>'.encode('utf-8'), response.content)
 
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka Hki</title>'.encode('utf-8'), response.content)
 
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka Hki</title>'.encode('utf-8'), response.content)
 
     @freeze_time('2019-01-17 12:00:00')
     def test_hmac_office_group_can_access_office_and_public_reports(self):
@@ -119,10 +128,12 @@ class TestFeatureReportHMACAuth(TestCase):
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_office.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka</title>'.encode('utf-8'), response.content)
 
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Virka</title>'.encode('utf-8'), response.content)
 
     @freeze_time('2019-01-17 12:00:00')
     def test_hmac_unauthorized_group_can_access_public_reports(self):
@@ -155,6 +166,7 @@ class TestFeatureReportHMACAuth(TestCase):
         url = reverse('nature:feature-report', kwargs={'pk': self.feature_public.id})
         response = self.client.get(url, **headers)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('<title>Kohderaportti - Yleisö</title>'.encode('utf-8'), response.content)
 
 
 class TestProtectedReportViewMixin(TestCase):
