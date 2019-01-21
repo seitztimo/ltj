@@ -1,5 +1,6 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, PropertyMock
 
+from django.contrib.auth.models import AnonymousUser
 from django.http import QueryDict
 from django.test import Client, TestCase, RequestFactory, override_settings
 from django.urls import reverse
@@ -172,44 +173,44 @@ class TestFeatureReportHMACAuth(TestCase):
 class TestProtectedReportViewMixin(TestCase):
 
     def setUp(self):
-        feature_class_open_data = FeatureClassFactory(www=True)
-        feature_class_non_open_data = FeatureClassFactory(www=False)
-        self.feature_open_data = FeatureFactory(feature_class=feature_class_open_data)
-        self.feature_non_open_data = FeatureFactory(feature_class=feature_class_non_open_data)
+        feature_class_www = FeatureClassFactory(www=True)
+        feature_class_non_www = FeatureClassFactory(www=False)
+        self.feature_www = FeatureFactory(feature_class=feature_class_www)
+        self.feature_non_www = FeatureFactory(feature_class=feature_class_non_www)
         self.admin = make_user(username='test_admin', is_admin=True)
         self.user = make_user(username='test_user', is_admin=False)
 
-    def test_admin_access_report_non_open_data_success(self):
-        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_open_data.id})
+    def test_admin_access_report_non_www_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_www.id})
         self.client.force_login(self.admin)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_admin_access_report_open_data_success(self):
-        url = reverse('nature:feature-report', kwargs={'pk': self.feature_open_data.id})
+    def test_admin_access_report_www_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_www.id})
         self.client.force_login(self.admin)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_user_access_report_non_open_data_not_found(self):
-        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_open_data.id})
+    def test_user_access_report_non_www_not_found(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_www.id})
         self.client.force_login(self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_user_access_report_open_data_success(self):
-        url = reverse('nature:feature-report', kwargs={'pk': self.feature_open_data.id})
+    def test_user_access_report_www_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_www.id})
         self.client.force_login(self.user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_anonymous_user_access_report_non_open_data_not_found(self):
-        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_open_data.id})
+    def test_anonymous_user_access_report_non_www_not_found(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_non_www.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_anonymous_user_access_report_open_data_success(self):
-        url = reverse('nature:feature-report', kwargs={'pk': self.feature_open_data.id})
+    def test_anonymous_user_access_report_www_success(self):
+        url = reverse('nature:feature-report', kwargs={'pk': self.feature_www.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -278,57 +279,234 @@ class TestFeatureWFSView(TestCase):
 class TestSpeciesReportView(TestCase):
 
     def setUp(self):
+        self.factory = RequestFactory()
         self.species = SpeciesFactory()
-        feature_class = FeatureClassFactory(open_data=False)
-        feature = FeatureFactory(feature_class=feature_class)
-        self.observation = ObservationFactory(feature=feature, species=self.species)
+        feature_class = FeatureClassFactory(www=False)
+        feature_class_www = FeatureClassFactory(www=True)
+        feature_class_office_hki = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, www=False)
+        feature_admin = FeatureFactory(
+            feature_class=feature_class,
+            protection_level=PROTECTION_LEVELS['ADMIN'],
+        )
+        feature_office_hki = FeatureFactory(
+            feature_class=feature_class_office_hki,
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+        )
+        feature_office = FeatureFactory(
+            feature_class=feature_class,
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+        )
+        feature_www = FeatureFactory(
+            feature_class=feature_class_www,
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+        )
 
-        feature_class_open_data = FeatureClassFactory(open_data=True)
-        feature_open_data = FeatureFactory(feature_class=feature_class_open_data)
-        self.observation_open_data = ObservationFactory(feature=feature_open_data, species=self.species)
+        self.observation_admin = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['ADMIN'],
+            feature=feature_admin,
+            species=self.species
+        )
+        self.observation_office_hki = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature=feature_office_hki,
+            species=self.species
+        )
+        self.observation_office = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature=feature_office,
+            species=self.species
+        )
+        self.observation_www = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature=feature_www,
+            species=self.species,
+        )
 
-        self.view = SpeciesReportView()
-        factory = RequestFactory()
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=True))
+    def test_get_context_data_for_admin(self, *args):
+        view = SpeciesReportView()
         view_kwargs = {'pk': self.species.pk}
-        self.request = factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        request = self.factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.species
 
-    def test_get_context_data_for_staff(self):
-        self.request.user = make_user(is_admin=True)
-        self.view.request = self.request
-        self.view.object = self.species
-        context = self.view.get_context_data()
+        context = view.get_context_data()
         self.assertQuerysetEqual(
             context['observations'],
-            [repr(self.observation), repr(self.observation_open_data)],
+            [
+                repr(self.observation_admin),
+                repr(self.observation_office_hki),
+                repr(self.observation_office),
+                repr(self.observation_www)
+            ],
             ordered=False,
         )
 
-    def test_get_context_data_for_non_staff(self):
-        self.request.user = make_user(is_admin=False)
-        self.view.request = self.request
-        self.view.object = self.species
-        context = self.view.get_context_data()
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=True))
+    def test_get_context_data_for_office_hki(self, *args):
+        view = SpeciesReportView()
+        view_kwargs = {'pk': self.species.pk}
+        request = self.factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.species
+
+        context = view.get_context_data()
         self.assertQuerysetEqual(
             context['observations'],
-            [repr(self.observation_open_data)],
+            [
+                repr(self.observation_office_hki),
+                repr(self.observation_office),
+                repr(self.observation_www)
+            ],
             ordered=False,
+        )
+
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_group', new_callable=PropertyMock(return_value=True))
+    def test_get_context_data_for_office(self, *args):
+        view = SpeciesReportView()
+        view_kwargs = {'pk': self.species.pk}
+        request = self.factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.species
+
+        context = view.get_context_data()
+        self.assertQuerysetEqual(
+            context['observations'],
+            [
+                repr(self.observation_office),
+                repr(self.observation_www)
+            ],
+            ordered=False,
+        )
+
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_group', new_callable=PropertyMock(return_value=False))
+    def test_get_context_data_for_public_www(self, *args):
+        view = SpeciesReportView()
+        view_kwargs = {'pk': self.species.pk}
+        request = self.factory.get(reverse('nature:species-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.species
+
+        context = view.get_context_data()
+        self.assertQuerysetEqual(
+            context['observations'],
+            [
+                repr(self.observation_www)
+            ],
         )
 
 
 class TestFeatureObservationsReportView(TestCase):
 
     def setUp(self):
-        self.feature = FeatureFactory()
-        self.view = FeatureObservationsReportView()
         self.factory = RequestFactory()
+        feature_class = FeatureClassFactory(www=True)
+        self.feature = FeatureFactory(
+            feature_class=feature_class,
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+        )
+        self.observation_admin = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['ADMIN'],
+            feature=self.feature,
+        )
+        self.observation_office = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            feature=self.feature,
+        )
+        self.observation_www = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature=self.feature,
+        )
 
-    def test_get_content_data(self):
-        request = self.factory.get(reverse('nature:feature-observations-report', kwargs={'pk': self.feature.id}))
-        request.user = make_user()
-        self.view.request = request
-        self.view.object = self.feature
-        context_data = self.view.get_context_data()
-        self.assertEqual(list(context_data['feature_observations'].query.order_by), ['species__name_fi'])
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=True))
+    def test_get_context_data_for_admin(self, *args):
+        view = FeatureObservationsReportView()
+        view_kwargs = {'pk': self.feature.pk}
+        request = self.factory.get(reverse('nature:feature-observations-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.feature
+
+        context = view.get_context_data()
+        self.assertQuerysetEqual(
+            context['feature_observations'],
+            [
+                repr(self.observation_admin),
+                repr(self.observation_office),
+                repr(self.observation_www)
+            ],
+            ordered=False,
+        )
+
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=True))
+    def test_get_context_data_for_office_hki(self, *args):
+        view = FeatureObservationsReportView()
+        view_kwargs = {'pk': self.feature.pk}
+        request = self.factory.get(reverse('nature:feature-observations-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.feature
+
+        context = view.get_context_data()
+        self.assertQuerysetEqual(
+            context['feature_observations'],
+            [
+                repr(self.observation_office),
+                repr(self.observation_www)
+            ],
+            ordered=False,
+        )
+
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_group', new_callable=PropertyMock(return_value=True))
+    def test_get_context_data_for_office(self, *args):
+        view = FeatureObservationsReportView()
+        view_kwargs = {'pk': self.feature.pk}
+        request = self.factory.get(reverse('nature:feature-observations-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.feature
+
+        context = view.get_context_data()
+        self.assertQuerysetEqual(
+            context['feature_observations'],
+            [
+                repr(self.observation_office),
+                repr(self.observation_www)
+            ],
+            ordered=False,
+        )
+
+    @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
+    @patch('nature.hmac.HMACAuth.has_office_group', new_callable=PropertyMock(return_value=False))
+    def test_get_context_data_for_public_www(self, *args):
+        view = FeatureObservationsReportView()
+        view_kwargs = {'pk': self.feature.pk}
+        request = self.factory.get(reverse('nature:feature-observations-report', kwargs=view_kwargs))
+        request.user = AnonymousUser()
+        view.request = request
+        view.object = self.feature
+
+        context = view.get_context_data()
+        self.assertQuerysetEqual(
+            context['feature_observations'],
+            [
+                repr(self.observation_www)
+            ],
+            ordered=False,
+        )
 
 
 class TestReportViews(TestCase):

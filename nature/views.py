@@ -3,11 +3,11 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView
 from django.views import View
-from django.utils.translation import ugettext as _
+from django.views.generic import DetailView
 
 from nature.hmac import HMACAuth
+from .enums import UserRole
 from .models import Feature, Species, ObservationSeries, Observation
 
 
@@ -37,15 +37,8 @@ class ProtectedReportViewMixin:
         context_data = super().get_context_data(**kwargs)
 
         hmac_auth = self._get_hmac_auth()
-        if self.request.user.is_staff or hmac_auth.has_admin_group:
-            user_role = _('Admin')
-        elif hmac_auth.has_office_hki_group:
-            user_role = _('Office Hki')
-        elif hmac_auth.has_office_group:
-            user_role = _('Office')
-        else:
-            user_role = _('Public')
-        context_data['user_role'] = user_role
+        user_role = UserRole.ADMIN if self.request.user.is_staff else hmac_auth.user_role
+        context_data['user_role'] = user_role.value
 
         return context_data
 
@@ -72,15 +65,21 @@ class SpeciesReportView(ProtectedReportViewMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.object:
-            context['observations'] = self.get_ordered_observations()
+            context['observations'] = self.get_observations()
         return context
 
-    def get_ordered_observations(self):
-        if self.request.user.is_staff:
-            queryset = self.object.observations.all()
+    def get_observations(self):
+        hmac_auth = self._get_hmac_auth()
+        qs = self.object.observations.all()
+        if self.request.user.is_staff or hmac_auth.has_admin_group:
+            qs = qs.for_admin()
+        elif hmac_auth.has_office_hki_group:
+            qs = qs.for_office_hki()
+        elif hmac_auth.has_office_group:
+            qs = qs.for_office()
         else:
-            queryset = self.object.observations.open_data()
-        return queryset.select_related('feature__feature_class').order_by('feature__feature_class__name')
+            qs = qs.www()
+        return qs.select_related('feature__feature_class').order_by('feature__feature_class__name')
 
 
 class SpeciesRegulationsReportView(ProtectedReportViewMixin, DetailView):
@@ -100,8 +99,21 @@ class FeatureObservationsReportView(ProtectedReportViewMixin, DetailView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         if self.object:
-            context_data['feature_observations'] = self.object.observations.all().order_by('species__name_fi')
+            context_data['feature_observations'] = self.get_observations()
         return context_data
+
+    def get_observations(self):
+        hmac_auth = self._get_hmac_auth()
+        qs = self.object.observations.all()
+        if self.request.user.is_staff or hmac_auth.has_admin_group:
+            qs = qs.for_admin()
+        elif hmac_auth.has_office_hki_group:
+            qs = qs.for_office_hki()
+        elif hmac_auth.has_office_group:
+            qs = qs.for_office()
+        else:
+            qs = qs.www()
+        return qs.order_by('species__name_fi')
 
 
 class FeatureHabitatTypeObservationsReportView(ProtectedReportViewMixin, DetailView):
