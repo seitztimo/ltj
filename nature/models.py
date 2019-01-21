@@ -464,7 +464,7 @@ class Observation(ProtectionLevelMixin, models.Model):
                                   related_name='observations', verbose_name=_('frequence'))
     observer = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True,
                                  related_name='observations', verbose_name=_('observer'))
-    number = models.CharField(_('number'), max_length=30, blank=True, null=True, db_column='lkm')
+    quantity = models.CharField(_('quantity'), max_length=30, blank=True, null=True, db_column='lkm')
     migration_class = models.ForeignKey('MigrationClass', models.PROTECT, db_column='liikkumislkid', blank=True,
                                         null=True,
                                         related_name='observations',
