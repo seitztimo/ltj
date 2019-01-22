@@ -193,4 +193,12 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+    {% if secret_observation_count %}
+        <hr class="mb-2 dashed">
+        <div class="row">
+            <b class="col-sm-3 text-uppercase">
+                {% blocktrans count counter=secret_observation_count %}{{ counter }} secret observation{% plural %}{{ counter }} secret observations{% endblocktrans %}
+            </b>
+        </div>
+    {% endif %}
 {% endblock %}

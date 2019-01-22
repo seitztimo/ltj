@@ -33,15 +33,23 @@
     </div>
 
     <hr class="mb-4">
-    {% if feature_observations %}
+    {% if observations %}
         <h4 class="text-uppercase">{% trans "Observations" %}</h4>
         <hr class="mb-2">
 
-        {% for observation in feature_observations %}
+        {% for observation in observations %}
             {% include "nature/reports/stubs/observation-info.html" with observation=observation %}
             {% if not forloop.last %}
                 <hr class="mb-2 dashed">
             {% endif %}
         {% endfor %}
+    {% endif %}
+    {% if secret_observation_count %}
+        <hr class="mb-2 dashed">
+        <div class="row">
+            <b class="col-sm-3 text-uppercase">
+                {% blocktrans count counter=secret_observation_count %}{{ counter }} secret observation{% plural %}{{ counter }} secret observations{% endblocktrans %}
+            </b>
+        </div>
     {% endif %}
 {% endblock %}

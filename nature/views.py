@@ -48,6 +48,47 @@ class ProtectedReportViewMixin:
         return self._hmac_auth
 
 
+class ProtectedObservationListReportViewMixin(ProtectedReportViewMixin):
+    """View mixin to filter observations based on user roles"""
+    def get_observation_queryset(self):
+        raise NotImplementedError
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.object:
+            context_data['observations'] = self.get_filtered_observations()
+            context_data['secret_observation_count'] = self.get_secret_observation_count()
+        return context_data
+
+    def get_filtered_observations(self):
+        """Get filtered observations based on hmac user roles"""
+        qs = self.get_observation_queryset()
+        hmac_auth = self._get_hmac_auth()
+        if self.request.user.is_staff or hmac_auth.has_admin_group:
+            qs = qs.for_admin()
+        elif hmac_auth.has_office_hki_group:
+            qs = qs.for_office_hki()
+        elif hmac_auth.has_office_group:
+            qs = qs.for_office()
+        else:
+            qs = qs.www()
+        return qs
+
+    def get_secret_observation_count(self):
+        """Return the number of secret observations for current user role"""
+        hmac_auth = self._get_hmac_auth()
+        user_role = hmac_auth.user_role
+
+        if user_role not in [UserRole.OFFICE_HKI, user_role.OFFICE]:
+            return 0
+
+        qs = self.get_observation_queryset()
+        admin_qs = qs.for_admin()
+        office_qs = qs.for_office_hki() if user_role == UserRole.OFFICE_HKI else qs.for_office()
+
+        return admin_qs.difference(office_qs).count()
+
+
 class FeatureReportView(ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-report.html'
@@ -58,28 +99,12 @@ class ObservationReportView(ProtectedReportViewMixin, DetailView):
     template_name = 'nature/reports/observation-report.html'
 
 
-class SpeciesReportView(ProtectedReportViewMixin, DetailView):
+class SpeciesReportView(ProtectedObservationListReportViewMixin, DetailView):
     queryset = Species.objects.all()
     template_name = 'nature/reports/species-report.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.object:
-            context['observations'] = self.get_observations()
-        return context
-
-    def get_observations(self):
-        hmac_auth = self._get_hmac_auth()
-        qs = self.object.observations.all()
-        if self.request.user.is_staff or hmac_auth.has_admin_group:
-            qs = qs.for_admin()
-        elif hmac_auth.has_office_hki_group:
-            qs = qs.for_office_hki()
-        elif hmac_auth.has_office_group:
-            qs = qs.for_office()
-        else:
-            qs = qs.www()
-        return qs.select_related('feature__feature_class').order_by('feature__feature_class__name')
+    def get_observation_queryset(self):
+        return self.object.observations.all().order_by('feature__feature_class__name')
 
 
 class SpeciesRegulationsReportView(ProtectedReportViewMixin, DetailView):
@@ -92,28 +117,12 @@ class ObservationSeriesReportView(DetailView):
     template_name = 'nature/reports/observationseries-report.html'
 
 
-class FeatureObservationsReportView(ProtectedReportViewMixin, DetailView):
+class FeatureObservationsReportView(ProtectedObservationListReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-observations-report.html'
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if self.object:
-            context_data['feature_observations'] = self.get_observations()
-        return context_data
-
-    def get_observations(self):
-        hmac_auth = self._get_hmac_auth()
-        qs = self.object.observations.all()
-        if self.request.user.is_staff or hmac_auth.has_admin_group:
-            qs = qs.for_admin()
-        elif hmac_auth.has_office_hki_group:
-            qs = qs.for_office_hki()
-        elif hmac_auth.has_office_group:
-            qs = qs.for_office()
-        else:
-            qs = qs.www()
-        return qs.order_by('species__name_fi')
+    def get_observation_queryset(self):
+        return self.object.observations.all().order_by('species__name_fi')
 
 
 class FeatureHabitatTypeObservationsReportView(ProtectedReportViewMixin, DetailView):

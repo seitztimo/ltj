@@ -342,6 +342,7 @@ class TestSpeciesReportView(TestCase):
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 0)
 
     @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
     @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=True))
@@ -363,6 +364,7 @@ class TestSpeciesReportView(TestCase):
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 1)
 
     @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
     @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
@@ -384,6 +386,7 @@ class TestSpeciesReportView(TestCase):
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 2)
 
     @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
     @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
@@ -403,6 +406,7 @@ class TestSpeciesReportView(TestCase):
                 repr(self.observation_www)
             ],
         )
+        self.assertEqual(context['secret_observation_count'], 0)
 
 
 class TestFeatureObservationsReportView(TestCase):
@@ -438,7 +442,7 @@ class TestFeatureObservationsReportView(TestCase):
 
         context = view.get_context_data()
         self.assertQuerysetEqual(
-            context['feature_observations'],
+            context['observations'],
             [
                 repr(self.observation_admin),
                 repr(self.observation_office),
@@ -446,6 +450,7 @@ class TestFeatureObservationsReportView(TestCase):
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 0)
 
     @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
     @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=True))
@@ -459,13 +464,14 @@ class TestFeatureObservationsReportView(TestCase):
 
         context = view.get_context_data()
         self.assertQuerysetEqual(
-            context['feature_observations'],
+            context['observations'],
             [
                 repr(self.observation_office),
                 repr(self.observation_www)
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 1)
 
     @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
     @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
@@ -480,13 +486,14 @@ class TestFeatureObservationsReportView(TestCase):
 
         context = view.get_context_data()
         self.assertQuerysetEqual(
-            context['feature_observations'],
+            context['observations'],
             [
                 repr(self.observation_office),
                 repr(self.observation_www)
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 1)
 
     @patch('nature.hmac.HMACAuth.has_admin_group', new_callable=PropertyMock(return_value=False))
     @patch('nature.hmac.HMACAuth.has_office_hki_group', new_callable=PropertyMock(return_value=False))
@@ -501,12 +508,13 @@ class TestFeatureObservationsReportView(TestCase):
 
         context = view.get_context_data()
         self.assertQuerysetEqual(
-            context['feature_observations'],
+            context['observations'],
             [
                 repr(self.observation_www)
             ],
             ordered=False,
         )
+        self.assertEqual(context['secret_observation_count'], 0)
 
 
 class TestReportViews(TestCase):
