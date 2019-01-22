@@ -46,7 +46,8 @@ class ProtectionLevelQuerySet(models.QuerySet):
         return self.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
 
     def open_data(self):
-        """
+        """Objects publicly available via REST API
+
         Models protected with protection level may not be related to
         Feature or FeatureClass, which has a concept of open data. In
         such cases, we return the public data set as open data. This is
@@ -56,7 +57,8 @@ class ProtectionLevelQuerySet(models.QuerySet):
         return self.for_public()
 
     def www(self):
-        """
+        """Objects publicly available via reports
+
         Models protected with protection level may not be related to
         Feature or FeatureClass, which has a concept of www. In
         such cases, we return the public data set as www. This is
@@ -115,6 +117,9 @@ class FeatureRelatedQuerySet(models.QuerySet):
     def open_data(self):
         return self.filter(feature__in=Feature.objects.open_data())
 
+    def www(self):
+        return self.filter(feature__in=Feature.objects.www())
+
 
 class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
     """
@@ -132,6 +137,9 @@ class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
 
     def open_data(self):
         return super().open_data().filter(feature__in=Feature.objects.open_data())
+
+    def www(self):
+        return super().www().filter(feature__in=Feature.objects.www())
 
 
 class ProtectionLevelMixin(models.Model):

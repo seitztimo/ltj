@@ -74,9 +74,11 @@ class ProtectionLevelQuerySet(TestCase):
 class TestFeatureQuerySet(TestCase):
 
     def setUp(self):
-        non_open_feature_class = FeatureClassFactory(open_data=False)
-        open_feature_class = FeatureClassFactory(open_data=True)
-        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
+        non_open_feature_class = FeatureClassFactory(open_data=False, www=False)
+        open_feature_class = FeatureClassFactory(open_data=True, www=False)
+        www_feature_class = FeatureClassFactory(open_data=False, www=True)
+        open_www_feature_class = FeatureClassFactory(open_data=True, www=True)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False, www=False)
         self.feature_admin = FeatureFactory(
             protection_level=PROTECTION_LEVELS['ADMIN'],
             feature_class=non_open_feature_class,
@@ -97,6 +99,14 @@ class TestFeatureQuerySet(TestCase):
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature_class=open_feature_class,
         )
+        self.feature_public_www = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=www_feature_class,
+        )
+        self.feature_public_open_www = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=open_www_feature_class,
+        )
 
     def test_for_office_hki(self):
         qs = Feature.objects.for_office_hki()
@@ -105,6 +115,8 @@ class TestFeatureQuerySet(TestCase):
             repr(self.feature_office),
             repr(self.feature_public),
             repr(self.feature_public_open_data),
+            repr(self.feature_public_www),
+            repr(self.feature_public_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -114,21 +126,30 @@ class TestFeatureQuerySet(TestCase):
             repr(self.feature_office),
             repr(self.feature_public),
             repr(self.feature_public_open_data),
+            repr(self.feature_public_www),
+            repr(self.feature_public_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
     def test_open_data(self):
         qs = Feature.objects.open_data()
-        expected_queryset = [repr(self.feature_public_open_data)]
+        expected_queryset = [repr(self.feature_public_open_data), repr(self.feature_public_open_www)]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_www(self):
+        qs = Feature.objects.www()
+        expected_queryset = [repr(self.feature_public_www), repr(self.feature_public_open_www)]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
 
 class TestFeatureRelatedQuerySet(TestCase):
 
     def setUp(self):
-        non_open_feature_class = FeatureClassFactory(open_data=False)
-        open_feature_class = FeatureClassFactory(open_data=True)
-        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
+        non_open_feature_class = FeatureClassFactory(open_data=False, www=False)
+        open_feature_class = FeatureClassFactory(open_data=True, www=False)
+        www_feature_class = FeatureClassFactory(open_data=False, www=True)
+        open_www_feature_class = FeatureClassFactory(open_data=True, www=True)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False, www=False)
         # features
         self.feature_admin = FeatureFactory(
             protection_level=PROTECTION_LEVELS['ADMIN'],
@@ -150,12 +171,22 @@ class TestFeatureRelatedQuerySet(TestCase):
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature_class=open_feature_class,
         )
+        self.feature_public_www = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=www_feature_class,
+        )
+        self.feature_public_open_www = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=open_www_feature_class,
+        )
         # feature values
         self.feature_value_admin = FeatureValueFactory(feature=self.feature_admin)
         self.feature_value_office_hki = FeatureValueFactory(feature=self.feature_office_hki)
         self.feature_value_office = FeatureValueFactory(feature=self.feature_office)
         self.feature_value_public = FeatureValueFactory(feature=self.feature_public)
         self.feature_value_public_open_data = FeatureValueFactory(feature=self.feature_public_open_data)
+        self.feature_value_www = FeatureValueFactory(feature=self.feature_public_www)
+        self.feature_value_open_www = FeatureValueFactory(feature=self.feature_public_open_www)
 
     def test_for_admin(self):
         qs = FeatureValue.objects.for_admin()
@@ -165,6 +196,8 @@ class TestFeatureRelatedQuerySet(TestCase):
             repr(self.feature_value_office),
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
+            repr(self.feature_value_www),
+            repr(self.feature_value_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -175,6 +208,8 @@ class TestFeatureRelatedQuerySet(TestCase):
             repr(self.feature_value_office),
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
+            repr(self.feature_value_www),
+            repr(self.feature_value_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -184,6 +219,8 @@ class TestFeatureRelatedQuerySet(TestCase):
             repr(self.feature_value_office),
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
+            repr(self.feature_value_www),
+            repr(self.feature_value_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -192,6 +229,8 @@ class TestFeatureRelatedQuerySet(TestCase):
         expected_queryset = [
             repr(self.feature_value_public),
             repr(self.feature_value_public_open_data),
+            repr(self.feature_value_www),
+            repr(self.feature_value_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -199,6 +238,15 @@ class TestFeatureRelatedQuerySet(TestCase):
         qs = FeatureValue.objects.open_data()
         expected_queryset = [
             repr(self.feature_value_public_open_data),
+            repr(self.feature_value_open_www),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_www(self):
+        qs = FeatureValue.objects.www()
+        expected_queryset = [
+            repr(self.feature_value_www),
+            repr(self.feature_value_open_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -206,9 +254,10 @@ class TestFeatureRelatedQuerySet(TestCase):
 class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
 
     def setUp(self):
-        non_open_feature_class = FeatureClassFactory(open_data=False)
-        open_feature_class = FeatureClassFactory(open_data=True)
-        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False)
+        non_open_feature_class = FeatureClassFactory(open_data=False, www=False)
+        open_feature_class = FeatureClassFactory(open_data=True, www=False)
+        www_feature_class = FeatureClassFactory(open_data=False, www=True)
+        office_hki_feature_class = FeatureClassFactory(id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID, open_data=False, www=False)
         # related features
         self.feature_office_hki = FeatureFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
@@ -225,6 +274,10 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
         self.feature_public_open_data = FeatureFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature_class=open_feature_class,
+        )
+        self.feature_public_www = FeatureFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature_class=www_feature_class,
         )
 
         # observations
@@ -248,6 +301,10 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature=self.feature_public_open_data,
         )
+        self.observation_public_feature_public_www = ObservationFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            feature=self.feature_public_www,
+        )
 
     def test_for_office_hki(self):
         qs = Observation.objects.for_office_hki()
@@ -257,6 +314,7 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
             repr(self.observation_public_feature_office),
             repr(self.observation_public_feature_public),
             repr(self.observation_public_feature_public_open_data),
+            repr(self.observation_public_feature_public_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -267,6 +325,7 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
             repr(self.observation_public_feature_office),
             repr(self.observation_public_feature_public),
             repr(self.observation_public_feature_public_open_data),
+            repr(self.observation_public_feature_public_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -275,6 +334,7 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
         expected_queryset = [
             repr(self.observation_public_feature_public),
             repr(self.observation_public_feature_public_open_data),
+            repr(self.observation_public_feature_public_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 
@@ -282,6 +342,13 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
         qs = Observation.objects.open_data()
         expected_queryset = [
             repr(self.observation_public_feature_public_open_data),
+        ]
+        self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
+
+    def test_www(self):
+        qs = Observation.objects.www()
+        expected_queryset = [
+            repr(self.observation_public_feature_public_www),
         ]
         self.assertQuerysetEqual(qs, expected_queryset, ordered=False)
 

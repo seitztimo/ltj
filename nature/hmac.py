@@ -8,6 +8,7 @@ import pytz
 from django.conf import settings
 from django.utils import timezone
 from django.utils.encoding import force_bytes
+from .enums import UserRole
 
 
 class HMACAuth:
@@ -68,6 +69,16 @@ class HMACAuth:
     @property
     def groups(self):
         return self.request.META.get('HTTP_X_FORWARDED_GROUPS', '').split(';')
+
+    @property
+    def user_role(self):
+        if self.has_admin_group:
+            return UserRole.ADMIN
+        elif self.has_office_hki_group:
+            return UserRole.OFFICE_HKI
+        elif self.has_office_group:
+            return UserRole.OFFICE
+        return UserRole.PUBLIC
 
     @property
     def within_clock_skew(self):
