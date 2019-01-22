@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-22 09:44+0200\n"
+"POT-Creation-Date: 2019-01-22 13:21+0200\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -105,20 +105,23 @@ msgstr "ruutu"
 msgid "Feature report"
 msgstr "Kohderaportti"
 
-msgid "Criteria"
-msgstr "Perusteet"
-
-msgid "Conservation programmes"
-msgstr "Suojeluohjelmat"
-
 msgid "Admin"
 msgstr "Admin"
+
+msgid "Office Hki"
+msgstr "Virka Hki"
 
 msgid "Office"
 msgstr "Virka"
 
 msgid "Public"
 msgstr "Yleisö"
+
+msgid "Criteria"
+msgstr "Perusteet"
+
+msgid "Conservation programmes"
+msgstr "Suojeluohjelmat"
 
 msgid "protection level"
 msgstr "suojaustaso"
@@ -604,6 +607,11 @@ msgstr "Kohderaportti - Lajihavainnot"
 msgid "Observations"
 msgstr "Lajihavainto"
 
+msgid "%(counter)s secret observation"
+msgid_plural "%(counter)s secret observations"
+msgstr[0] "%(counter)s salattu havainto"
+msgstr[1] "%(counter)s salattua havaintoa"
+
 msgid "Feature Report"
 msgstr "Kohderaportti"
 
@@ -720,9 +728,6 @@ msgstr "Suojeluarvo"
 
 msgid "Date of entry"
 msgstr "Voimaantulo"
-
-msgid "Office Hki"
-msgstr "Virka Hki"
 
 msgid "User guide"
 msgstr "Ohje"
