@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-20 15:36+0300\n"
+"POT-Creation-Date: 2019-01-22 09:44+0200\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -73,7 +73,8 @@ msgstr "Tarvitaan tiedostot .shp, .shx ja .dbf."
 msgid ""
 "Fields not allowed: %(fields)s. Allowed shapefile fields are: "
 "%(allowed_fields)s."
-msgstr "Nämä kentät eivät kelpaa: %(fields)s. Sallitut kentät ovat: "
+msgstr ""
+"Nämä kentät eivät kelpaa: %(fields)s. Sallitut kentät ovat: "
 "%(allowed_fields)s."
 
 #, python-format
@@ -115,9 +116,6 @@ msgstr "Admin"
 
 msgid "Office"
 msgstr "Virka"
-
-msgid "Office Hki"
-msgstr "Virka Hki"
 
 msgid "Public"
 msgstr "Yleisö"
@@ -227,8 +225,8 @@ msgstr "henkilöt"
 msgid "author"
 msgstr "tekija"
 
-msgid "series"
-msgstr "sarja"
+msgid "publication series"
+msgstr "julkaisusarja"
 
 msgid "place of printing"
 msgstr "painopaikka"
@@ -311,9 +309,6 @@ msgstr "kohdelinkit"
 msgid "species"
 msgstr "laji"
 
-msgid "species register"
-msgstr "lajit"
-
 msgid "regulation"
 msgstr "säädös"
 
@@ -337,6 +332,9 @@ msgstr "yleisyys"
 
 msgid "observer"
 msgstr "havainnoija"
+
+msgid "quantity"
+msgstr "lukumäärä"
 
 msgid "migration class"
 msgstr "liikkumisluokka"
@@ -723,6 +721,9 @@ msgstr "Suojeluarvo"
 msgid "Date of entry"
 msgstr "Voimaantulo"
 
+msgid "Office Hki"
+msgstr "Virka Hki"
+
 msgid "User guide"
 msgstr "Ohje"
 
@@ -734,9 +735,3 @@ msgstr "Voit lähettää palautetta osoitteeseen ltj.ymk@hel.fi"
 
 msgid "Log in again"
 msgstr "Kirjaudu uudelleen sisään"
-
-msgid "shape-imports"
-msgstr "shape-tuonnit"
-
-msgid "file loading"
-msgstr "tiedostolataus"

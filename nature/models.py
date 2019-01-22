@@ -283,7 +283,7 @@ class Person(models.Model):
 class Publication(models.Model):
     name = models.CharField(_('name'), max_length=150, blank=True, null=True, db_column='nimi')
     author = models.CharField(_('author'), max_length=100, blank=True, null=True, db_column='tekija')
-    series = models.CharField(_('series'), max_length=100, blank=True, null=True, db_column='sarja')
+    series = models.CharField(_('publication series'), max_length=100, blank=True, null=True, db_column='sarja')
     place_of_printing = models.CharField(_('place of printing'), max_length=50, blank=True, null=True,
                                          db_column='painopaikka')
     year = models.CharField(_('year'), max_length=50, blank=True, null=True, db_column='vuosi')
@@ -457,14 +457,14 @@ class Observation(ProtectionLevelMixin, models.Model):
     species = models.ForeignKey('Species', models.PROTECT, db_column='lajid', related_name='observations',
                                 verbose_name=_('species'))
     series = models.ForeignKey(ObservationSeries, models.PROTECT, db_column='hsaid', blank=True, null=True,
-                               related_name='observations', verbose_name=_('series'))
+                               related_name='observations', verbose_name=_('observation series'))
     abundance = models.ForeignKey('Abundance', models.PROTECT, db_column='runsausid', blank=True, null=True,
                                   related_name='observations', verbose_name=_('abundance'))
     frequency = models.ForeignKey('Frequency', models.PROTECT, db_column='yleisyysid', blank=True, null=True,
                                   related_name='observations', verbose_name=_('frequence'))
     observer = models.ForeignKey(Person, models.PROTECT, db_column='hloid', blank=True, null=True,
                                  related_name='observations', verbose_name=_('observer'))
-    number = models.CharField(_('number'), max_length=30, blank=True, null=True, db_column='lkm')
+    quantity = models.CharField(_('quantity'), max_length=30, blank=True, null=True, db_column='lkm')
     migration_class = models.ForeignKey('MigrationClass', models.PROTECT, db_column='liikkumislkid', blank=True,
                                         null=True,
                                         related_name='observations',

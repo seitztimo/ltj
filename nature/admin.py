@@ -43,7 +43,7 @@ class ObservationSeriesAdmin(admin.ModelAdmin):
 
 class ObservationInline(admin.TabularInline):
     model = Observation
-    fields = ('species', 'series', 'date', 'observer', 'number', 'description', 'notes',
+    fields = ('species', 'series', 'date', 'observer', 'quantity', 'description', 'notes',
               'protection_level', 'migration_class', 'occurrence', 'origin')
     raw_id_fields = ('species',)
     extra = 1
