@@ -3,6 +3,7 @@
 __pycache__
 local_settings.py
 .pytest_cache
+locale/fi/LC_MESSAGES/django.mo
 
 # unit tests / coverage reports
 htmlcov/
