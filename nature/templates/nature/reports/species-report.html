@@ -42,11 +42,6 @@
                 <br/>
                 {{ species.taxon_1 | lower | capfirst }}
             {% endif %}
-
-            {% if species.taxon_2 %}
-                <br/>
-                {{ species.taxon_2 | lower | capfirst }}
-            {% endif %}
         </div>
     </div>
     {% if species.link %}
