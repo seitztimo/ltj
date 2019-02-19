@@ -1,8 +1,8 @@
 {% load static i18n %}
 
 <div class="row">
-    <b class="col-sm-3">{{ observation.species.name_fi }}</b>
-    <div class="col-sm-3 font-italic">{{ observation.species.name_sci_1 }}</div>
+    <b class="col-sm-3">{{ observation.species.name_fi }} {{ observation.species.name_subspecies_1|default_if_none:"" }}</b>
+    <div class="col-sm-3 font-italic">{{ observation.species.name_sci_1|lower|capfirst }} {{ observation.species.name_subspecies_1|default_if_none:""|lower }}</div>
     <div class="col-sm-6"><a target="_blank" href="{% url 'nature:species-report' observation.species.id %}">{% trans "Species report" %}</a></div>
 </div>
 
@@ -22,7 +22,9 @@
             <b class="col-sm-3">{% trans "Protection regulations" %}</b>
             <div class="col-sm-6">
                 {% for regulation in regulations %}
-                    <p class="mb-0"><a target="_blank" href="{% url 'nature:species-regulations-report' observation.species.id %}">{{ regulation }}</a></p>
+                    {% if regulation.valid %}
+                        <p class="mb-0"><a target="_blank" href="{% url 'nature:species-regulations-report' observation.species.id %}">{{ regulation.value_explanation }}</a></p>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
