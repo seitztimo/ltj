@@ -607,6 +607,7 @@ msgstr "Kohderaportti - Lajihavainnot"
 msgid "Observations"
 msgstr "Lajihavainto"
 
+#, python-format
 msgid "%(counter)s secret observation"
 msgid_plural "%(counter)s secret observations"
 msgstr[0] "%(counter)s salattu havainto"
@@ -719,6 +720,12 @@ msgstr "Esiintymä"
 
 msgid "Protection regulations"
 msgstr "Suojeluarvot"
+
+msgid "Author"
+msgstr "Tekijä"
+
+msgid "Series"
+msgstr "Sarja"
 
 msgid "Regulation"
 msgstr "Säädös"

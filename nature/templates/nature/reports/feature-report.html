@@ -107,6 +107,15 @@
         {% endfor %}
         <hr class="mb-2">
     {% endif %}
+    {% if feature.publications.all %}
+        <h4 class="text-uppercase">{% trans "publications" %}</h4>
+            {% for publication in feature.publications.all %}
+                {% include "nature/reports/stubs/publication-info.html" with publication=publication %}
+                {% if not forloop.last %}
+                    <hr class="mb-2 dashed">
+                {% endif %}
+            {% endfor %}
+    {% endif %}
     {% if feature.observations.all %}
         {% if feature.geometry.geom_type == 'Point' %}
             <h4 class="text-uppercase">{% trans "Observations" %}</h4>
