@@ -109,7 +109,7 @@
             <div class="row">
                 <b class="col-sm-2">{% trans "Feature" %}</b>
                 <div class="col-sm-10">
-                    <a href="{% url 'nature:feature-report' observation.feature.id %}">{{ observation.feature.id }}</a>
+                    <a href="{% url 'nature:feature-report' observation.feature.id %}">{% if observation.feature.fid %}{{ observation.feature.fid }}{% else %}{{ observation.feature.id }}{% endif %}</a>
                 </div>
             </div>
 
