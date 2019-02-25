@@ -17,6 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "file loading"
+msgstr "tiedostolataus"
+
 msgid "file"
 msgstr "tiedosto"
 
@@ -38,6 +41,9 @@ msgstr "tiedostot"
 #, python-brace-format
 msgid "{0} features are imported"
 msgstr "{0} kohdetta tuotu"
+
+msgid "shape-imports"
+msgstr "shape-tuonnit"
 
 msgid "shapefiles"
 msgstr "shape-tiedostot"
@@ -607,6 +613,7 @@ msgstr "Kohderaportti - Lajihavainnot"
 msgid "Observations"
 msgstr "Lajihavainto"
 
+#, python-format
 msgid "%(counter)s secret observation"
 msgid_plural "%(counter)s secret observations"
 msgstr[0] "%(counter)s salattu havainto"
