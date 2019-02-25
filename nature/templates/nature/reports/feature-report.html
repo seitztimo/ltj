@@ -26,7 +26,7 @@
     </style>
 {% endblock %}
 
-{% block report_header %}{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }}){% endblock %}
+{% block report_header %}{{ feature.feature_class.name }} {% if feature.name %}<br> {{ feature.name }}{% endif %} ({{ feature.fid }}){% endblock %}
 
 {% block report_body %}
     <!-- Area and geometry -->
