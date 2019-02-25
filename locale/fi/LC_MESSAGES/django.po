@@ -727,6 +727,12 @@ msgstr "Esiintymä"
 msgid "Protection regulations"
 msgstr "Suojeluarvot"
 
+msgid "Author"
+msgstr "Tekijä"
+
+msgid "Series"
+msgstr "Sarja"
+
 msgid "Regulation"
 msgstr "Säädös"
 
