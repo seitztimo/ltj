@@ -1,0 +1,66 @@
+{% load static i18n %}
+{% if publication.publication_type %}
+    <h5>{{ publication.publication_type }}</h5>
+{% endif %}
+{% if publication.name %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "Name" %}</b>
+    <div class="col-sm-10">
+        {{ publication.name }}
+    </div>
+</div>
+{% endif %}
+
+{% if publication.author %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "Author" %}</b>
+    <div class="col-sm-10">
+        {{ publication.author }}
+    </div>
+</div>
+{% endif %}
+
+{% if publication.series %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "Series" %}</b>
+    <div class="col-sm-10">
+        {{ publication.series }}
+    </div>
+</div>
+{% endif %}
+
+{% if publication.place_of_printing %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "place of printing"|title %}</b>
+    <div class="col-sm-10">
+        {{ publication.place_of_printing }}
+    </div>
+</div>
+{% endif %}
+
+{% if publication.year %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "year"|title %}</b>
+    <div class="col-sm-10">
+        {{ publication.year }}
+    </div>
+</div>
+{% endif %}
+
+{% if publication.additional_info %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "additional information"|title %}</b>
+    <div class="col-sm-10">
+        {{ publication.additional_info }}
+    </div>
+</div>
+{% endif %}
+
+{% if publication.link %}
+<div class="row mb-0">
+    <b class="col-sm-2">{% trans "link"|title %}</b>
+    <div class="col-sm-10">
+        <a href="{{ publication.link }}">{% trans "link"|title %}</a>
+    </div>
+</div>
+{% endif %}
