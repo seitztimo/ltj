@@ -69,6 +69,9 @@
         <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
         <p>{{ feature.description|default_if_none:"" }}</p>
         <p>{{ feature.text_display|default_if_none:""|safe }}</p>
+        {% for link in feature.links.all|dictsort:"ordering" %}
+            <a href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
+        {% endfor %}
     {% endif %}
 
     {% if feature.transactions.all %}
@@ -106,6 +109,15 @@
             {% endif %}
         {% endfor %}
         <hr class="mb-2">
+    {% endif %}
+    {% if feature.publications.all %}
+        <h4 class="text-uppercase">{% trans "publications" %}</h4>
+            {% for publication in feature.publications.all %}
+                {% include "nature/reports/stubs/publication-info.html" with publication=publication %}
+                {% if not forloop.last %}
+                    <hr class="mb-2 dashed">
+                {% endif %}
+            {% endfor %}
     {% endif %}
     {% if feature.observations.all %}
         {% if feature.geometry.geom_type == 'Point' %}

@@ -28,7 +28,7 @@
     <div class="row">
         <b class="col-sm-2">{% trans "Species" %}</b>
         <div class="col-sm-10">
-            <i>{{ species.name_sci_1 | lower | capfirst }}</i>
+            <i>{{ species.name_sci_1 | lower | capfirst }} {{ species.name_subspecies_1 | lower }}</i>
             <br/>
             {{ species.name_fi | lower | capfirst }}
         </div>
@@ -41,11 +41,6 @@
             {% if species.taxon_1 %}
                 <br/>
                 {{ species.taxon_1 | lower | capfirst }}
-            {% endif %}
-
-            {% if species.taxon_2 %}
-                <br/>
-                {{ species.taxon_2 | lower | capfirst }}
             {% endif %}
         </div>
     </div>
@@ -109,7 +104,7 @@
             <div class="row">
                 <b class="col-sm-2">{% trans "Feature" %}</b>
                 <div class="col-sm-10">
-                    <a href="{% url 'nature:feature-report' observation.feature.id %}">{{ observation.feature.id }}</a>
+                    <a href="{% url 'nature:feature-report' observation.feature.id %}">{% if observation.feature.fid %}{{ observation.feature.fid }}{% else %}{{ observation.feature.id }}{% endif %}</a>
                 </div>
             </div>
 
