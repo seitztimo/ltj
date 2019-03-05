@@ -3,9 +3,7 @@
 <div class="row">
     <b class="col-sm-2">{% trans "Regulation" %}</b>
     <div class="col-sm-10">
-        <a href="{{ regulation.link | safe }}">
-        {{ regulation.name }}, {{ regulation.paragraph }}
-        </a>
+        {{ regulation.name }}{% if regulation.paragraph %}, {{ regulation.paragraph }}{% endif %}
     </div>
 </div>
 <div class="row">
@@ -14,9 +12,23 @@
         {{ regulation.value }} = {{ regulation.value_explanation }}
     </div>
 </div>
+{% if regulation.link %}
 <div class="row">
-    <b class="col-sm-2">{% trans "Date of entry" %}</b>
+    <b class="col-sm-2">{% trans "link"|title %}</b>
     <div class="col-sm-10">
-        {{ regulation.date_of_entry | date:'d.m.Y' }}
+        <a href="{{ regulation.link | safe }}">{% trans "link"|title %}</a>
+    </div>
+<<<<<<< HEAD
+</div>
+=======
+</div>
+{% endif %}
+{% if regulation.additional_info %}
+<div class="row">
+    <b class="col-sm-2">{% trans "additional info"|title %}</b>
+    <div class="col-sm-10">
+        {{ regulation.additional_info }}
     </div>
 </div>
+{% endif %}
+>>>>>>> master
