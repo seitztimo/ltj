@@ -25,7 +25,7 @@ install:
 before_script:
   - psql -U postgres template1 -c 'create extension postgis;'
   - psql -U postgres -c 'create database ltj;'
-  - ./Cmanage.py compilemessages
+  - ./manage.py compilemessages
 
 env:
   global:
