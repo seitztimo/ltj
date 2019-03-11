@@ -61,11 +61,13 @@ class HabitatTypeObservationInlineForm(forms.ModelForm):
 
 class ProtectionInlineForm(forms.ModelForm):
     criteria = forms.ModelMultipleChoiceField(
+        label=_('Criteria'),
         queryset=Criterion.objects.all(),
         widget=FilteredSelectMultiple(verbose_name=_('Criteria'), is_stacked=False),
         required=False,
     )
     conservation_programmes = forms.ModelMultipleChoiceField(
+        label=_('Conservation programmes'),
         queryset=ConservationProgramme.objects.all(),
         widget=FilteredSelectMultiple(verbose_name=_('Conservation programmes'), is_stacked=False),
         required=False,
