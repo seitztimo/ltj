@@ -69,11 +69,17 @@
         <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
         <p>{{ feature.description|default_if_none:"" }}</p>
         <p>{{ feature.text_display|default_if_none:""|safe }}</p>
+        <hr class="mb-2">
+    {% endif %}
+
+    {% if feature.links %}
+    <div class="mb-5">
         {% for link in feature.links.all|dictsort:"ordering" %}
             <a href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
         {% endfor %}
-        <hr class="mb-2">
+    </div>
     {% endif %}
+    
 
     {% if feature.transactions.all %}
         <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
