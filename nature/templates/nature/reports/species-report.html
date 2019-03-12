@@ -94,12 +94,14 @@
                 {% endifchanged %}
             {% endwith %}
 
+            {% if observation.feature.name %}
             <div class="row">
                 <b class="col-sm-2">{% trans "Name" %}</b>
                 <div class="col-sm-10">
                     {{ observation.feature.name }}
                 </div>
             </div>
+            {% endif %}
 
             <div class="row">
                 <b class="col-sm-2">{% trans "Feature" %}</b>
