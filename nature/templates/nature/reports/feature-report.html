@@ -75,6 +75,15 @@
         <hr class="mb-2">
     {% endif %}
 
+    {% if feature.links %}
+    <div class="mb-5">
+        {% for link in feature.links.all|dictsort:"ordering" %}
+            <a href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+
     {% if feature.transactions.all %}
         <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
         {% for transaction in feature.transactions.all %}
