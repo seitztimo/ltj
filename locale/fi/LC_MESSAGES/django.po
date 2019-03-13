@@ -103,7 +103,7 @@ msgid "Feature transactions"
 msgstr "Tapahtumat"
 
 msgid "protection"
-msgstr "suojaus"
+msgstr "suojelukohde"
 
 msgid "square"
 msgstr "ruutu"
@@ -124,7 +124,7 @@ msgid "Public"
 msgstr "Yleisö"
 
 msgid "Criteria"
-msgstr "Perusteet"
+msgstr "Suojeluperusteet"
 
 msgid "Conservation programmes"
 msgstr "Suojeluohjelmat"
@@ -517,7 +517,7 @@ msgid "hiking"
 msgstr "liikkuminen"
 
 msgid "criteria"
-msgstr "perusteet"
+msgstr "suojeluperusteet"
 
 msgid "protections"
 msgstr "suojelu"
