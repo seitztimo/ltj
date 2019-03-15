@@ -265,7 +265,7 @@ class ObservationSerializer(ProtectedHyperlinkedModelSerializer):
         model = Observation
         fields = (
             'id', 'url', 'feature', 'species', 'series', 'abundance',
-            'frequency', 'number', 'migration_class', 'origin',
+            'frequency', 'migration_class', 'origin',
             'breeding_degree', 'description', 'notes', 'date',
             'occurrence', 'created_time', 'last_modified_time',
             'protection_level', 'code',
