@@ -15,8 +15,8 @@ class HMACAuth:
     """Validate a hmac request and check its authorization information."""
 
     # Allowed HMAC user groups
-    ADMIN_GROUPS = ('ltj_admin', r'HELS000627\Paikkatietovipunen_ltj_admin')
-    OFFICE_HKI_GROUPS = ('ltj_virka_hki', r'HELS000627\Paikkatietovipunen_ltj_virka')
+    ADMIN_GROUPS = ('ltj_admin', r'Paikkatietovipunen_ltj_admin')
+    OFFICE_HKI_GROUPS = ('ltj_virka_hki', r'Paikkatietovipunen_ltj_virka')
     OFFICE_GROUPS = ('ltj_virka',)
 
     ALLOWED_CLOCK_SKEW_IN_SECONDS = 300
