@@ -428,7 +428,7 @@ class FeatureLink(ProtectionLevelMixin, models.Model):
     link = models.CharField(_('link'), max_length=4000, blank=True, null=True, db_column='linkki')
     text = models.CharField(_('text'), max_length=4000, blank=True, null=True, db_column='linkkiteksti')
     link_type = models.ForeignKey('LinkType', models.PROTECT, db_column='tyyppiid', verbose_name=_('link type'))
-    ordering = models.IntegerField(_('ordering'), blank=True, null=True, db_column='jarjestys')
+    ordering = models.IntegerField(_('ordering'), default=0, db_column='jarjestys')
     link_text = models.CharField(_('link text'), max_length=100, blank=True, null=True, db_column='linkin_teksti')
 
     objects = FeatureRelatedProtectionLevelQuerySet.as_manager()
