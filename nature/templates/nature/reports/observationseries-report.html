@@ -1,7 +1,7 @@
 {% extends "nature/reports/report-base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Observation Series Report" %}{% endblock %}
+{% block title %}{% trans "Observation Series Report" %} - {{ user_role }}{% endblock %}
 
 {% block extrastyles %}
     <style>
