@@ -36,10 +36,10 @@
         <h4 class="text-uppercase">{% trans "Regulations" %}</h4>
         <hr class="mb-2">
 
-        {% for regulation in species.regulations.all %}
-            {% include 'nature/reports/stubs/species-regulation.html' with regulation=regulation %}
-            {% if not forloop.last %}
-                <hr class="mb-2 dashed">
+        {% for regulation in regulations.all %}
+                {% include 'nature/reports/stubs/species-regulation.html' with regulation=regulation %}
+                {% if not forloop.last %}
+                    <hr class="mb-2 dashed">
             {% endif %}
         {% endfor %}
         <hr class="mb-2">

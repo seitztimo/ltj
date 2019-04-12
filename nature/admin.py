@@ -10,11 +10,24 @@ from .models import (
     Regulation, Value, Transaction,
     Person, FeatureValue, TransactionFeature,
     HabitatTypeObservation, Protection,
-    Square)
+    Square, SpeciesRegulation, HabitatTypeRegulation,
+    TransactionRegulation)
 from .forms import FeatureForm, HabitatTypeObservationInlineForm, ProtectionInlineForm, SquareInlineForm, \
     ValueForm, ObservationSeriesForm, PersonForm, PublicationForm, FeatureLinkForm, ObservationForm, SpeciesForm, \
     LinkTypeForm, HabitatTypeForm, RegulationForm, FeatureClassForm, TransactionForm
 from .widgets import NatureOLWidget
+
+
+class SpeciesRegulationInline(admin.TabularInline):
+    model = SpeciesRegulation
+
+
+class HabitatTypeRegulationInline(admin.TabularInline):
+    model = HabitatTypeRegulation
+
+
+class TransactionRegulationInline(admin.TabularInline):
+    model = TransactionRegulation
 
 
 @admin.register(Species)
@@ -31,6 +44,10 @@ class SpeciesAdmin(admin.ModelAdmin):
         return format_html('<a target="_blank" href="{0}">{1}</a>'.format(url, _('Species report')))
     report.allow_tags = True
     report.short_description = _('Species report')
+
+    inlines = [
+        SpeciesRegulationInline,
+    ]
 
 
 @admin.register(ObservationSeries)
@@ -201,6 +218,10 @@ class HabitatTypeAdmin(admin.ModelAdmin):
     actions = None
     form = HabitatTypeForm
 
+    inlines = [
+        HabitatTypeRegulationInline,
+    ]
+
 
 @admin.register(Regulation)
 class RegulationAdmin(admin.ModelAdmin):
@@ -226,6 +247,10 @@ class TransactionAdmin(admin.ModelAdmin):
     list_filter = ('protection_level', 'transaction_type')
     actions = None
     form = TransactionForm
+
+    inlines = [
+        TransactionRegulationInline
+    ]
 
 
 @admin.register(Person)

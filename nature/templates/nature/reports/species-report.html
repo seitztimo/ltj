@@ -1,7 +1,7 @@
 {% extends "nature/reports/report-base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Species Report" %}{% endblock %}
+{% block title %}{% trans "Species Report" %} - {{ user_role }}{% endblock %}
 
 {% block extrastyles %}
     <style>
@@ -28,7 +28,10 @@
     <div class="row">
         <b class="col-sm-2">{% trans "Species" %}</b>
         <div class="col-sm-10">
-            <i>{{ species.name_sci_1 | lower | capfirst }} {{ species.name_subspecies_1 | lower }}</i>
+            <i>
+                {% if species.name_sci_1 %}{{ species.name_sci_1 | lower | capfirst }}{% endif %} 
+                {% if species.name_subspecies_1 %}{{ species.name_subspecies_1 | lower }}{% endif %}
+            </i>
             <br/>
             {{ species.name_fi | lower | capfirst }}
         </div>
@@ -94,12 +97,14 @@
                 {% endifchanged %}
             {% endwith %}
 
+            {% if observation.feature.name %}
             <div class="row">
                 <b class="col-sm-2">{% trans "Name" %}</b>
                 <div class="col-sm-10">
                     {{ observation.feature.name }}
                 </div>
             </div>
+            {% endif %}
 
             <div class="row">
                 <b class="col-sm-2">{% trans "Feature" %}</b>

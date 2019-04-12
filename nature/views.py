@@ -89,6 +89,21 @@ class ProtectedObservationListReportViewMixin(ProtectedReportViewMixin):
         return admin_qs.difference(office_qs).count()
 
 
+class ValidRegulationsViewMixin(ProtectedReportViewMixin):
+    def get_regulations_queryset(self):
+        raise NotImplementedError
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.object:
+            context_data['regulations'] = self.get_filtered_regulations()
+        return context_data
+
+    def get_filtered_regulations(self):
+        qs = self.get_regulations_queryset().exclude(valid=False)
+        return qs
+
+
 class FeatureReportView(ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-report.html'
@@ -107,9 +122,12 @@ class SpeciesReportView(ProtectedObservationListReportViewMixin, DetailView):
         return self.object.observations.all().order_by('feature__feature_class__name')
 
 
-class SpeciesRegulationsReportView(ProtectedReportViewMixin, DetailView):
-    queryset = Species.objects.all()
+class SpeciesRegulationsReportView(ValidRegulationsViewMixin, DetailView):
+    model = Species
     template_name = 'nature/reports/species-regulations-report.html'
+
+    def get_regulations_queryset(self):
+        return self.object.regulations
 
 
 class ObservationSeriesReportView(DetailView):

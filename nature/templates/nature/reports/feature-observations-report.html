@@ -21,14 +21,14 @@
     </style>
 {% endblock %}
 
-{% block report_header %}{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }}){% endblock %}
+{% block report_header %}{{ feature.feature_class.name }}{% if feature.name %}<br>{{ feature.name }}{% endif %}{% if feature.fid %}({{ feature.fid }}){% endif %}{% endblock %}
 
 {% block report_body %}
     <!-- Feature -->
     <div class="row">
         <b class="col-sm-2">{% trans "Feature" %}</b>
         <div class="col-sm-10">
-            <a href="{% url 'nature:feature-report' feature.id %}">{{ feature.name }}</a>
+            <a href="{% url 'nature:feature-report' feature.id %}">{% if feature.name %}{{ feature.name }}{% elif feature.fid %}{{ feature.fid }}{% else %}{% trans "Link" %}{% endif %}</a>
         </div>
     </div>
 

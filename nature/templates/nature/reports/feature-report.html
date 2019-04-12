@@ -26,7 +26,7 @@
     </style>
 {% endblock %}
 
-{% block report_header %}{{ feature.feature_class.name }} <br> {{ feature.name }} ({{ feature.fid }}){% endblock %}
+{% block report_header %}{{ feature.feature_class.name }} {% if feature.name %}<br> {{ feature.name }}{% endif %} ({{ feature.fid }}){% endblock %}
 
 {% block report_body %}
     <!-- Area and geometry -->
@@ -57,8 +57,12 @@
         <div class="row">
             {% for value in feature.values.all %}
                 <div class="col-md-4">{{ value.value }}</div>
-                <div class="col-md-4">{{ value.valuator }}</div>
-                <div class="col-md-4"><a href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
+                <div class="col-md-4">{{ value.explanation }}</div>
+                {% if value.link %}
+                    <div class="col-md-4"><a href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
+                {% else %}
+                    <div class="col-md-4"></div>
+                {% endif %}
             {% endfor %}
         </div>
         <hr class="mb-2">
@@ -69,10 +73,17 @@
         <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
         <p>{{ feature.description|default_if_none:"" }}</p>
         <p>{{ feature.text_display|default_if_none:""|safe }}</p>
+        <hr class="mb-2">
+    {% endif %}
+
+    {% if feature.links %}
+    <div class="mb-5">
         {% for link in feature.links.all|dictsort:"ordering" %}
             <a href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
         {% endfor %}
+    </div>
     {% endif %}
+    
 
     {% if feature.transactions.all %}
         <hr class="mb-2">
@@ -118,6 +129,7 @@
                     <hr class="mb-2 dashed">
                 {% endif %}
             {% endfor %}
+            <hr class="mb-2">
     {% endif %}
     {% if feature.observations.all %}
         {% if feature.geometry.geom_type == 'Point' %}
@@ -132,6 +144,7 @@
             <a href="{% url 'nature:feature-observations-report' feature.id %}">
                 {% trans "Observations at this feature" %}
             </a>
+            <br>
         {% endif %}
     {% endif %}
 
