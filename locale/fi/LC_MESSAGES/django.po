@@ -571,6 +571,12 @@ msgstr "yleisyys"
 msgid "frequencies"
 msgstr "yleisyydet"
 
+msgid "Edit"
+msgstr "Muokkaa"
+
+msgid "Stop editing"
+msgstr "Lopeta muokkaus"
+
 msgid "Delete all Geometries"
 msgstr "Poista kaikki geometriat"
 

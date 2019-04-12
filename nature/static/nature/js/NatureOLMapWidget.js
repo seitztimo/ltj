@@ -439,10 +439,6 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         selectedFeatures.on('remove', function() {
             self.closeFeaturePopup();
         });
-
-        this.map.addInteraction(this.interactions.draw);
-        this.map.addInteraction(this.interactions.modify);
-        this.map.addInteraction(this.interactions.select)
     };
 
     MapWidget.prototype.showFeaturePopup = function(feature) {
@@ -507,6 +503,23 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         // Empty textarea widget
         document.getElementById(this.options.id).value = '';
         this.enableDrawing();
+    };
+
+    MapWidget.prototype.editFeatures = function() {
+        var isEditing = geodjango_geometry.map.getInteractions(geodjango_geometry).getArray().indexOf(geodjango_geometry.interactions.modify) !== -1; 
+        var editButtonContainer = document.querySelector(".edit_features")
+        if (isEditing) {
+            this.map.removeInteraction(this.interactions.draw);
+            this.map.removeInteraction(this.interactions.modify);
+            this.map.removeInteraction(this.interactions.select);
+            editButtonContainer.classList.remove("is-editing");
+        }
+        else {
+            this.map.addInteraction(this.interactions.draw);
+            this.map.addInteraction(this.interactions.modify);
+            this.map.addInteraction(this.interactions.select);
+            editButtonContainer.classList.add("is-editing");
+        }
     };
 
     MapWidget.prototype.serializeFeatures = function() {

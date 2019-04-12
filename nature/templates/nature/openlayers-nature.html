@@ -4,6 +4,8 @@
     #{{ id }}_map .aligned label { float: inherit; }
     #{{ id }}_div_map { position: relative; vertical-align: top; float: {{ LANGUAGE_BIDI|yesno:"right,left" }}; }
     {% if not display_raw %}#{{ id }} { display: none; }{% endif %}
+    .disable-edit, .is-editing .enable-edit { display: none; }
+    .enable-edit, .is-editing .disable-edit { display: inline; }
     {% endblock %}
 </style>
 
@@ -14,7 +16,14 @@
 
 <div id="{{ id }}_div_map">
     <div id="{{ id }}_map"></div>
-    {% if not disabled %}<span class="clear_features"><a href="javascript:{{ module }}.clearFeatures()">{% trans "Delete all Geometries" %}</a></span>{% endif %}
+    {% if not disabled %}
+    <span class="edit_features">
+        <a href="javascript:{{ module }}.editFeatures()">
+            <span class="enable-edit">{% trans "Edit" %}</span><span class="disable-edit">{% trans "Stop editing" %}</span>
+        </a>
+    </span> |
+    <span class="clear_features"><a href="javascript:{{ module }}.clearFeatures()">{% trans "Delete all Geometries" %}</a></span>
+    {% endif %}
     {% if display_raw %}<p>{% trans "Debugging window (serialized value)" %}</p>{% endif %}
     <textarea id="{{ id }}" class="vSerializedField required" cols="150" rows="10" name="{{ name }}">{{ serialized }}</textarea>
     <script type="text/javascript">
