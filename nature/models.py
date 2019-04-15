@@ -92,7 +92,8 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
         """
         transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
         prefetch = Prefetch('transactions', queryset=transactions)
-        return super().for_office().exclude(feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID).prefetch_related(prefetch)
+        feature_class_id = OFFICE_HKI_ONLY_FEATURE_CLASS_ID
+        return super().for_office().exclude(feature_class_id=feature_class_id).prefetch_related(prefetch)
 
     def for_office_hki(self):
         transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
