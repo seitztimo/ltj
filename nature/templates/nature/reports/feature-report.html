@@ -164,7 +164,7 @@
 
 {% block extrajs %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
-<script src="{% static 'nature/js/ReportMap.js' %}"></script>
+<script src="//{{ request.META.HTTP_HOST }}{% static 'nature/js/ReportMap.js' %}"></script>
 <script type="text/javascript">
     var reportMap = new ReportMap('map', '{{ feature.geometry.geojson|safe }}');
 </script>
