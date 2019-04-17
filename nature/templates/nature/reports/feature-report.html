@@ -86,6 +86,7 @@
     
 
     {% if feature.transactions.all %}
+        <hr class="mb-2">
         <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
         {% for transaction in feature.transactions.all %}
             <div class="row mb-0">
