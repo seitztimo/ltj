@@ -95,7 +95,10 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
 
         These users do not have access to UHEX features
         """
-        return super().for_office().exclude(feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID)
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        prefetch = Prefetch('links', queryset=links)
+        return super().for_office().exclude(
+            feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID).prefetch_related(prefetch)
 
     def for_public(self):
         links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
