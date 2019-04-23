@@ -1,23 +1,27 @@
-sudo: false
+dist: xenial
+
 language: python
-
-cache: pip
-
 python:
   - "3.6"
+  - "3.7"
   - "nightly"
 
 matrix:
   allow_failures:
   - python: "nightly"
+  - python: "3.7"
 
-# As of 2017-08 the new travis trusty images have broken postgis,
-# so we have to specify the exact postgres version to install right addons
+cache: pip
+
+services:
+   - postgresql
+   
 addons:
-  postgresql: 9.6
+  postgresql: "10"
   apt:
     packages:
-    - postgresql-9.6-postgis-2.3
+      - postgresql-10-postgis-2.5
+      - postgresql-10-postgis-2.5-scripts
 
 install:
   - pip install -r requirements-dev.txt
