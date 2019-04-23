@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.gis.db import models
+from django.db.models import Prefetch
 from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
@@ -24,6 +25,7 @@ class ProtectionLevelQuerySet(models.QuerySet):
     """
     QuerySet class that provide protection level filter methods
     """
+
     def for_admin(self):
         return self
 
@@ -83,12 +85,25 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
     """
     QuerySet class For Feature model
     """
+    def for_office_hki(self):
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        prefetch = Prefetch('links', queryset=links)
+        return super().for_office_hki().prefetch_related(prefetch)
+
     def for_office(self):
         """ For office users that do not work for City of Helsinki
 
         These users do not have access to UHEX features
         """
-        return super().for_office().exclude(feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID)
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        prefetch = Prefetch('links', queryset=links)
+        return super().for_office().exclude(
+            feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID).prefetch_related(prefetch)
+
+    def for_public(self):
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
+        prefetch = Prefetch('links', queryset=links)
+        return super().for_public().prefetch_related(prefetch)
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
