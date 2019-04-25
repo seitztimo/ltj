@@ -1,11 +1,10 @@
   -- New table for service metadata
   
-CREATE TABLE IF NOT EXISTS ltj.jakelumetadata 
-    id integer NOT NULL,
+CREATE TABLE IF NOT EXISTS ltj.jakelumetadata (
+    id integer NOT NULL PRIMARY KEY,
     datanomistaja character varying(25),
-    paivitetty_tietopalveluun date,
-    CONSTRAINT jakelumetadata_pkey PRIMARY KEY id
-;
+    paivitetty_tietopalveluun date
+);
 
 ALTER TABLE ltj.jakelumetadata OWNER to ltj;
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE ltj.jakelumetadata TO ltj_yllapito;
@@ -15,7 +14,10 @@ COMMENT ON COLUMN ltj.jakelumetadata.id
     IS 'Erillinen aineiston jakelun ylläpitämä metatietotaulu, jossa on yksi rivi id-arvolla 1.
         Taulu on liitetty aineistojakeluprosessin käyttämiin näkymiin';
 
-INSERT INTO ltj.jakelumetadata VALUES 1, 'Helsinki/LTJ', now
+INSERT INTO ltj.jakelumetadata VALUES (1, 'Helsinki/LTJ', now());
+
+CREATE SCHEMA IF NOT EXISTS ltj_wfs_virka;
+CREATE SCHEMA IF NOT EXISTS ltj_wfs_avoin;
 
 -- Virkaversio kääpäkohteet:
 
@@ -228,7 +230,7 @@ WHERE
     kohde.luokkatunnus::text = 'GK'::text AND
     kohde.voimassa = true AND
     kohde.suojaustasoid <> 1 AND
-    GeometryType(geometry1)::text Like '%POLYGON'::text
+    GeometryType(geometry1)::text LIKE '%POLYGON'::text
   GROUP BY kohde.id, luokka.nimi, jakelumetadata.id;
 	
 ALTER TABLE ltj_wfs_virka.arvokkaat_geologiset_aluemaiset OWNER TO ltj;
