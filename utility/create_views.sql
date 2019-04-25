@@ -1,3 +1,22 @@
+  -- New table for service metadata
+  
+CREATE TABLE IF NOT EXISTS ltj.jakelumetadata 
+    id integer NOT NULL,
+    datanomistaja character varying(25),
+    paivitetty_tietopalveluun date,
+    CONSTRAINT jakelumetadata_pkey PRIMARY KEY id
+;
+
+ALTER TABLE ltj.jakelumetadata OWNER to ltj;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE ltj.jakelumetadata TO ltj_yllapito;
+GRANT SELECT ON TABLE ltj.jakelumetadata TO ltj_katselu;
+GRANT ALL ON TABLE ltj.jakelumetadata TO ltj;
+COMMENT ON COLUMN ltj.jakelumetadata.id
+    IS 'Erillinen aineiston jakelun ylläpitämä metatietotaulu, jossa on yksi rivi id-arvolla 1.
+        Taulu on liitetty aineistojakeluprosessin käyttämiin näkymiin';
+
+INSERT INTO ltj.jakelumetadata VALUES 1, 'Helsinki/LTJ', now
+
 -- Virkaversio kääpäkohteet:
 
 CREATE OR REPLACE VIEW ltj_wfs_virka.arvo_kaapakohteet AS
@@ -2228,8 +2247,7 @@ ALTER TABLE ltj.ltj_kohteet OWNER TO ltj;
 -- ltj_lajikohteet-view for SpatialWeb
   
 CREATE OR REPLACE VIEW ltj.ltj_lajikohteet AS
-SELECT
-    kohde.id,
+ SELECT kohde.id,
     kohde.luokkatunnus,
     kohde.tunnus,
     kohde.nimi,
@@ -2238,32 +2256,14 @@ SELECT
     lajihavainto.suojaustasoid AS suojaustasohavainto,
     lajirekisteri.suojaustasoid AS suojaustasolaji,
     luokka.nimi AS luokka,
+    luokka.www AS luokka_www,
     lajihavainto.lajid
-FROM ltj.kohde
-    JOIN ltj.luokka ON luokka.tunnus::text = kohde.luokkatunnus::text
-    JOIN ltj.lajihavainto ON kohde.id = lajihavainto.kohdeid
-    JOIN ltj.lajirekisteri ON lajihavainto.lajid = lajirekisteri.id
-WHERE
-    kohde.voimassa AND
-    st_isvalid(kohde.geometry1);
+   FROM kohde
+     JOIN luokka ON luokka.tunnus::text = kohde.luokkatunnus::text
+     JOIN lajihavainto ON kohde.id = lajihavainto.kohdeid
+     JOIN lajirekisteri ON lajihavainto.lajid = lajirekisteri.id
+  WHERE kohde.voimassa AND st_isvalid(kohde.geometry1);
 
 ALTER TABLE ltj.ltj_lajikohteet OWNER TO ltj;
 
-  -- New table for service metadata
-  
-CREATE TABLE IF NOT EXISTS ltj.jakelumetadata 
-    id integer NOT NULL,
-    datanomistaja character varying(25),
-    paivitetty_tietopalveluun date,
-    CONSTRAINT jakelumetadata_pkey PRIMARY KEY id
-;
 
-ALTER TABLE ltj.jakelumetadata OWNER to ltj;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE ltj.jakelumetadata TO ltj_yllapito;
-GRANT SELECT ON TABLE ltj.jakelumetadata TO ltj_katselu;
-GRANT ALL ON TABLE ltj.jakelumetadata TO ltj;
-COMMENT ON COLUMN ltj.jakelumetadata.id
-    IS 'Erillinen aineiston jakelun ylläpitämä metatietotaulu, jossa on yksi rivi id-arvolla 1.
-        Taulu on liitetty aineistojakeluprosessin käyttämiin näkymiin';
-
-INSERT INTO ltj.jakelumetadata VALUES 1, 'Helsinki/LTJ', now
