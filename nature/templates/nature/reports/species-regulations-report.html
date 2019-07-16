@@ -23,9 +23,11 @@
     <div class="row">
         <b class="col-sm-2">{% trans "Species" %}</b>
         <div class="col-sm-10">
+            {{ species.name_fi | lower | capfirst }}
+            <br/>
             <i>{{ species.name_sci_1 | lower | capfirst }}</i>
             <br/>
-            {{ species.name_fi | lower | capfirst }}
+            <i>{{ species.name_subspecies_1 | lower | capfirst }}</i>
         </div>
     </div>
 
