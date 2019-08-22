@@ -1672,7 +1672,7 @@ ALTER TABLE ltj_wfs_avoin.rauh_luonnonsuojeluohjelma OWNER TO ltj;
 
 -- Avoin data rauhoitetut naturat aluemaiset:
 
-CREATE OR REPLACE VIEW ltj_wfs_avoin.rauh_natura AS
+CREATE OR REPLACE VIEW ltj_wfs_avoin.rauh_natura_aluemaiset AS
 SELECT
     kohde.id,
     kohde.tunnus,
@@ -1955,8 +1955,6 @@ SELECT
     kohde.huom,
     kohde.digipvm,
     kohde.pvm_editoitu,
-    kohde.digitoija,
-    kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
     kohde.geometry1,
