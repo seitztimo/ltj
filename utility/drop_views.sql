@@ -46,6 +46,7 @@ DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_luonnonmuistomerkit;
 DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_luonnonsuojelualueet;
 DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_luonnonsuojeluohjelma;
 DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_natura;
+DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_natura_aluemaiset;
 DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_natura_viivamaiset;
 DROP VIEW IF EXISTS ltj_wfs_avoin.rauh_suojellut_luontotyypit;
 DROP VIEW IF EXISTS ltj_wfs_avoin.vesi_lahteet;
