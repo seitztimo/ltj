@@ -575,6 +575,7 @@ SELECT
     kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
     kohde.teksti AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata,
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti,
@@ -608,6 +609,7 @@ SELECT
     kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
     kohde.teksti AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata,
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti,
@@ -1682,6 +1684,7 @@ SELECT
     kohde.digipvm,
     kohde.pvm_editoitu,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
        CASE
             WHEN NOT kohde.teksti_www::text = ''::text THEN kohde.teksti_www
             ELSE kohde.teksti
@@ -1715,6 +1718,7 @@ SELECT
     kohde.digipvm,
     kohde.pvm_editoitu,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
        CASE
             WHEN NOT kohde.teksti_www::text = ''::text THEN kohde.teksti_www
             ELSE kohde.teksti
