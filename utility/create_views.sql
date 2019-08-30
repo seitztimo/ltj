@@ -2222,7 +2222,7 @@ ALTER TABLE ltj_wfs_avoin.metsaverkosto OWNER TO ltj;
 CREATE OR REPLACE VIEW ltj.ltj_kohteet AS
 SELECT kohde.id,
     st_geometryn(st_force2d(kohde.geometry1), 1)::geometry(Geometry,3879) AS geometry1,
-    kohde.tunnus,
+    COALESCE(kohde.tunnus, kohde.id::text::character varying) AS tunnus,
     kohde.luokkatunnus,
     kohde.nimi,
     kohde.kuvaus,
