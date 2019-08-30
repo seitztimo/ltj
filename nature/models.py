@@ -410,7 +410,7 @@ class HistoricalFeature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus',
                                       related_name='historical_features', verbose_name=_('feature class'))
     archived_time = models.DateTimeField(_('archived time'), db_column='historia_pvm')
-    feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True,
+    feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=False, null=False,
                                 related_name='historical_features', verbose_name=_('feature'))
 
     class Meta:
