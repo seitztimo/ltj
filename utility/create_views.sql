@@ -575,6 +575,7 @@ SELECT
     kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
     kohde.teksti AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata,
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti,
@@ -608,6 +609,7 @@ SELECT
     kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
     kohde.teksti AS kohdeteksti,
     'https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=155&l=fi'::text AS metadata,
     ('https://kartta.hel.fi/applications/ltj/reports/kohderaportti.aspx?id='::text || kohde.id) AS kohderaportti,
@@ -1670,7 +1672,7 @@ ALTER TABLE ltj_wfs_avoin.rauh_luonnonsuojeluohjelma OWNER TO ltj;
 
 -- Avoin data rauhoitetut naturat aluemaiset:
 
-CREATE OR REPLACE VIEW ltj_wfs_avoin.rauh_natura AS
+CREATE OR REPLACE VIEW ltj_wfs_avoin.rauh_natura_aluemaiset AS
 SELECT
     kohde.id,
     kohde.tunnus,
@@ -1682,6 +1684,7 @@ SELECT
     kohde.digipvm,
     kohde.pvm_editoitu,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
        CASE
             WHEN NOT kohde.teksti_www::text = ''::text THEN kohde.teksti_www
             ELSE kohde.teksti
@@ -1715,6 +1718,7 @@ SELECT
     kohde.digipvm,
     kohde.pvm_editoitu,
     kohde.pinta_ala AS pinta_ala_ha,
+    kohde.geometry1,
        CASE
             WHEN NOT kohde.teksti_www::text = ''::text THEN kohde.teksti_www
             ELSE kohde.teksti
@@ -1951,8 +1955,6 @@ SELECT
     kohde.huom,
     kohde.digipvm,
     kohde.pvm_editoitu,
-    kohde.digitoija,
-    kohde.muokkaaja,
     kohde.suojaustasoid,
     kohde.pinta_ala AS pinta_ala_ha,
     kohde.geometry1,
@@ -2220,7 +2222,7 @@ ALTER TABLE ltj_wfs_avoin.metsaverkosto OWNER TO ltj;
 CREATE OR REPLACE VIEW ltj.ltj_kohteet AS
 SELECT kohde.id,
     st_geometryn(st_force2d(kohde.geometry1), 1)::geometry(Geometry,3879) AS geometry1,
-    kohde.tunnus,
+    COALESCE(kohde.tunnus, kohde.id::text::character varying) AS tunnus,
     kohde.luokkatunnus,
     kohde.nimi,
     kohde.kuvaus,
