@@ -96,7 +96,7 @@ class HistoricalFeatureFactory(factory.django.DjangoModelFactory):
     active = True
     protection_level = PROTECTION_LEVELS['PUBLIC']
     archived_time = factory.Faker('date_time_this_year', before_now=True, tzinfo=datetime.timezone.utc)
-    feature = factory.SubFactory(FeatureFactory)
+    feature = 1
 
     class Meta:
         model = 'nature.HistoricalFeature'
