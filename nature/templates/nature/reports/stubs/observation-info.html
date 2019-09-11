@@ -1,7 +1,9 @@
 {% load static i18n %}
 
 <div class="row">
-    <b class="col-sm-3">{{ observation.species.name_fi }} {{ observation.species.name_subspecies_1|default_if_none:"" }}</b>
+    {% if observation.species.name_fi %}
+        <b class="col-sm-3">{{ observation.species.name_fi }} {{ observation.species.name_subspecies_1|default_if_none:"" }}</b>
+    {% endif %}
     <div class="col-sm-3 font-italic">{{ observation.species.name_sci_1|lower|capfirst }} {{ observation.species.name_subspecies_1|default_if_none:""|lower }}</div>
     <div class="col-sm-6"><a target="_blank" href="{% url 'nature:species-report' observation.species.id %}">{% trans "Species report" %}</a></div>
 </div>

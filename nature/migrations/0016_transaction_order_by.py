@@ -7,7 +7,7 @@ import django.db.models.expressions
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0014_feature_link_ordering_default'),
+        ('nature', '0015_historicalfeature_feature_field_change'),
     ]
 
     operations = [

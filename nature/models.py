@@ -25,6 +25,7 @@ class ProtectionLevelQuerySet(models.QuerySet):
     """
     QuerySet class that provide protection level filter methods
     """
+
     def for_admin(self):
         return self
 
@@ -84,6 +85,12 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
     """
     QuerySet class For Feature model
     """
+    def for_office_hki(self):
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        prefetch_transactions = Prefetch('transactions', queryset=transactions)
+        prefetch_links = Prefetch('links', queryset=links)
+        return super().for_office_hki().prefetch_related(prefetch_transactions, prefetch_links)
 
     def for_office(self):
         """ For office users that do not work for City of Helsinki
@@ -91,19 +98,23 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
         These users do not have access to UHEX features
         """
         transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-        prefetch = Prefetch('transactions', queryset=transactions)
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        prefetch_transactions = Prefetch('transactions', queryset=transactions)
+        prefetch_links = Prefetch('links', queryset=links)
         feature_class_id = OFFICE_HKI_ONLY_FEATURE_CLASS_ID
-        return super().for_office().exclude(feature_class_id=feature_class_id).prefetch_related(prefetch)
-
-    def for_office_hki(self):
-        transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-        prefetch = Prefetch('transactions', queryset=transactions)
-        return super().for_office_hki().prefetch_related(prefetch)
+        return (
+            super()
+            .for_office()
+            .exclude(feature_class_id=feature_class_id)
+            .prefetch_related(prefetch_transactions, prefetch_links)
+        )
 
     def for_public(self):
         transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
-        prefetch = Prefetch('transactions', queryset=transactions)
-        return super().for_public().prefetch_related(prefetch)
+        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
+        prefetch_transactions = Prefetch('transactions', queryset=transactions)
+        prefetch_links = Prefetch('links', queryset=links)
+        return super().for_public().prefetch_related(prefetch_transactions, prefetch_links)
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
@@ -410,8 +421,7 @@ class HistoricalFeature(AbstractFeature):
     feature_class = models.ForeignKey('FeatureClass', models.PROTECT, db_column='luokkatunnus',
                                       related_name='historical_features', verbose_name=_('feature class'))
     archived_time = models.DateTimeField(_('archived time'), db_column='historia_pvm')
-    feature = models.ForeignKey(Feature, models.SET_NULL, db_column='kohde_id', blank=True, null=True,
-                                related_name='historical_features', verbose_name=_('feature'))
+    feature = models.IntegerField(db_column='kohde_id', blank=False, null=False, verbose_name=_('feature'))
 
     class Meta:
         ordering = ['id']

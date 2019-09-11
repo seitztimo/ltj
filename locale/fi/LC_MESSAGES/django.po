@@ -319,16 +319,16 @@ msgid "species"
 msgstr "laji"
 
 msgid "regulation"
-msgstr "säädös"
+msgstr "suojeluarvo"
 
 msgid "species regulation"
-msgstr "lajisäädös"
+msgstr "lajin suojeluarvo"
 
 msgid "species regulations"
-msgstr "lajisäädökset"
+msgstr "lajin suojeluarvot"
 
 msgid "code"
-msgstr "havaintokoodi"
+msgstr "lajikoodi"
 
 msgid "uri"
 msgstr "uri"
@@ -418,7 +418,7 @@ msgid "registry date"
 msgstr "rekisteri pvm"
 
 msgid "regulations"
-msgstr "määräykset"
+msgstr "säädökset ja suojeluarvot"
 
 msgid "link types"
 msgstr "linkkityypit"
@@ -427,10 +427,10 @@ msgid "habitat type"
 msgstr "luontotyyppi"
 
 msgid "habitat type regulation"
-msgstr "luontotyyppisäädös"
+msgstr "luontotyypin suojeluarvo"
 
 msgid "habitat type regulations"
-msgstr "luontotyyppisäädökset"
+msgstr "luontotyypin suojeluarvot"
 
 msgid "group fraction"
 msgstr "osuus kuviosta"
@@ -538,10 +538,10 @@ msgid "transaction"
 msgstr "tapahtuma"
 
 msgid "transaction regulation"
-msgstr "tapahtumasäädös"
+msgstr "tapahtumaan liittyvä säädös"
 
 msgid "transaction regulations"
-msgstr "tapahtumasäädökset"
+msgstr "tapahtumaan liittyvät säädökset"
 
 msgid "register id"
 msgstr "diaari nro"
@@ -570,6 +570,12 @@ msgstr "yleisyys"
 
 msgid "frequencies"
 msgstr "yleisyydet"
+
+msgid "Edit"
+msgstr "Muokkaa"
+
+msgid "Stop editing"
+msgstr "Lopeta muokkaus"
 
 msgid "Delete all Geometries"
 msgstr "Poista kaikki geometriat"
@@ -665,7 +671,7 @@ msgid "Observation"
 msgstr "Lajihavainto"
 
 msgid "Observation Series Report"
-msgstr "Havaintosarjatraportti"
+msgstr "Havaintosarjaraportti"
 
 msgid "Name"
 msgstr "Nimi"
@@ -677,16 +683,16 @@ msgid "End date"
 msgstr "Loppu pvm"
 
 msgid "Species Regulations Report"
-msgstr "Lajisäädösraportti"
+msgstr "Lajin suojeluarvot"
 
 msgid "Species regulation report"
-msgstr "Lajisäädösraportti"
+msgstr "Lajin suojeluarvot"
 
 msgid "Species"
 msgstr "Laji"
 
 msgid "Regulations"
-msgstr "Säädökset"
+msgstr "Suojeluarvot"
 
 msgid "Regulation values in the nature information system"
 msgstr "Suojeluarvot luontotietojärjestelmässä"
@@ -734,7 +740,7 @@ msgid "Series"
 msgstr "Sarja"
 
 msgid "Regulation"
-msgstr "Säädös"
+msgstr "Peruste"
 
 msgid "Protection value"
 msgstr "Suojeluarvo"
