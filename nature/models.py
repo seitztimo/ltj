@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.gis.db import models
-from django.db.models import Prefetch
+from django.db.models import F, Prefetch
 from django.utils.translation import ugettext_lazy as _
 
 PROTECTION_LEVELS = {
@@ -87,23 +87,34 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
     """
     def for_office_hki(self):
         links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-        prefetch = Prefetch('links', queryset=links)
-        return super().for_office_hki().prefetch_related(prefetch)
+        transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
+        prefetch_transactions = Prefetch('transactions', queryset=transactions)
+        prefetch_links = Prefetch('links', queryset=links)
+        return super().for_office_hki().prefetch_related(prefetch_transactions, prefetch_links)
 
     def for_office(self):
         """ For office users that do not work for City of Helsinki
 
         These users do not have access to UHEX features
         """
+        transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
         links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-        prefetch = Prefetch('links', queryset=links)
-        return super().for_office().exclude(
-            feature_class_id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID).prefetch_related(prefetch)
+        prefetch_transactions = Prefetch('transactions', queryset=transactions)
+        prefetch_links = Prefetch('links', queryset=links)
+        feature_class_id = OFFICE_HKI_ONLY_FEATURE_CLASS_ID
+        return (
+            super()
+            .for_office()
+            .exclude(feature_class_id=feature_class_id)
+            .prefetch_related(prefetch_transactions, prefetch_links)
+        )
 
     def for_public(self):
+        transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
         links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['PUBLIC'])
-        prefetch = Prefetch('links', queryset=links)
-        return super().for_public().prefetch_related(prefetch)
+        prefetch_transactions = Prefetch('transactions', queryset=transactions)
+        prefetch_links = Prefetch('links', queryset=links)
+        return super().for_public().prefetch_related(prefetch_transactions, prefetch_links)
 
     def open_data(self):
         return super().open_data().filter(feature_class__in=FeatureClass.objects.open_data())
@@ -907,7 +918,7 @@ class Transaction(ProtectionLevelMixin, models.Model):
                                          verbose_name=_('regulations'))
 
     class Meta:
-        ordering = ['id']
+        ordering = [F('date').desc(nulls_last=True)]
         db_table = 'tapahtuma'
         verbose_name = _('transaction')
         verbose_name_plural = _('transactions')
