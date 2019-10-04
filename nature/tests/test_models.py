@@ -280,30 +280,51 @@ class TestFeatureRelatedProtectionLevelQuerySet(TestCase):
             feature_class=www_feature_class,
         )
 
+        # related species
+        self.species_office = SpeciesFactory(
+            protection_level=PROTECTION_LEVELS['OFFICE'],
+            name_fi='name_fi',
+            name_sci_1='name_sci',
+            name_subspecies_1='name_subspecies'
+        )
+
+        self.species_public = SpeciesFactory(
+            protection_level=PROTECTION_LEVELS['PUBLIC'],
+            name_fi='name_fi',
+            name_sci_1='name_sci',
+            name_subspecies_1='name_subspecies'
+        )
+
         # observations
         self.observation_office_feature_office_hki = ObservationFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
             feature=self.feature_office_hki,
+            species=self.species_office
         )
         self.observation_office_feature_office = ObservationFactory(
             protection_level=PROTECTION_LEVELS['OFFICE'],
             feature=self.feature_office,
+            species=self.species_office
         )
         self.observation_public_feature_office = ObservationFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature=self.feature_office,
+            species=self.species_public
         )
         self.observation_public_feature_public = ObservationFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature=self.feature_public,
+            species=self.species_public
         )
         self.observation_public_feature_public_open_data = ObservationFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature=self.feature_public_open_data,
+            species=self.species_public
         )
         self.observation_public_feature_public_www = ObservationFactory(
             protection_level=PROTECTION_LEVELS['PUBLIC'],
             feature=self.feature_public_www,
+            species=self.species_public
         )
 
     def test_for_office_hki(self):

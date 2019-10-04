@@ -165,6 +165,27 @@ class FeatureRelatedProtectionLevelQuerySet(ProtectionLevelQuerySet):
         return super().www().filter(feature__in=Feature.objects.www())
 
 
+class ObservationQuerySet(FeatureRelatedProtectionLevelQuerySet):
+    """
+    Extend FeatureRelatedProtectionLevelQuerySet to take specie
+    protection level into account
+    """
+    def for_office_hki(self):
+        return super().for_office_hki().filter(species__in=Species.objects.for_office_hki())
+
+    def for_office(self):
+        return super().for_office().filter(species__in=Species.objects.for_office())
+
+    def for_public(self):
+        return super().for_public().filter(species__in=Species.objects.for_public())
+
+    def open_data(self):
+        return super().open_data().filter(species__in=Species.objects.open_data())
+
+    def www(self):
+        return super().www().filter(species__in=Species.objects.www())
+
+
 class ProtectionLevelMixin(models.Model):
     PROTECTION_LEVEL_CHOICES = (
         (PROTECTION_LEVELS['ADMIN'], _('Admin')),
@@ -512,7 +533,7 @@ class Observation(ProtectionLevelMixin, models.Model):
     last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True,
                                               db_column='pvm_editoitu')
 
-    objects = FeatureRelatedProtectionLevelQuerySet.as_manager()
+    objects = ObservationQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
