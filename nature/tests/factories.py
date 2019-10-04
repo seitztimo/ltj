@@ -83,9 +83,22 @@ class FeatureFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=80)
     active = True
     protection_level = PROTECTION_LEVELS['PUBLIC']
+    links = factory.RelatedFactory('nature.tests.factories.FeatureLinkFactory', 'feature')
 
     class Meta:
         model = 'nature.Feature'
+
+    @factory.post_generation
+    def transactions(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for transaction in extracted:
+                transaction.features.add(self)
+        else:
+            transaction = TransactionFactory()
+            transaction.features.add(self)
 
 
 class HistoricalFeatureFactory(factory.django.DjangoModelFactory):
