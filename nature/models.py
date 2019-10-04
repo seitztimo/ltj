@@ -96,17 +96,14 @@ class FeatureQuerySet(ProtectionLevelQuerySet):
         """ For office users that do not work for City of Helsinki
 
         These users do not have access to UHEX features
+
+        for_office() gets it's prefetch from for_office_hki()
         """
-        transactions = Transaction.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-        links = FeatureLink.objects.filter(protection_level__gte=PROTECTION_LEVELS['OFFICE'])
-        prefetch_transactions = Prefetch('transactions', queryset=transactions)
-        prefetch_links = Prefetch('links', queryset=links)
         feature_class_id = OFFICE_HKI_ONLY_FEATURE_CLASS_ID
         return (
             super()
             .for_office()
             .exclude(feature_class_id=feature_class_id)
-            .prefetch_related(prefetch_transactions, prefetch_links)
         )
 
     def for_public(self):
