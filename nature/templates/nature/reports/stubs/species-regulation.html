@@ -16,7 +16,7 @@
 <div class="row">
     <b class="col-sm-2">{% trans "link"|title %}</b>
     <div class="col-sm-10">
-        <a href="{{ regulation.link | safe }}">{% trans "link"|title %}</a>
+        <a target="_blank" rel="noopener noreferrer" href="{{ regulation.link | safe }}">{% trans "link"|title %}</a>
     </div>
 </div>
 {% endif %}

@@ -114,12 +114,15 @@ class ObservationReportView(ProtectedReportViewMixin, DetailView):
     template_name = 'nature/reports/observation-report.html'
 
 
-class SpeciesReportView(ProtectedObservationListReportViewMixin, DetailView):
+class SpeciesReportView(ProtectedObservationListReportViewMixin, ValidRegulationsViewMixin, DetailView):
     queryset = Species.objects.all()
     template_name = 'nature/reports/species-report.html'
 
     def get_observation_queryset(self):
         return self.object.observations.all().order_by('feature__feature_class__name')
+
+    def get_regulations_queryset(self):
+        return self.object.regulations.all()
 
 
 class SpeciesRegulationsReportView(ValidRegulationsViewMixin, DetailView):
@@ -127,7 +130,7 @@ class SpeciesRegulationsReportView(ValidRegulationsViewMixin, DetailView):
     template_name = 'nature/reports/species-regulations-report.html'
 
     def get_regulations_queryset(self):
-        return self.object.regulations
+        return self.object.regulations.all()
 
 
 class ObservationSeriesReportView(DetailView):
