@@ -58,7 +58,7 @@
     <hr class="mb-4">
 
     <!-- Regulations -->
-    {% if species.regulations.all %}
+    {% if regulations %}
         <h4 class="text-uppercase">
             {% trans "Regulations" %}
             <small>
@@ -69,7 +69,7 @@
         </h4>
         <hr class="mb-2">
 
-        {% for regulation in species.regulations.all %}
+        {% for regulation in regulations %}
             {% include 'nature/reports/stubs/species-regulation.html' with regulation=regulation %}
             {% if not forloop.last %}
                 <hr class="mb-2 dashed">
