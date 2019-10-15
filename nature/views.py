@@ -104,9 +104,12 @@ class ValidRegulationsViewMixin(ProtectedReportViewMixin):
         return qs
 
 
-class FeatureReportView(ProtectedReportViewMixin, DetailView):
+class FeatureReportView(ProtectedObservationListReportViewMixin, ProtectedReportViewMixin, DetailView):
     queryset = Feature.objects.all()
     template_name = 'nature/reports/feature-report.html'
+
+    def get_observation_queryset(self):
+        return self.object.observations.all()
 
 
 class ObservationReportView(ProtectedReportViewMixin, DetailView):

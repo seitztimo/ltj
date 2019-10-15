@@ -133,10 +133,10 @@
             {% endfor %}
             <hr class="mb-2">
     {% endif %}
-    {% if feature.observations.all %}
+    {% if observations %}
         {% if feature.geometry.geom_type == 'Point' %}
             <h4 class="text-uppercase">{% trans "Observations" %}</h4>
-            {% for observation in feature.observations.all %}
+            {% for observation in observations %}
                 {% include "nature/reports/stubs/observation-info.html" with observation=observation %}
                 {% if not forloop.last %}
                     <hr class="mb-2 dashed">
