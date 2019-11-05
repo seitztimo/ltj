@@ -2,7 +2,7 @@
 -- The database seems to have multiple schemas, and the tables
 -- are created in public schema.
 --
-SET search_path=public;
+SET search_path=ltj;
 
 --
 -- The version of database we have are missing following changes that are needed
