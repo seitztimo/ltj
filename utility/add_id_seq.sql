@@ -6,7 +6,7 @@
 
 --
 -- The database seems to have multiple schemas, and the tables
--- are created in public schema.
+-- are created in ltj schema.
 --
 SET search_path=ltj;
 
