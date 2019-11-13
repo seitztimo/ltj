@@ -6,9 +6,19 @@ from datetime import datetime
 
 import pytz
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.utils.encoding import force_bytes
 from .enums import UserRole
+
+
+class InvalidAuthorization(PermissionDenied):
+    default_message = 'Invalid Authorization'
+
+    def __init__(self, *args):
+        if not args:
+            args = [self.default_message]
+        super().__init__(*args)
 
 
 class HMACAuth:
@@ -88,7 +98,10 @@ class HMACAuth:
         gmt = pytz.timezone('GMT')  # DATE header is always in GMT
         date = date.replace(tzinfo=gmt)
         now = timezone.now()
-        return abs(date - now) < timezone.timedelta(seconds=self.ALLOWED_CLOCK_SKEW_IN_SECONDS)
+        is_within_clock_skew = abs(date - now) < timezone.timedelta(seconds=self.ALLOWED_CLOCK_SKEW_IN_SECONDS)
+        if is_within_clock_skew:
+            return True
+        raise InvalidAuthorization()
 
     @property
     def has_valid_credentials(self):
@@ -101,14 +114,14 @@ class HMACAuth:
 
         auth_type, credentials = auth_header.split(' ', maxsplit=1)
         if auth_type.lower() != 'hmac':
-            return False  # only hmac auth allowed
+            raise InvalidAuthorization()  # only hmac auth allowed
 
         p = re.compile(r'(\w+)="([^"]+)"')
         auth_info = dict(p.findall(credentials))
 
         required_keys = {'algorithm', 'headers', 'signature'}
         if not required_keys.issubset(auth_info):
-            return False
+            raise InvalidAuthorization()
 
         algorithm = auth_info['algorithm']
         headers = auth_info['headers'].split(' ')
@@ -116,7 +129,7 @@ class HMACAuth:
 
         meta_keys = ['HTTP_{0}'.format(header.replace('-', '_').upper()) for header in headers]
         if not set(meta_keys).issubset(self.request.META):
-            return False
+            raise InvalidAuthorization()
 
         signature_string = self._generate_signature_message(headers, meta_keys)
         expected_signature = self._generate_signature(algorithm, signature_string)
