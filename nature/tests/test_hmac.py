@@ -1,7 +1,7 @@
 from django.test import TestCase, RequestFactory, override_settings
 from freezegun import freeze_time
 
-from nature.hmac import HMACAuth
+from nature.hmac import HMACAuth, InvalidAuthorization
 
 
 @override_settings(SHARED_SECRET='secret')
@@ -34,7 +34,7 @@ class TestHMACAuth(TestCase):
         self.assertTrue(hmac_auth.is_valid)
 
     @freeze_time('2017-06-22 20:00:00')
-    def test_is_valid_return_false_if_out_of_clock_skew_range(self):
+    def test_out_of_clock_skew_raises_exception(self):
         request = self.factory.get(
             '/test-url/',
             HTTP_DATE='Thu, 22 Jun 2017 17:15:21 GMT',
@@ -49,10 +49,11 @@ class TestHMACAuth(TestCase):
             )
         )
         hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
+        with self.assertRaises(InvalidAuthorization):
+            hmac_auth.within_clock_skew
 
     @freeze_time('2017-06-22 17:16:00')
-    def test_is_valid_return_false_for_non_hmac_auth(self):
+    def test_is_valid_raises_exception_for_non_hmac_auth(self):
         request = self.factory.get(
             '/test-url/',
             HTTP_DATE='Thu, 22 Jun 2017 17:15:21 GMT',
@@ -67,7 +68,8 @@ class TestHMACAuth(TestCase):
             )
         )
         hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
+        with self.assertRaises(InvalidAuthorization):
+            hmac_auth.is_valid
 
     @freeze_time('2017-06-22 17:16:00')
     def test_is_valid_return_false_if_missing_auth_header(self):
@@ -81,7 +83,7 @@ class TestHMACAuth(TestCase):
         self.assertFalse(hmac_auth.is_valid)
 
     @freeze_time('2017-06-22 17:16:00')
-    def test_is_valid_return_false_if_missing_header_used_in_credentials(self):
+    def test_is_valid_raises_exception_if_missing_header_used_in_credentials(self):
         request = self.factory.get(
             '/test-url/',
             HTTP_HOST='hmac.com',
@@ -95,10 +97,11 @@ class TestHMACAuth(TestCase):
             )
         )
         hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
+        with self.assertRaises(InvalidAuthorization):
+            hmac_auth.is_valid
 
     @freeze_time('2017-06-22 17:16:00')
-    def test_is_valid_return_false_if_missing_required_credential_key(self):
+    def test_is_valid_raises_exception_if_missing_required_credential_key(self):
         request = self.factory.get(
             '/test-url/',
             HTTP_DATE='Thu, 22 Jun 2017 17:15:21 GMT',
@@ -112,7 +115,8 @@ class TestHMACAuth(TestCase):
             )
         )
         hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
+        with self.assertRaises(InvalidAuthorization):
+            hmac_auth.is_valid
 
     @freeze_time('2017-06-22 17:16:00')
     def test_is_valid_return_false_for_invalid_digest_algorithm(self):
