@@ -7,7 +7,7 @@
 -- where user have no knowledge on the values.
 --
 
-SET search_path=ltj;
+SET search_path=public;
 
 
 COMMENT ON COLUMN kohde.suojaustasoid IS '1: Vain ylläpitäjille. 2: Vain ylläpitäjille ja virkakatselijoille. 3. Saa näyttää Internetissä, oletusarvo';
