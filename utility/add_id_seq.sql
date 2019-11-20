@@ -8,7 +8,7 @@
 -- The database seems to have multiple schemas, and the tables
 -- are created in ltj schema.
 --
-SET search_path=ltj;
+SET search_path=public;
 
 --
 -- Add sequences to id fields
