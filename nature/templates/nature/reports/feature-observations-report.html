@@ -21,7 +21,7 @@
     </style>
 {% endblock %}
 
-{% block report_header %}{{ feature.feature_class.name }}{% if feature.name %}<br>{{ feature.name }}{% endif %}{% if feature.fid %}({{ feature.fid }}){% endif %}{% endblock %}
+{% block report_header %}{{ feature.feature_class.name }}<br>{% if feature.name %}{{ feature.name }}{% endif %}{% if feature.fid %}({{ feature.fid }}){% endif %}{% endblock %}
 
 {% block report_body %}
     <!-- Feature -->
