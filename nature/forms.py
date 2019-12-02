@@ -150,7 +150,7 @@ class PersonForm(forms.ModelForm):
             'company': 'Yrityksen nimi',
             'public_servant': 'Tieto onko henkilö viranomainen vai ei',
             'created_time': 'Ajankohta, jolloin henkilö lisätty rekisteriin. Automaattinen.',
-            'last_modified_time': 'Ajankohta, jolloin henkilöobjektia on muokattu. Automaatinen.'
+            'last_modified_time': 'Ajankohta, jolloin henkilöobjektia on muokattu. Automaattinen.'
         }
 
 
