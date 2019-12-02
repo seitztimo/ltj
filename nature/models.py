@@ -322,8 +322,10 @@ class Person(models.Model):
     created_time = models.DateTimeField(_('created time'), blank=True, null=True, auto_now_add=True,
                                         db_column='lisaysaika')
     created_by = models.CharField(_('created by'), max_length=150, blank=True, null=True, db_column='lisaaja')
-    last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True, db_column='muokkausaika')
-    last_modified_by = models.CharField(_('last modified by'), max_length=150, blank=True, null=True, db_column='muokkaaja')
+    last_modified_time = models.DateTimeField(_('last modified time'), blank=True, null=True, auto_now=True,
+                                              db_column='muokkausaika')
+    last_modified_by = models.CharField(_('last modified by'), max_length=150, blank=True, null=True,
+                                        db_column='muokkaaja')
 
     class Meta:
         ordering = ['id']
