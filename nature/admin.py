@@ -255,7 +255,9 @@ class TransactionAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
+    exclude = ('notes', 'company', 'public_servant', 'telephone', 'email')
     list_display = ('id', 'surname', 'first_name')
     search_fields = ('id', 'surname', 'first_name')
+    readonly_fields = ('created_time', 'last_modified_time')
     actions = None
     form = PersonForm
