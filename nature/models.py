@@ -810,7 +810,7 @@ class Regulation(models.Model):
         verbose_name_plural = _('regulations')
 
     def __str__(self):
-        result = self.name
+        result = str(self.name)
         if self.paragraph:
             result += ', ' + self.paragraph
         if self.value:
