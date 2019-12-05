@@ -686,7 +686,10 @@ class HabitatType(models.Model):
         verbose_name_plural = _('habitat types')
 
     def __str__(self):
-        return str(self.name)
+        result = str(self.name)
+        if self.group:
+            result += ', ' + self.group
+        return result
 
 
 class FeatureClass(models.Model):
@@ -812,7 +815,12 @@ class Regulation(models.Model):
         verbose_name_plural = _('regulations')
 
     def __str__(self):
-        return str(self.name)
+        result = str(self.name)
+        if self.paragraph:
+            result += ', ' + self.paragraph
+        if self.value:
+            result += ', ' + self.value
+        return result
 
 
 class ConservationProgramme(models.Model):
