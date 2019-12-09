@@ -1,9 +1,32 @@
 import os
 import environ
-import raven
+import sentry_sdk
+import subprocess
+from sentry_sdk.integrations.django import DjangoIntegration
 
 root = environ.Path(__file__) - 2
 BASE_DIR = root()
+
+
+def get_git_revision_hash():
+    """
+    We need a way to retrieve git revision hash for sentry reports
+    I assume that if we have a git repository available we will
+    have git-the-comamand as well
+    """
+    try:
+        # We are not interested in gits complaints (stderr > /dev/null)
+        git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'], stderr=subprocess.DEVNULL, encoding='utf8')
+    # ie. "git" was not found
+    # should we return a more generic meta hash here?
+    # like "undefined"?
+    except FileNotFoundError:
+        git_hash = "git_not_available"
+    except subprocess.CalledProcessError:
+        # Ditto
+        git_hash = "no_repository"
+    return git_hash.rstrip()
+
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -82,12 +105,12 @@ INSTALLED_APPS = [
 
 # Sentry
 if env('SENTRY_DSN'):
-    RAVEN_CONFIG = {
-        'dsn': env('SENTRY_DSN'),
-        'environment': env('SENTRY_ENVIRONMENT'),
-        'release': raven.fetch_git_sha(BASE_DIR),
-    }
-    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
+    sentry_sdk.init(
+        dsn=env('SENTRY_DSN'),
+        environment=env('SENTRY_ENVIRONMENT'),
+        release=get_git_revision_hash(),
+        integrations=[DjangoIntegration()]
+    )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
