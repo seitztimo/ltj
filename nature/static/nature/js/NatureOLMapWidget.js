@@ -239,15 +239,16 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
             url: 'https://kartta.hel.fi/ws/geoserver/avoindata/gwc/service/wmts',
             matrixSet: 'ETRS-GK25',
             tileSize: [256, 256],
-            extent: [25440000, 6630000, 25571072, 6761072],
-            origin: [25440000, 6761072],
-            resolutions: [256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.125, 0.0625],
+            extent: [24451424, 6291456, 26548576, 8388608],
+            origin: [24451424, 8388608],
+            resolutions: [8192.0, 4096.0, 2048.0, 1024.0, 512.0, 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25],
             matrixIds: [
                 'ETRS-GK25:0', 'ETRS-GK25:1', 'ETRS-GK25:2',
                 'ETRS-GK25:3', 'ETRS-GK25:4', 'ETRS-GK25:5',
                 'ETRS-GK25:6', 'ETRS-GK25:7', 'ETRS-GK25:8',
                 'ETRS-GK25:9', 'ETRS-GK25:10', 'ETRS-GK25:11',
-                'ETRS-GK25:12'
+                'ETRS-GK25:12', 'ETRS-GK25:13', 'ETRS-GK25:14',
+                'ETRS-GK25:15'
             ]
         };
 
