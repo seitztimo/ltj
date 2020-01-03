@@ -63,6 +63,12 @@ MEDIA_URL = env('MEDIA_URL')
 STATIC_ROOT = env('STATIC_ROOT')
 MEDIA_ROOT = env('MEDIA_ROOT')
 
+# This governs the number of fields allowed in form submissions, including
+# the admin site. LTJ has admin pages that upload well over 2000 fields.
+# This settings might be the one to tweak if submitting an admin page causes
+# a 400 response.
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
+
 # log to stderr, at level specified by LOG_LEVEL and add metadata
 LOGGING = {
     'version': 1,
