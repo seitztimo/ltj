@@ -81,14 +81,13 @@
     {% if feature.links %}
     <div class="mb-5">
         {% for link in feature.links.all|dictsort:"ordering" %}
-            <a href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
+            <a target="_blank" rel="noopener noreferrer" href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
         {% endfor %}
     </div>
+    <hr class="mb-2">
     {% endif %}
     
-
     {% if feature.transactions.all %}
-        <hr class="mb-2">
         <h4 class="text-uppercase">{% trans "Feature transactions" %}</h4>
         {% for transaction in feature.transactions.all %}
             <div class="row mb-0">
@@ -148,6 +147,7 @@
             </a>
             <br>
         {% endif %}
+        <hr class="mb-2">
     {% endif %}
 
     {% if feature.habitat_type_observations.all %}
@@ -159,6 +159,7 @@
                 {% trans "Habitat observations at this feature" %}
             </a>
         {% endif %}
+        <hr class="mb-2">
     {% endif %}
 {% endblock %}
 
