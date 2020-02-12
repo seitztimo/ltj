@@ -111,6 +111,12 @@ class FeatureReportView(ProtectedObservationListReportViewMixin, ProtectedReport
     def get_observation_queryset(self):
         return self.object.observations.all()
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.object:
+            context_data['transactions'] = self.object.transactions.all().prefetch_related('regulations')
+        return context_data
+
 
 class ObservationReportView(ProtectedReportViewMixin, DetailView):
     queryset = Observation.objects.all()
