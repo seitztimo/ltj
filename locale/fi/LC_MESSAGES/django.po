@@ -759,3 +759,21 @@ msgstr "Voit lähettää palautetta osoitteeseen ltj.ymk@hel.fi"
 
 msgid "Log in again"
 msgstr "Kirjaudu uudelleen sisään"
+
+#, javascript-format
+msgid ""
+"This is the list of available %s. You may choose some by selecting them in "
+"the box below and then clicking the 'Choose' arrow between the two boxes."
+msgstr ""
+"%s, jotka ovat valittavissa. Valitse allaolevasta laatikosta "
+"haluamasi ja siirrä ne valittuihin klikkamalla 'Valitse'-nuolta "
+"laatikoiden välillä."
+
+#, javascript-format
+msgid ""
+"This is the list of chosen %s. You may remove some by selecting them in the "
+"box below and then clicking the 'Remove' arrow between the two boxes."
+msgstr ""
+"%s, jotka ovat valittuina. Voit poistaa valintoja valitsemalla ne "
+"allaolevasta laatikosta ja siirtämällä ne takaisin valitsemattomiin "
+"klikkamalla 'Poista'-nuolta laatikoiden välillä."
