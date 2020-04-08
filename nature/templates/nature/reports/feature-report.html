@@ -74,7 +74,13 @@
     {% if feature.description or feature.text_display %}
         <h4 class="text-uppercase">{% trans "Feature description" %}</h4>
         <p>{{ feature.description|default_if_none:"" }}</p>
-        <p>{{ feature.text_display|default_if_none:""|safe }}</p>
+        {% if not feature.www_text %}
+            <p>{{ feature.text|default_if_none:""|safe }}</p>
+        {% elif user_is_in_admin_groups %}
+            <p>{{ feature.text|default_if_none:""|safe }}</p>
+        {% else %}
+            <p>{{ feature.text_www|default_if_none:""|safe }}</p>
+        {% endif %}
         <hr class="mb-2">
     {% endif %}
 
