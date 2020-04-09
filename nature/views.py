@@ -35,10 +35,10 @@ class ProtectedReportViewMixin:
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-
+        admin_hmac_roles = [UserRole.ADMIN, UserRole.OFFICE_HKI, UserRole.OFFICE]
         hmac_auth = self._get_hmac_auth()
         user_role = UserRole.ADMIN if self.request.user.is_staff else hmac_auth.user_role
-        user_is_in_admin_groups = hmac_auth.user_role in [UserRole.ADMIN, UserRole.OFFICE_HKI, UserRole.OFFICE]
+        user_is_in_admin_groups = self.request.user.is_staff or hmac_auth.user_role in admin_hmac_roles
         context_data['user_role'] = user_role.value
         context_data['user_is_in_admin_groups'] = user_is_in_admin_groups
 
