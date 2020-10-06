@@ -8,13 +8,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0004_open_feature_classes'),
+        ("nature", "0004_open_feature_classes"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='featurelink',
-            name='link_text',
-            field=models.CharField(blank=True, db_column='linkin_teksti', max_length=100, null=True),
+            model_name="featurelink",
+            name="link_text",
+            field=models.CharField(
+                blank=True, db_column="linkin_teksti", max_length=100, null=True
+            ),
         ),
     ]

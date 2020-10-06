@@ -20,11 +20,11 @@ from django.utils.translation import ugettext_lazy as _
 from nature.api import router
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'v1/', include(router.urls)),
-    url(r'^ltj/', include('nature.urls')),
+    url(r"^admin/", admin.site.urls),
+    url(r"v1/", include(router.urls)),
+    url(r"^ltj/", include("nature.urls")),
 ]
 
-admin.site.site_title = _('Luontotietojärjestelmä site admin')
-admin.site.site_header = _('Luontotietojärjestelmä administration')
-admin.site.site_url = '/admin'
+admin.site.site_title = _("Luontotietojärjestelmä site admin")
+admin.site.site_header = _("Luontotietojärjestelmä administration")
+admin.site.site_url = "/admin"

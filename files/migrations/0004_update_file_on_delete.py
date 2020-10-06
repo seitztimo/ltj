@@ -8,18 +8,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('files', '0003_update_file_fields'),
+        ("files", "0003_update_file_fields"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='file',
-            name='last_modified_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='modified_files', to=settings.AUTH_USER_MODEL, verbose_name='last modified by'),
+            model_name="file",
+            name="last_modified_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="modified_files",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="last modified by",
+            ),
         ),
         migrations.AlterField(
-            model_name='file',
-            name='uploaded_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='uploaded_files', to=settings.AUTH_USER_MODEL, verbose_name='uploaded by'),
+            model_name="file",
+            name="uploaded_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="uploaded_files",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="uploaded by",
+            ),
         ),
     ]

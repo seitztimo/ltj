@@ -7,18 +7,32 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0012_change_quantity_verbose_name'),
+        ("nature", "0012_change_quantity_verbose_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='observation',
-            name='series',
-            field=models.ForeignKey(blank=True, db_column='hsaid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.ObservationSeries', verbose_name='observation series'),
+            model_name="observation",
+            name="series",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="hsaid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.ObservationSeries",
+                verbose_name="observation series",
+            ),
         ),
         migrations.AlterField(
-            model_name='publication',
-            name='series',
-            field=models.CharField(blank=True, db_column='sarja', max_length=100, null=True, verbose_name='publication series'),
+            model_name="publication",
+            name="series",
+            field=models.CharField(
+                blank=True,
+                db_column="sarja",
+                max_length=100,
+                null=True,
+                verbose_name="publication series",
+            ),
         ),
     ]

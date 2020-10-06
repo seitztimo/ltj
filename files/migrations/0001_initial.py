@@ -17,18 +17,52 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='File',
+            name="File",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to='files/', verbose_name='file')),
-                ('created_time', models.DateTimeField(auto_now_add=True, null=True, verbose_name='created time')),
-                ('last_modified_time', models.DateTimeField(auto_now=True, null=True, verbose_name='last modified time')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='created_files', to=settings.AUTH_USER_MODEL, verbose_name='created by')),
-                ('last_modified_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='modified_files', to=settings.AUTH_USER_MODEL, verbose_name='last modified by')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("file", models.FileField(upload_to="files/", verbose_name="file")),
+                (
+                    "created_time",
+                    models.DateTimeField(
+                        auto_now_add=True, null=True, verbose_name="created time"
+                    ),
+                ),
+                (
+                    "last_modified_time",
+                    models.DateTimeField(
+                        auto_now=True, null=True, verbose_name="last modified time"
+                    ),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="created_files",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="created by",
+                    ),
+                ),
+                (
+                    "last_modified_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="modified_files",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="last modified by",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'file',
-                'verbose_name_plural': 'files',
+                "verbose_name": "file",
+                "verbose_name_plural": "files",
             },
         ),
     ]

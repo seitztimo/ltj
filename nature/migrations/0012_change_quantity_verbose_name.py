@@ -6,13 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0011_rename_number_to_quantity'),
+        ("nature", "0011_rename_number_to_quantity"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='observation',
-            name='quantity',
-            field=models.CharField(blank=True, db_column='lkm', max_length=30, null=True, verbose_name='quantity'),
+            model_name="observation",
+            name="quantity",
+            field=models.CharField(
+                blank=True,
+                db_column="lkm",
+                max_length=30,
+                null=True,
+                verbose_name="quantity",
+            ),
         ),
     ]

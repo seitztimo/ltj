@@ -7,7 +7,6 @@ from .factories import FileFactory
 
 
 class TestFile(TestCase):
-
     def setUp(self):
         user = make_user()
         self.file = FileFactory(uploaded_by=user, last_modified_by=user)
@@ -16,4 +15,4 @@ class TestFile(TestCase):
         os.remove(self.file.file.path)
 
     def test__str__(self):
-        self.assertEqual(str(self.file), 'files/testfile')
+        self.assertEqual(str(self.file), "files/testfile")

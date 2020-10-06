@@ -19,12 +19,45 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ShapefileImport',
+            name="ShapefileImport",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('shapefiles', models.FileField(help_text='Zipped shapefiles that contains .shp, .shx and .dbf files with a common filename prefix', upload_to='', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['zip']), imports.validators.ZippedShapefilesValidator()], verbose_name='shapefiles')),
-                ('created_time', models.DateTimeField(auto_now_add=True, null=True, verbose_name='created time')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='created by')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "shapefiles",
+                    models.FileField(
+                        help_text="Zipped shapefiles that contains .shp, .shx and .dbf files with a common filename prefix",
+                        upload_to="",
+                        validators=[
+                            django.core.validators.FileExtensionValidator(
+                                allowed_extensions=["zip"]
+                            ),
+                            imports.validators.ZippedShapefilesValidator(),
+                        ],
+                        verbose_name="shapefiles",
+                    ),
+                ),
+                (
+                    "created_time",
+                    models.DateTimeField(
+                        auto_now_add=True, null=True, verbose_name="created time"
+                    ),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="created by",
+                    ),
+                ),
             ],
         ),
     ]

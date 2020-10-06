@@ -10,18 +10,25 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('files', '0002_rename_file_fields'),
+        ("files", "0002_rename_file_fields"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='file',
-            name='uploaded_by',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='uploaded_files', to=settings.AUTH_USER_MODEL, verbose_name='uploaded by'),
+            model_name="file",
+            name="uploaded_by",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="uploaded_files",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="uploaded by",
+            ),
         ),
         migrations.AlterField(
-            model_name='file',
-            name='uploaded_time',
-            field=models.DateTimeField(auto_now_add=True, null=True, verbose_name='uploaded time'),
+            model_name="file",
+            name="uploaded_time",
+            field=models.DateTimeField(
+                auto_now_add=True, null=True, verbose_name="uploaded time"
+            ),
         ),
     ]

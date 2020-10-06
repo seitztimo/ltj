@@ -1,0 +1,9 @@
+ipython
+coverage
+factory-boy
+pytest
+pytest-cov
+pytest-django
+freezegun
+flake8
+black

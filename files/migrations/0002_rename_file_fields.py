@@ -8,18 +8,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('files', '0001_initial'),
+        ("files", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='file',
-            old_name='created_by',
-            new_name='uploaded_by',
+            model_name="file",
+            old_name="created_by",
+            new_name="uploaded_by",
         ),
         migrations.RenameField(
-            model_name='file',
-            old_name='created_time',
-            new_name='uploaded_time',
+            model_name="file",
+            old_name="created_time",
+            new_name="uploaded_time",
         ),
     ]

@@ -5,7 +5,6 @@ from ..forms import ProtectionInlineForm
 
 
 class TestProtectionInlineForm(TestCase):
-
     def setUp(self):
         self.feature = FeatureFactory()
         self.criteria_1 = CriterionFactory()
@@ -15,15 +14,15 @@ class TestProtectionInlineForm(TestCase):
 
     def test_save(self):
         form_data = {
-            'id': self.feature.id,
-            'reported_area': 'Test reported area',
-            'criteria': [
+            "id": self.feature.id,
+            "reported_area": "Test reported area",
+            "criteria": [
                 self.criteria_1.id,
                 self.criteria_2.id,
             ],
-            'conservation_programmes': [
+            "conservation_programmes": [
                 self.conservation_programme_1.id,
-                self.conservation_programme_2.id
+                self.conservation_programme_2.id,
             ],
         }
         form = ProtectionInlineForm(form_data)

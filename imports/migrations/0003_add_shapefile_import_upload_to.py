@@ -10,13 +10,23 @@ import imports.validators
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('imports', '0002_add_shapefileimport_verbose_name'),
+        ("imports", "0002_add_shapefileimport_verbose_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='shapefileimport',
-            name='shapefiles',
-            field=models.FileField(help_text='Zipped shapefiles that contains .shp, .shx and .dbf files with a common filename prefix', upload_to='shapefiles/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['zip']), imports.validators.ZippedShapefilesValidator()], verbose_name='shapefiles'),
+            model_name="shapefileimport",
+            name="shapefiles",
+            field=models.FileField(
+                help_text="Zipped shapefiles that contains .shp, .shx and .dbf files with a common filename prefix",
+                upload_to="shapefiles/",
+                validators=[
+                    django.core.validators.FileExtensionValidator(
+                        allowed_extensions=["zip"]
+                    ),
+                    imports.validators.ZippedShapefilesValidator(),
+                ],
+                verbose_name="shapefiles",
+            ),
         ),
     ]
