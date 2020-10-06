@@ -1,0 +1,9 @@
+Django>=2.2,<3.0
+djangorestframework
+djangorestframework-gis
+django-ckeditor
+django-environ
+psycopg2
+sentry-sdk
+requests
+pyshp

@@ -24,7 +24,7 @@ addons:
       - postgresql-10-postgis-2.5-scripts
 
 install:
-  - pip install -r requirements-dev.txt
+  - pip install -r requirements.txt -r requirements-dev.txt
 
 before_script:
   - psql -U postgres template1 -c 'create extension postgis;'
