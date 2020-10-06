@@ -6,22 +6,22 @@ from django.contrib.gis.geos import GEOSGeometry
 
 from nature.models import Feature
 
-REQUIRED_SHAPEFILE_EXTENSIONS = ('.shp', '.shx', '.dbf')
+REQUIRED_SHAPEFILE_EXTENSIONS = (".shp", ".shx", ".dbf")
 SHAPEFILE_FIELD_MAPPING = {
-    'id': 'id',
-    'tunnus': 'fid',
-    'luokkatunn': 'feature_class_id',
-    'nimi': 'name',
-    'kuvaus': 'description',
-    'huom': 'notes',
-    'voimassa': 'active',
-    'digipvm': 'created_time',
-    'numero': 'number',
-    'digitoija': 'created_by',
-    'suojaustas': 'protection_level',
-    'pvm_editoi': 'last_modified_time',
-    'muokkaaja': 'last_modified_by',
-    'pinta_ala': 'area',
+    "id": "id",
+    "tunnus": "fid",
+    "luokkatunn": "feature_class_id",
+    "nimi": "name",
+    "kuvaus": "description",
+    "huom": "notes",
+    "voimassa": "active",
+    "digipvm": "created_time",
+    "numero": "number",
+    "digitoija": "created_by",
+    "suojaustas": "protection_level",
+    "pvm_editoi": "last_modified_time",
+    "muokkaaja": "last_modified_by",
+    "pinta_ala": "area",
 }
 
 
@@ -47,10 +47,14 @@ class ShapefileImporter:
     then the importer will update the feature, otherwise it will create
     new ones.
     """
+
     @classmethod
     def import_features(cls, zipped_shapefiles):
         shp_reader = cls._get_shp_reader(zipped_shapefiles)
-        fields = [SHAPEFILE_FIELD_MAPPING[shape_field[0]] for shape_field in shp_reader.fields[1:]]
+        fields = [
+            SHAPEFILE_FIELD_MAPPING[shape_field[0]]
+            for shape_field in shp_reader.fields[1:]
+        ]
         for shape_record in shp_reader.iterShapeRecords():
             cls._import_feature(fields, shape_record)
         return shp_reader.numRecords
@@ -58,16 +62,22 @@ class ShapefileImporter:
     @classmethod
     def _get_shp_reader(cls, zipped_shapefiles):
         with zipfile.ZipFile(zipped_shapefiles) as zfile:
-            dbf, shp, shx = sorted([name for name in zfile.namelist() if name.endswith(REQUIRED_SHAPEFILE_EXTENSIONS)])
+            dbf, shp, shx = sorted(
+                [
+                    name
+                    for name in zfile.namelist()
+                    if name.endswith(REQUIRED_SHAPEFILE_EXTENSIONS)
+                ]
+            )
             with zfile.open(dbf) as dbf, zfile.open(shp) as shp, zfile.open(shx) as shx:
                 return shapefile.Reader(shp=shp, shx=shx, dbf=dbf)
 
     @classmethod
     def _import_feature(cls, fields, shape_record):
         feature_data = dict(zip(fields, shape_record.record))
-        feature_data['geometry'] = cls._get_feature_geometry(shape_record.shape)
+        feature_data["geometry"] = cls._get_feature_geometry(shape_record.shape)
 
-        feature_id = feature_data.pop('id', None)
+        feature_id = feature_data.pop("id", None)
         try:
             feature = Feature.objects.get(id=feature_id)
             for key, value in feature_data.items():
@@ -78,7 +88,9 @@ class ShapefileImporter:
 
     @classmethod
     def _get_feature_geometry(cls, shape):
-        shape_type = shape.__geo_interface__['type'].upper()
-        coordinates = '{}'.format(shape.__geo_interface__['coordinates']).replace(',', ' ')
-        geostr = 'SRID={};{}{}'.format(settings.SRID, shape_type, coordinates)
+        shape_type = shape.__geo_interface__["type"].upper()
+        coordinates = "{}".format(shape.__geo_interface__["coordinates"]).replace(
+            ",", " "
+        )
+        geostr = "SRID={};{}{}".format(settings.SRID, shape_type, coordinates)
         return GEOSGeometry(geostr, srid=settings.SRID)

@@ -8,12 +8,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('imports', '0001_initial'),
+        ("imports", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='shapefileimport',
-            options={'verbose_name': 'shapefile import', 'verbose_name_plural': 'shapefile imports'},
+            name="shapefileimport",
+            options={
+                "verbose_name": "shapefile import",
+                "verbose_name_plural": "shapefile imports",
+            },
         ),
     ]

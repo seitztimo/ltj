@@ -7,7 +7,6 @@ from .factories import ShapefileImportFactory
 
 
 class TestShapefileImport(TestCase):
-
     def setUp(self):
         self.shp_import = ShapefileImportFactory(created_by=make_user())
 
@@ -15,4 +14,4 @@ class TestShapefileImport(TestCase):
         os.remove(self.shp_import.shapefiles.path)
 
     def test__str__(self):
-        self.assertEqual(self.shp_import.__str__(), 'shapefiles/testshapefiles.zip')
+        self.assertEqual(self.shp_import.__str__(), "shapefiles/testshapefiles.zip")

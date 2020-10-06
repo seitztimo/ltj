@@ -11,18 +11,17 @@ from ..models import ShapefileImport
 
 
 class TestShapefileImportAdmin(TestCase):
-
     def setUp(self):
         self.user = make_user()
         self.site = AdminSite()
         self.factory = RequestFactory()
         self.shp_import = ShapefileImportFactory.build()
 
-    @patch('imports.admin.messages.add_message')
-    @patch('imports.importers.ShapefileImporter.import_features')
+    @patch("imports.admin.messages.add_message")
+    @patch("imports.importers.ShapefileImporter.import_features")
     def test_save_model(self, mock_import, mock_add_message):
         shp_import_admin = ShapefileImportAdmin(ShapefileImport, self.site)
-        request = self.factory.get('/fake-url/')
+        request = self.factory.get("/fake-url/")
         request.user = self.user
 
         shp_import_admin.save_model(request, self.shp_import, None, None)

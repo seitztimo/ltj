@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0010_remove_office_hki_protection_level'),
+        ("nature", "0010_remove_office_hki_protection_level"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='observation',
-            old_name='number',
-            new_name='quantity',
+            model_name="observation",
+            old_name="number",
+            new_name="quantity",
         ),
     ]

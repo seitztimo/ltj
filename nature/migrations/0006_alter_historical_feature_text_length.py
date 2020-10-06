@@ -8,18 +8,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0005_link_text_length_100'),
+        ("nature", "0005_link_text_length_100"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalfeature',
-            name='text',
-            field=models.CharField(blank=True, db_column='teksti', max_length=40000, null=True),
+            model_name="historicalfeature",
+            name="text",
+            field=models.CharField(
+                blank=True, db_column="teksti", max_length=40000, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalfeature',
-            name='text_www',
-            field=models.CharField(blank=True, db_column='teksti_www', max_length=40000, null=True),
+            model_name="historicalfeature",
+            name="text_www",
+            field=models.CharField(
+                blank=True, db_column="teksti_www", max_length=40000, null=True
+            ),
         ),
     ]

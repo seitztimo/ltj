@@ -9,7 +9,7 @@ from .importers import ShapefileImporter
 
 @admin.register(ShapefileImport)
 class ShapefileImportAdmin(admin.ModelAdmin):
-    readonly_fields = ('created_by', 'created_time')
+    readonly_fields = ("created_by", "created_time")
     actions = None
 
     @transaction.atomic
@@ -17,6 +17,10 @@ class ShapefileImportAdmin(admin.ModelAdmin):
         if not obj.pk:
             # only do imports when creating new instances
             num_features = ShapefileImporter.import_features(obj.shapefiles)
-            messages.add_message(request, messages.INFO, _('{0} features are imported').format(num_features))
+            messages.add_message(
+                request,
+                messages.INFO,
+                _("{0} features are imported").format(num_features),
+            )
             obj.created_by = request.user
         super().save_model(request, obj, form, change)

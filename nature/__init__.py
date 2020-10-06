@@ -1,1 +1,1 @@
-default_app_config = 'nature.apps.NatureConfig'
+default_app_config = "nature.apps.NatureConfig"

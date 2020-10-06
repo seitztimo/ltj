@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0002_observation_uri'),
+        ("nature", "0002_observation_uri"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='featureclass',
-            name='open_data',
-            field=models.BooleanField(db_column='avoin_data', default=False),
+            model_name="featureclass",
+            name="open_data",
+            field=models.BooleanField(db_column="avoin_data", default=False),
         ),
     ]

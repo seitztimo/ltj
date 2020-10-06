@@ -11,756 +11,2042 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Abundance',
+            name="Abundance",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
-                ('source', models.CharField(blank=True, db_column='lahde', max_length=50, null=True)),
-                ('value', models.CharField(blank=True, db_column='arvo', max_length=5, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "source",
+                    models.CharField(
+                        blank=True, db_column="lahde", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        blank=True, db_column="arvo", max_length=5, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'runsaus',
-                'ordering': ['id'],
+                "db_table": "runsaus",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='BreedingDegree',
+            name="BreedingDegree",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
-                ('source', models.CharField(blank=True, db_column='lahde', max_length=50, null=True)),
-                ('value', models.CharField(blank=True, db_column='arvo', max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "source",
+                    models.CharField(
+                        blank=True, db_column="lahde", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        blank=True, db_column="arvo", max_length=50, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'pesimisvarmuus',
-                'ordering': ['id'],
+                "db_table": "pesimisvarmuus",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='ConservationProgramme',
+            name="ConservationProgramme",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=20, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=20, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'sohjelma',
-                'ordering': ['id'],
+                "db_table": "sohjelma",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Criterion',
+            name="Criterion",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('criterion', models.CharField(blank=True, db_column='peruste', max_length=50, null=True)),
-                ('specific_criterion', models.CharField(blank=True, db_column='tarkperuste', max_length=50, null=True)),
-                ('subcriterion', models.CharField(blank=True, db_column='alaperuste', max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "criterion",
+                    models.CharField(
+                        blank=True, db_column="peruste", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "specific_criterion",
+                    models.CharField(
+                        blank=True, db_column="tarkperuste", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "subcriterion",
+                    models.CharField(
+                        blank=True, db_column="alaperuste", max_length=50, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'suoperuste',
-                'ordering': ['id'],
+                "db_table": "suoperuste",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Transaction',
+            name="Transaction",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
-                ('register_id', models.CharField(blank=True, db_column='diaarinro', max_length=20, null=True)),
-                ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
-                ('last_modified_by', models.CharField(blank=True, db_column='paivittaja', max_length=20, null=True)),
-                ('date', models.DateField(blank=True, db_column='pvm', null=True)),
-                ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protection_level",
+                    models.IntegerField(
+                        choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                        db_column="suojaustasoid",
+                        default=3,
+                    ),
+                ),
+                (
+                    "register_id",
+                    models.CharField(
+                        blank=True, db_column="diaarinro", max_length=20, null=True
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, db_column="kuvaus", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "last_modified_by",
+                    models.CharField(
+                        blank=True, db_column="paivittaja", max_length=20, null=True
+                    ),
+                ),
+                ("date", models.DateField(blank=True, db_column="pvm", null=True)),
+                (
+                    "link",
+                    models.CharField(
+                        blank=True, db_column="linkki", max_length=4000, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'tapahtuma',
-                'ordering': ['id'],
+                "db_table": "tapahtuma",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='TransactionFeature',
+            name="TransactionFeature",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('transaction', models.ForeignKey(db_column='tapid', on_delete=django.db.models.deletion.CASCADE, to='nature.Transaction')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "transaction",
+                    models.ForeignKey(
+                        db_column="tapid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.Transaction",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'tapahtuma_kohde',
+                "db_table": "tapahtuma_kohde",
             },
         ),
         migrations.CreateModel(
-            name='TransactionRegulation',
+            name="TransactionRegulation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('transaction', models.ForeignKey(db_column='tapid', on_delete=django.db.models.deletion.CASCADE, to='nature.Transaction')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "transaction",
+                    models.ForeignKey(
+                        db_column="tapid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.Transaction",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'tap_saados',
+                "db_table": "tap_saados",
             },
         ),
         migrations.CreateModel(
-            name='TransactionType',
+            name="TransactionType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=20, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=20, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'tapahtumatyyppi',
-                'ordering': ['id'],
+                "db_table": "tapahtumatyyppi",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Feature',
+            name="Feature",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
-                ('fid', models.CharField(blank=True, db_column='tunnus', max_length=10, null=True)),
-                ('geometry', nature.models.PermissiveGeometryField(db_column='geometry1', srid=3879)),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=80, null=True)),
-                ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
-                ('notes', models.CharField(blank=True, db_column='huom', max_length=255, null=True)),
-                ('active', models.BooleanField(db_column='voimassa', default=True)),
-                ('created_time', models.DateField(auto_now_add=True, db_column='digipvm', null=True)),
-                ('number', models.IntegerField(blank=True, db_column='numero', null=True)),
-                ('created_by', models.CharField(blank=True, db_column='digitoija', max_length=50, null=True)),
-                ('last_modified_time', models.DateTimeField(auto_now=True, db_column='pvm_editoitu', null=True)),
-                ('last_modified_by', models.CharField(blank=True, db_column='muokkaaja', max_length=10, null=True)),
-                ('area', models.FloatField(verbose_name='Area (ha)', editable=False, blank=True, db_column='pinta_ala', null=True)),
-                ('text', models.CharField(blank=True, db_column='teksti', max_length=40000, null=True)),
-                ('text_www', models.CharField(blank=True, db_column='teksti_www', max_length=40000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protection_level",
+                    models.IntegerField(
+                        choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                        db_column="suojaustasoid",
+                        default=3,
+                    ),
+                ),
+                (
+                    "fid",
+                    models.CharField(
+                        blank=True, db_column="tunnus", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "geometry",
+                    nature.models.PermissiveGeometryField(
+                        db_column="geometry1", srid=3879
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=80, null=True
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, db_column="kuvaus", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "notes",
+                    models.CharField(
+                        blank=True, db_column="huom", max_length=255, null=True
+                    ),
+                ),
+                ("active", models.BooleanField(db_column="voimassa", default=True)),
+                (
+                    "created_time",
+                    models.DateField(auto_now_add=True, db_column="digipvm", null=True),
+                ),
+                (
+                    "number",
+                    models.IntegerField(blank=True, db_column="numero", null=True),
+                ),
+                (
+                    "created_by",
+                    models.CharField(
+                        blank=True, db_column="digitoija", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "last_modified_time",
+                    models.DateTimeField(
+                        auto_now=True, db_column="pvm_editoitu", null=True
+                    ),
+                ),
+                (
+                    "last_modified_by",
+                    models.CharField(
+                        blank=True, db_column="muokkaaja", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "area",
+                    models.FloatField(
+                        verbose_name="Area (ha)",
+                        editable=False,
+                        blank=True,
+                        db_column="pinta_ala",
+                        null=True,
+                    ),
+                ),
+                (
+                    "text",
+                    models.CharField(
+                        blank=True, db_column="teksti", max_length=40000, null=True
+                    ),
+                ),
+                (
+                    "text_www",
+                    models.CharField(
+                        blank=True, db_column="teksti_www", max_length=40000, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'kohde',
-                'ordering': ['id'],
-                'verbose_name': 'feature',
-                'verbose_name_plural': 'features',
+                "db_table": "kohde",
+                "ordering": ["id"],
+                "verbose_name": "feature",
+                "verbose_name_plural": "features",
             },
         ),
         migrations.CreateModel(
-            name='FeatureClass',
+            name="FeatureClass",
             fields=[
-                ('id', models.CharField(db_column='tunnus', max_length=10, primary_key=True, serialize=False)),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=50, null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('reporting', models.BooleanField(db_column='raportointi', default=True)),
-                ('www', models.BooleanField(default=True)),
-                ('metadata', models.CharField(blank=True, max_length=4000, null=True)),
-                ('super_class', models.ForeignKey(blank=True, db_column='paatunnus', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='subclasses', to='nature.FeatureClass')),
+                (
+                    "id",
+                    models.CharField(
+                        db_column="tunnus",
+                        max_length=10,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "reporting",
+                    models.BooleanField(db_column="raportointi", default=True),
+                ),
+                ("www", models.BooleanField(default=True)),
+                ("metadata", models.CharField(blank=True, max_length=4000, null=True)),
+                (
+                    "super_class",
+                    models.ForeignKey(
+                        blank=True,
+                        db_column="paatunnus",
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="subclasses",
+                        to="nature.FeatureClass",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'luokka',
-                'ordering': ['id'],
-                'verbose_name': 'feature class',
-                'verbose_name_plural': 'feature classes',
+                "db_table": "luokka",
+                "ordering": ["id"],
+                "verbose_name": "feature class",
+                "verbose_name_plural": "feature classes",
             },
         ),
         migrations.CreateModel(
-            name='FeatureLink',
+            name="FeatureLink",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
-                ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
-                ('text', models.CharField(blank=True, db_column='linkkiteksti', max_length=4000, null=True)),
-                ('ordering', models.IntegerField(blank=True, db_column='jarjestys', null=True)),
-                ('link_text', models.CharField(blank=True, db_column='linkin_teksti', max_length=1000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protection_level",
+                    models.IntegerField(
+                        choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                        db_column="suojaustasoid",
+                        default=3,
+                    ),
+                ),
+                (
+                    "link",
+                    models.CharField(
+                        blank=True, db_column="linkki", max_length=4000, null=True
+                    ),
+                ),
+                (
+                    "text",
+                    models.CharField(
+                        blank=True, db_column="linkkiteksti", max_length=4000, null=True
+                    ),
+                ),
+                (
+                    "ordering",
+                    models.IntegerField(blank=True, db_column="jarjestys", null=True),
+                ),
+                (
+                    "link_text",
+                    models.CharField(
+                        blank=True,
+                        db_column="linkin_teksti",
+                        max_length=1000,
+                        null=True,
+                    ),
+                ),
             ],
             options={
-                'db_table': 'kohdelinkki',
-                'ordering': ['id'],
+                "db_table": "kohdelinkki",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='FeaturePublication',
+            name="FeaturePublication",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'kohde_julk',
+                "db_table": "kohde_julk",
             },
         ),
         migrations.CreateModel(
-            name='Frequency',
+            name="Frequency",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
-                ('source', models.CharField(blank=True, db_column='lahde', max_length=50, null=True)),
-                ('value', models.CharField(blank=True, db_column='arvo', max_length=5, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "source",
+                    models.CharField(
+                        blank=True, db_column="lahde", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        blank=True, db_column="arvo", max_length=5, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'yleisyys',
-                'ordering': ['id'],
+                "db_table": "yleisyys",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='HabitatType',
+            name="HabitatType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=50, null=True)),
-                ('code', models.CharField(blank=True, db_column='koodi', max_length=10, null=True)),
-                ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('group', models.CharField(blank=True, db_column='ltyyppiryhma', max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "code",
+                    models.CharField(
+                        blank=True, db_column="koodi", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, db_column="kuvaus", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "group",
+                    models.CharField(
+                        blank=True, db_column="ltyyppiryhma", max_length=50, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'ltyyppirekisteri',
-                'ordering': ['id'],
+                "db_table": "ltyyppirekisteri",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='HabitatTypeObservation',
+            name="HabitatTypeObservation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('group_fraction', models.IntegerField(blank=True, db_column='osuus_kuviosta', null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('created_time', models.DateTimeField(auto_now_add=True, db_column='pvm_luotu')),
-                ('last_modified_time', models.DateTimeField(auto_now=True, db_column='pvm_editoitu', null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "group_fraction",
+                    models.IntegerField(
+                        blank=True, db_column="osuus_kuviosta", null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "created_time",
+                    models.DateTimeField(auto_now_add=True, db_column="pvm_luotu"),
+                ),
+                (
+                    "last_modified_time",
+                    models.DateTimeField(
+                        auto_now=True, db_column="pvm_editoitu", null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'ltyyppihavainto',
-                'ordering': ['id'],
+                "db_table": "ltyyppihavainto",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='HabitatTypeRegulation',
+            name="HabitatTypeRegulation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('habitat_type', models.ForeignKey(db_column='ltyyppiid', on_delete=django.db.models.deletion.CASCADE, to='nature.HabitatType')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "habitat_type",
+                    models.ForeignKey(
+                        db_column="ltyyppiid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.HabitatType",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'ltyyppi_saados',
+                "db_table": "ltyyppi_saados",
             },
         ),
         migrations.CreateModel(
-            name='HistoricalFeature',
+            name="HistoricalFeature",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
-                ('fid', models.CharField(blank=True, db_column='tunnus', max_length=10, null=True)),
-                ('geometry', nature.models.PermissiveGeometryField(db_column='geometry1', srid=3879)),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=80, null=True)),
-                ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
-                ('notes', models.CharField(blank=True, db_column='huom', max_length=255, null=True)),
-                ('active', models.BooleanField(db_column='voimassa', default=True)),
-                ('created_time', models.DateField(auto_now_add=True, db_column='digipvm', null=True)),
-                ('number', models.IntegerField(blank=True, db_column='numero', null=True)),
-                ('created_by', models.CharField(blank=True, db_column='digitoija', max_length=50, null=True)),
-                ('last_modified_time', models.DateTimeField(auto_now=True, db_column='pvm_editoitu', null=True)),
-                ('last_modified_by', models.CharField(blank=True, db_column='muokkaaja', max_length=10, null=True)),
-                ('area', models.FloatField(verbose_name='Area (ha)', editable=False, blank=True, db_column='pinta_ala', null=True)),
-                ('text', models.CharField(blank=True, db_column='teksti', max_length=4000, null=True)),
-                ('text_www', models.CharField(blank=True, db_column='teksti_www', max_length=4000, null=True)),
-                ('archived_time', models.DateTimeField(db_column='historia_pvm')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protection_level",
+                    models.IntegerField(
+                        choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                        db_column="suojaustasoid",
+                        default=3,
+                    ),
+                ),
+                (
+                    "fid",
+                    models.CharField(
+                        blank=True, db_column="tunnus", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "geometry",
+                    nature.models.PermissiveGeometryField(
+                        db_column="geometry1", srid=3879
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=80, null=True
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, db_column="kuvaus", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "notes",
+                    models.CharField(
+                        blank=True, db_column="huom", max_length=255, null=True
+                    ),
+                ),
+                ("active", models.BooleanField(db_column="voimassa", default=True)),
+                (
+                    "created_time",
+                    models.DateField(auto_now_add=True, db_column="digipvm", null=True),
+                ),
+                (
+                    "number",
+                    models.IntegerField(blank=True, db_column="numero", null=True),
+                ),
+                (
+                    "created_by",
+                    models.CharField(
+                        blank=True, db_column="digitoija", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "last_modified_time",
+                    models.DateTimeField(
+                        auto_now=True, db_column="pvm_editoitu", null=True
+                    ),
+                ),
+                (
+                    "last_modified_by",
+                    models.CharField(
+                        blank=True, db_column="muokkaaja", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "area",
+                    models.FloatField(
+                        verbose_name="Area (ha)",
+                        editable=False,
+                        blank=True,
+                        db_column="pinta_ala",
+                        null=True,
+                    ),
+                ),
+                (
+                    "text",
+                    models.CharField(
+                        blank=True, db_column="teksti", max_length=4000, null=True
+                    ),
+                ),
+                (
+                    "text_www",
+                    models.CharField(
+                        blank=True, db_column="teksti_www", max_length=4000, null=True
+                    ),
+                ),
+                ("archived_time", models.DateTimeField(db_column="historia_pvm")),
             ],
             options={
-                'db_table': 'kohde_historia',
-                'ordering': ['id'],
+                "db_table": "kohde_historia",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='LinkType',
+            name="LinkType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=20, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=20, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'linkkityyppi',
-                'ordering': ['id'],
-                'verbose_name': 'link type',
-                'verbose_name_plural': 'link types',
+                "db_table": "linkkityyppi",
+                "ordering": ["id"],
+                "verbose_name": "link type",
+                "verbose_name_plural": "link types",
             },
         ),
         migrations.CreateModel(
-            name='MigrationClass',
+            name="MigrationClass",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
-                ('source', models.CharField(blank=True, db_column='lahde', max_length=50, null=True)),
-                ('value', models.IntegerField(blank=True, db_column='arvo', null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "source",
+                    models.CharField(
+                        blank=True, db_column="lahde", max_length=50, null=True
+                    ),
+                ),
+                ("value", models.IntegerField(blank=True, db_column="arvo", null=True)),
             ],
             options={
-                'db_table': 'liikkumislk',
-                'ordering': ['id'],
+                "db_table": "liikkumislk",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Observation',
+            name="Observation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
-                ('code', models.CharField(blank=True, db_column='hav_koodi', max_length=100, null=True)),
-                ('number', models.CharField(blank=True, db_column='lkm', max_length=30, null=True)),
-                ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
-                ('notes', models.CharField(blank=True, db_column='huom', max_length=100, null=True)),
-                ('date', models.DateField(blank=True, db_column='pvm', null=True)),
-                ('created_time', models.DateTimeField(auto_now_add=True, db_column='pvm_luotu')),
-                ('last_modified_time', models.DateTimeField(auto_now=True, db_column='pvm_editoitu', null=True)),
-                ('abundance', models.ForeignKey(blank=True, db_column='runsausid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.Abundance')),
-                ('breeding_degree', models.ForeignKey(blank=True, db_column='pesimisvarmuusid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.BreedingDegree')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protection_level",
+                    models.IntegerField(
+                        choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                        db_column="suojaustasoid",
+                        default=3,
+                    ),
+                ),
+                (
+                    "code",
+                    models.CharField(
+                        blank=True, db_column="hav_koodi", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "number",
+                    models.CharField(
+                        blank=True, db_column="lkm", max_length=30, null=True
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, db_column="kuvaus", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "notes",
+                    models.CharField(
+                        blank=True, db_column="huom", max_length=100, null=True
+                    ),
+                ),
+                ("date", models.DateField(blank=True, db_column="pvm", null=True)),
+                (
+                    "created_time",
+                    models.DateTimeField(auto_now_add=True, db_column="pvm_luotu"),
+                ),
+                (
+                    "last_modified_time",
+                    models.DateTimeField(
+                        auto_now=True, db_column="pvm_editoitu", null=True
+                    ),
+                ),
+                (
+                    "abundance",
+                    models.ForeignKey(
+                        blank=True,
+                        db_column="runsausid",
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="observations",
+                        to="nature.Abundance",
+                    ),
+                ),
+                (
+                    "breeding_degree",
+                    models.ForeignKey(
+                        blank=True,
+                        db_column="pesimisvarmuusid",
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="observations",
+                        to="nature.BreedingDegree",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'lajihavainto',
-                'ordering': ['id'],
+                "db_table": "lajihavainto",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='ObservationSeries',
+            name="ObservationSeries",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=50, null=True)),
-                ('description', models.CharField(blank=True, db_column='kuvaus', max_length=255, null=True)),
-                ('start_date', models.DateField(blank=True, db_column='alkupvm', null=True)),
-                ('end_date', models.DateField(blank=True, db_column='loppupvm', null=True)),
-                ('method', models.CharField(blank=True, db_column='menetelma', max_length=255, null=True)),
-                ('notes', models.CharField(blank=True, db_column='huomioitavaa', max_length=255, null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('valid', models.BooleanField(db_column='voimassa')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, db_column="kuvaus", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "start_date",
+                    models.DateField(blank=True, db_column="alkupvm", null=True),
+                ),
+                (
+                    "end_date",
+                    models.DateField(blank=True, db_column="loppupvm", null=True),
+                ),
+                (
+                    "method",
+                    models.CharField(
+                        blank=True, db_column="menetelma", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "notes",
+                    models.CharField(
+                        blank=True, db_column="huomioitavaa", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                ("valid", models.BooleanField(db_column="voimassa")),
             ],
             options={
-                'db_table': 'havaintosarja',
-                'ordering': ['id'],
-                'verbose_name': 'observation series',
-                'verbose_name_plural': 'observation series',
+                "db_table": "havaintosarja",
+                "ordering": ["id"],
+                "verbose_name": "observation series",
+                "verbose_name_plural": "observation series",
             },
         ),
         migrations.CreateModel(
-            name='Occurrence',
+            name="Occurrence",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'esiintyma',
-                'ordering': ['id'],
+                "db_table": "esiintyma",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Origin',
+            name="Origin",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
-                ('source', models.CharField(blank=True, db_column='lahde', max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "source",
+                    models.CharField(
+                        blank=True, db_column="lahde", max_length=50, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'alkupera',
-                'ordering': ['id'],
+                "db_table": "alkupera",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Person',
+            name="Person",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('surname', models.CharField(blank=True, db_column='sukunimi', max_length=25, null=True)),
-                ('first_name', models.CharField(blank=True, db_column='etunimi', max_length=25, null=True)),
-                ('expertise', models.CharField(blank=True, db_column='asiantuntemus', max_length=150, null=True)),
-                ('notes', models.CharField(blank=True, db_column='huomioitavaa', max_length=255, null=True)),
-                ('company', models.CharField(blank=True, db_column='yritys', max_length=100, null=True)),
-                ('public_servant', models.BooleanField(db_column='viranomainen')),
-                ('telephone', models.CharField(blank=True, db_column='puhnro', max_length=50, null=True)),
-                ('email', models.CharField(blank=True, db_column='email', max_length=100, null=True)),
-                ('created_time', models.DateTimeField(auto_now_add=True, db_column='lisaysaika', null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "surname",
+                    models.CharField(
+                        blank=True, db_column="sukunimi", max_length=25, null=True
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, db_column="etunimi", max_length=25, null=True
+                    ),
+                ),
+                (
+                    "expertise",
+                    models.CharField(
+                        blank=True, db_column="asiantuntemus", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "notes",
+                    models.CharField(
+                        blank=True, db_column="huomioitavaa", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "company",
+                    models.CharField(
+                        blank=True, db_column="yritys", max_length=100, null=True
+                    ),
+                ),
+                ("public_servant", models.BooleanField(db_column="viranomainen")),
+                (
+                    "telephone",
+                    models.CharField(
+                        blank=True, db_column="puhnro", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "email",
+                    models.CharField(
+                        blank=True, db_column="email", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "created_time",
+                    models.DateTimeField(
+                        auto_now_add=True, db_column="lisaysaika", null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'henkilo',
-                'ordering': ['id'],
+                "db_table": "henkilo",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='ProtectionConservationProgramme',
+            name="ProtectionConservationProgramme",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('conservation_programme', models.ForeignKey(db_column='sohjelmaid', on_delete=django.db.models.deletion.CASCADE, to='nature.ConservationProgramme')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "conservation_programme",
+                    models.ForeignKey(
+                        db_column="sohjelmaid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.ConservationProgramme",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'suojelu_sohjelma',
+                "db_table": "suojelu_sohjelma",
             },
         ),
         migrations.CreateModel(
-            name='ProtectionCriterion',
+            name="ProtectionCriterion",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('criterion', models.ForeignKey(db_column='perusteid', on_delete=django.db.models.deletion.CASCADE, to='nature.Criterion')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "criterion",
+                    models.ForeignKey(
+                        db_column="perusteid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.Criterion",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'suo_peruste',
+                "db_table": "suo_peruste",
             },
         ),
         migrations.CreateModel(
-            name='ProtectionLevel',
+            name="ProtectionLevel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selitys', max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selitys", max_length=50, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'suojaustaso',
-                'ordering': ['id'],
+                "db_table": "suojaustaso",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Publication',
+            name="Publication",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=150, null=True)),
-                ('author', models.CharField(blank=True, db_column='tekija', max_length=100, null=True)),
-                ('series', models.CharField(blank=True, db_column='sarja', max_length=100, null=True)),
-                ('place_of_printing', models.CharField(blank=True, db_column='painopaikka', max_length=50, null=True)),
-                ('year', models.CharField(blank=True, db_column='vuosi', max_length=50, null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "author",
+                    models.CharField(
+                        blank=True, db_column="tekija", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "series",
+                    models.CharField(
+                        blank=True, db_column="sarja", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "place_of_printing",
+                    models.CharField(
+                        blank=True, db_column="painopaikka", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "year",
+                    models.CharField(
+                        blank=True, db_column="vuosi", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "link",
+                    models.CharField(
+                        blank=True, db_column="linkki", max_length=4000, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'julkaisu',
-                'ordering': ['id'],
-                'verbose_name': 'publication',
-                'verbose_name_plural': 'publications',
+                "db_table": "julkaisu",
+                "ordering": ["id"],
+                "verbose_name": "publication",
+                "verbose_name_plural": "publications",
             },
         ),
         migrations.CreateModel(
-            name='PublicationType',
+            name="PublicationType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=20, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=20, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'julktyyppi',
-                'ordering': ['id'],
+                "db_table": "julktyyppi",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Regulation',
+            name="Regulation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, db_column='nimi', max_length=255, null=True)),
-                ('paragraph', models.CharField(blank=True, db_column='pykala', max_length=100, null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('value', models.CharField(blank=True, db_column='arvo', max_length=10, null=True)),
-                ('value_explanation', models.CharField(blank=True, db_column='arvon_selitys', max_length=255, null=True)),
-                ('valid', models.BooleanField(db_column='voimassa')),
-                ('date_of_entry', models.DateTimeField(blank=True, db_column='voimaantulo', null=True)),
-                ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True, db_column="nimi", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "paragraph",
+                    models.CharField(
+                        blank=True, db_column="pykala", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        blank=True, db_column="arvo", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "value_explanation",
+                    models.CharField(
+                        blank=True, db_column="arvon_selitys", max_length=255, null=True
+                    ),
+                ),
+                ("valid", models.BooleanField(db_column="voimassa")),
+                (
+                    "date_of_entry",
+                    models.DateTimeField(
+                        blank=True, db_column="voimaantulo", null=True
+                    ),
+                ),
+                (
+                    "link",
+                    models.CharField(
+                        blank=True, db_column="linkki", max_length=4000, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'saados',
-                'ordering': ['id'],
+                "db_table": "saados",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Species',
+            name="Species",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protection_level', models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3)),
-                ('taxon', models.CharField(blank=True, db_column='ryhma', max_length=5, null=True)),
-                ('taxon_1', models.CharField(blank=True, db_column='elioryhma1', max_length=50, null=True)),
-                ('taxon_2', models.CharField(blank=True, db_column='elioryhma2', max_length=50, null=True)),
-                ('order_fi', models.CharField(blank=True, db_column='lahko_suomi', max_length=150, null=True)),
-                ('order_la', models.CharField(blank=True, db_column='lahko_tiet', max_length=150, null=True)),
-                ('family_fi', models.CharField(blank=True, db_column='heimo_suomi', max_length=150, null=True)),
-                ('family_la', models.CharField(blank=True, db_column='heimo_tiet', max_length=150, null=True)),
-                ('name_fi', models.CharField(blank=True, db_column='nimi_suomi1', max_length=150, null=True)),
-                ('name_fi_2', models.CharField(blank=True, db_column='nimi_suomi2', max_length=150, null=True)),
-                ('name_sci_1', models.CharField(blank=True, db_column='nimi_tiet1', max_length=150, null=True)),
-                ('name_sci_2', models.CharField(blank=True, db_column='nimi_tiet2', max_length=150, null=True)),
-                ('name_subspecies_1', models.CharField(blank=True, db_column='alalaji1', max_length=150, null=True)),
-                ('name_subspecies_2', models.CharField(blank=True, db_column='alalaji2', max_length=150, null=True)),
-                ('author_1', models.CharField(blank=True, db_column='auktori1', max_length=150, null=True)),
-                ('author_2', models.CharField(blank=True, db_column='auktori2', max_length=150, null=True)),
-                ('name_abbreviated_1', models.CharField(blank=True, db_column='nimilyhenne1', max_length=10, null=True)),
-                ('name_abbreviated_2', models.CharField(blank=True, db_column='nimilyhenne2', max_length=10, null=True)),
-                ('name_sv', models.CharField(blank=True, db_column='nimi_ruotsi', max_length=150, null=True)),
-                ('name_en', models.CharField(blank=True, db_column='nimi_englanti', max_length=150, null=True)),
-                ('registry_date', models.DateTimeField(blank=True, db_column='rekisteripvm', null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
-                ('code', models.CharField(blank=True, db_column='koodi', max_length=100, null=True)),
-                ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protection_level",
+                    models.IntegerField(
+                        choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                        db_column="suojaustasoid",
+                        default=3,
+                    ),
+                ),
+                (
+                    "taxon",
+                    models.CharField(
+                        blank=True, db_column="ryhma", max_length=5, null=True
+                    ),
+                ),
+                (
+                    "taxon_1",
+                    models.CharField(
+                        blank=True, db_column="elioryhma1", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "taxon_2",
+                    models.CharField(
+                        blank=True, db_column="elioryhma2", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "order_fi",
+                    models.CharField(
+                        blank=True, db_column="lahko_suomi", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "order_la",
+                    models.CharField(
+                        blank=True, db_column="lahko_tiet", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "family_fi",
+                    models.CharField(
+                        blank=True, db_column="heimo_suomi", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "family_la",
+                    models.CharField(
+                        blank=True, db_column="heimo_tiet", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_fi",
+                    models.CharField(
+                        blank=True, db_column="nimi_suomi1", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_fi_2",
+                    models.CharField(
+                        blank=True, db_column="nimi_suomi2", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_sci_1",
+                    models.CharField(
+                        blank=True, db_column="nimi_tiet1", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_sci_2",
+                    models.CharField(
+                        blank=True, db_column="nimi_tiet2", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_subspecies_1",
+                    models.CharField(
+                        blank=True, db_column="alalaji1", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_subspecies_2",
+                    models.CharField(
+                        blank=True, db_column="alalaji2", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "author_1",
+                    models.CharField(
+                        blank=True, db_column="auktori1", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "author_2",
+                    models.CharField(
+                        blank=True, db_column="auktori2", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_abbreviated_1",
+                    models.CharField(
+                        blank=True, db_column="nimilyhenne1", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "name_abbreviated_2",
+                    models.CharField(
+                        blank=True, db_column="nimilyhenne2", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "name_sv",
+                    models.CharField(
+                        blank=True, db_column="nimi_ruotsi", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "name_en",
+                    models.CharField(
+                        blank=True, db_column="nimi_englanti", max_length=150, null=True
+                    ),
+                ),
+                (
+                    "registry_date",
+                    models.DateTimeField(
+                        blank=True, db_column="rekisteripvm", null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "code",
+                    models.CharField(
+                        blank=True, db_column="koodi", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "link",
+                    models.CharField(
+                        blank=True, db_column="linkki", max_length=4000, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'lajirekisteri',
-                'ordering': ['id'],
-                'verbose_name': 'species',
-                'verbose_name_plural': 'species',
+                "db_table": "lajirekisteri",
+                "ordering": ["id"],
+                "verbose_name": "species",
+                "verbose_name_plural": "species",
             },
         ),
         migrations.CreateModel(
-            name='SpeciesRegulation',
+            name="SpeciesRegulation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('regulation', models.ForeignKey(db_column='saaid', on_delete=django.db.models.deletion.CASCADE, to='nature.Regulation')),
-                ('species', models.ForeignKey(db_column='lajid', on_delete=django.db.models.deletion.CASCADE, to='nature.Species')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "regulation",
+                    models.ForeignKey(
+                        db_column="saaid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.Regulation",
+                    ),
+                ),
+                (
+                    "species",
+                    models.ForeignKey(
+                        db_column="lajid",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="nature.Species",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'laj_saa',
+                "db_table": "laj_saa",
             },
         ),
         migrations.CreateModel(
-            name='Value',
+            name="Value",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('explanation', models.CharField(blank=True, db_column='selite', max_length=50, null=True)),
-                ('value', models.CharField(blank=True, db_column='luokka', max_length=10, null=True)),
-                ('valuator', models.CharField(blank=True, db_column='arvottaja', max_length=50, null=True)),
-                ('date', models.DateField(blank=True, db_column='pvm', null=True)),
-                ('link', models.CharField(blank=True, db_column='linkki', max_length=4000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "explanation",
+                    models.CharField(
+                        blank=True, db_column="selite", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "value",
+                    models.CharField(
+                        blank=True, db_column="luokka", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "valuator",
+                    models.CharField(
+                        blank=True, db_column="arvottaja", max_length=50, null=True
+                    ),
+                ),
+                ("date", models.DateField(blank=True, db_column="pvm", null=True)),
+                (
+                    "link",
+                    models.CharField(
+                        blank=True, db_column="linkki", max_length=4000, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'arvo',
-                'ordering': ['id'],
+                "db_table": "arvo",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='FeatureValue',
+            name="FeatureValue",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'arvo_kohde',
+                "db_table": "arvo_kohde",
             },
         ),
         migrations.CreateModel(
-            name='Protection',
+            name="Protection",
             fields=[
-                ('id', models.OneToOneField(db_column='id', on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='protection', serialize=False, to='nature.Feature')),
-                ('reported_area', models.CharField(blank=True, db_column='ilmoitettu_pinta_ala', max_length=50, null=True)),
-                ('land_area', models.CharField(blank=True, db_column='maapinta_ala', max_length=50, null=True)),
-                ('water_area', models.CharField(blank=True, db_column='vesipinta_ala', max_length=50, null=True)),
-                ('hiking', models.CharField(blank=True, db_column='liikkuminen', max_length=255, null=True)),
-                ('regulations', models.CharField(blank=True, db_column='maaraykset', max_length=255, null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
+                (
+                    "id",
+                    models.OneToOneField(
+                        db_column="id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        related_name="protection",
+                        serialize=False,
+                        to="nature.Feature",
+                    ),
+                ),
+                (
+                    "reported_area",
+                    models.CharField(
+                        blank=True,
+                        db_column="ilmoitettu_pinta_ala",
+                        max_length=50,
+                        null=True,
+                    ),
+                ),
+                (
+                    "land_area",
+                    models.CharField(
+                        blank=True, db_column="maapinta_ala", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "water_area",
+                    models.CharField(
+                        blank=True, db_column="vesipinta_ala", max_length=50, null=True
+                    ),
+                ),
+                (
+                    "hiking",
+                    models.CharField(
+                        blank=True, db_column="liikkuminen", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "regulations",
+                    models.CharField(
+                        blank=True, db_column="maaraykset", max_length=255, null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'suojelu',
-                'ordering': ['id'],
+                "db_table": "suojelu",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
-            name='Square',
+            name="Square",
             fields=[
-                ('id', models.OneToOneField(db_column='id', on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='square', serialize=False, to='nature.Feature')),
-                ('number', models.CharField(blank=True, db_column='nro', max_length=10, null=True)),
-                ('degree_of_determination', models.IntegerField(blank=True, db_column='selvitysaste', null=True)),
-                ('additional_info', models.CharField(blank=True, db_column='lisatieto', max_length=255, null=True)),
+                (
+                    "id",
+                    models.OneToOneField(
+                        db_column="id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        related_name="square",
+                        serialize=False,
+                        to="nature.Feature",
+                    ),
+                ),
+                (
+                    "number",
+                    models.CharField(
+                        blank=True, db_column="nro", max_length=10, null=True
+                    ),
+                ),
+                (
+                    "degree_of_determination",
+                    models.IntegerField(
+                        blank=True, db_column="selvitysaste", null=True
+                    ),
+                ),
+                (
+                    "additional_info",
+                    models.CharField(
+                        blank=True, db_column="lisatieto", max_length=255, null=True
+                    ),
+                ),
             ],
             options={
-                'db_table': 'ruutu',
-                'ordering': ['id'],
+                "db_table": "ruutu",
+                "ordering": ["id"],
             },
         ),
         migrations.AddField(
-            model_name='featurevalue',
-            name='feature',
-            field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.CASCADE, to='nature.Feature'),
+            model_name="featurevalue",
+            name="feature",
+            field=models.ForeignKey(
+                db_column="kohdeid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='featurevalue',
-            name='value',
-            field=models.ForeignKey(db_column='arvoid', on_delete=django.db.models.deletion.CASCADE, to='nature.Value'),
+            model_name="featurevalue",
+            name="value",
+            field=models.ForeignKey(
+                db_column="arvoid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Value",
+            ),
         ),
         migrations.AddField(
-            model_name='species',
-            name='regulations',
-            field=models.ManyToManyField(related_name='species', through='nature.SpeciesRegulation', to='nature.Regulation'),
+            model_name="species",
+            name="regulations",
+            field=models.ManyToManyField(
+                related_name="species",
+                through="nature.SpeciesRegulation",
+                to="nature.Regulation",
+            ),
         ),
         migrations.AddField(
-            model_name='publication',
-            name='publication_type',
-            field=models.ForeignKey(db_column='julktyyppiid', on_delete=django.db.models.deletion.PROTECT, related_name='publications', to='nature.PublicationType'),
+            model_name="publication",
+            name="publication_type",
+            field=models.ForeignKey(
+                db_column="julktyyppiid",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="publications",
+                to="nature.PublicationType",
+            ),
         ),
         migrations.AddField(
-            model_name='observationseries',
-            name='person',
-            field=models.ForeignKey(blank=True, db_column='hloid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observation_series', to='nature.Person'),
+            model_name="observationseries",
+            name="person",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="hloid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observation_series",
+                to="nature.Person",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='feature',
-            field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.Feature'),
+            model_name="observation",
+            name="feature",
+            field=models.ForeignKey(
+                db_column="kohdeid",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='frequency',
-            field=models.ForeignKey(blank=True, db_column='yleisyysid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.Frequency'),
+            model_name="observation",
+            name="frequency",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="yleisyysid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.Frequency",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='migration_class',
-            field=models.ForeignKey(blank=True, db_column='liikkumislkid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.MigrationClass'),
+            model_name="observation",
+            name="migration_class",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="liikkumislkid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.MigrationClass",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='observer',
-            field=models.ForeignKey(blank=True, db_column='hloid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.Person'),
+            model_name="observation",
+            name="observer",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="hloid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.Person",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='occurrence',
-            field=models.ForeignKey(blank=True, db_column='esiintymaid', null=True, on_delete=django.db.models.deletion.PROTECT, to='nature.Occurrence'),
+            model_name="observation",
+            name="occurrence",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="esiintymaid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="nature.Occurrence",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='origin',
-            field=models.ForeignKey(blank=True, db_column='alkuperaid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.Origin'),
+            model_name="observation",
+            name="origin",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="alkuperaid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.Origin",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='series',
-            field=models.ForeignKey(blank=True, db_column='hsaid', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.ObservationSeries'),
+            model_name="observation",
+            name="series",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="hsaid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.ObservationSeries",
+            ),
         ),
         migrations.AddField(
-            model_name='observation',
-            name='species',
-            field=models.ForeignKey(db_column='lajid', on_delete=django.db.models.deletion.PROTECT, related_name='observations', to='nature.Species'),
+            model_name="observation",
+            name="species",
+            field=models.ForeignKey(
+                db_column="lajid",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="observations",
+                to="nature.Species",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalfeature',
-            name='feature',
-            field=models.ForeignKey(blank=True, db_column='kohde_id', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='historical_features', to='nature.Feature'),
+            model_name="historicalfeature",
+            name="feature",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="kohde_id",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="historical_features",
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='historicalfeature',
-            name='feature_class',
-            field=models.ForeignKey(db_column='luokkatunnus', on_delete=django.db.models.deletion.PROTECT, related_name='historical_features', to='nature.FeatureClass'),
+            model_name="historicalfeature",
+            name="feature_class",
+            field=models.ForeignKey(
+                db_column="luokkatunnus",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="historical_features",
+                to="nature.FeatureClass",
+            ),
         ),
         migrations.AddField(
-            model_name='habitattyperegulation',
-            name='regulation',
-            field=models.ForeignKey(db_column='saadosid', on_delete=django.db.models.deletion.CASCADE, to='nature.Regulation'),
+            model_name="habitattyperegulation",
+            name="regulation",
+            field=models.ForeignKey(
+                db_column="saadosid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Regulation",
+            ),
         ),
         migrations.AddField(
-            model_name='habitattypeobservation',
-            name='feature',
-            field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.PROTECT, related_name='habitat_type_observations', to='nature.Feature'),
+            model_name="habitattypeobservation",
+            name="feature",
+            field=models.ForeignKey(
+                db_column="kohdeid",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="habitat_type_observations",
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='habitattypeobservation',
-            name='habitat_type',
-            field=models.ForeignKey(db_column='ltyypid', on_delete=django.db.models.deletion.PROTECT, related_name='habitat_type_observations', to='nature.HabitatType'),
+            model_name="habitattypeobservation",
+            name="habitat_type",
+            field=models.ForeignKey(
+                db_column="ltyypid",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="habitat_type_observations",
+                to="nature.HabitatType",
+            ),
         ),
         migrations.AddField(
-            model_name='habitattypeobservation',
-            name='observation_series',
-            field=models.ForeignKey(db_column='hsaid', on_delete=django.db.models.deletion.PROTECT, related_name='habitat_type_observations', to='nature.ObservationSeries'),
+            model_name="habitattypeobservation",
+            name="observation_series",
+            field=models.ForeignKey(
+                db_column="hsaid",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="habitat_type_observations",
+                to="nature.ObservationSeries",
+            ),
         ),
         migrations.AddField(
-            model_name='habitattype',
-            name='regulations',
-            field=models.ManyToManyField(related_name='habitat_types', through='nature.HabitatTypeRegulation', to='nature.Regulation'),
+            model_name="habitattype",
+            name="regulations",
+            field=models.ManyToManyField(
+                related_name="habitat_types",
+                through="nature.HabitatTypeRegulation",
+                to="nature.Regulation",
+            ),
         ),
         migrations.AddField(
-            model_name='featurepublication',
-            name='feature',
-            field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.CASCADE, to='nature.Feature'),
+            model_name="featurepublication",
+            name="feature",
+            field=models.ForeignKey(
+                db_column="kohdeid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='featurepublication',
-            name='publication',
-            field=models.ForeignKey(db_column='julkid', on_delete=django.db.models.deletion.CASCADE, to='nature.Publication'),
+            model_name="featurepublication",
+            name="publication",
+            field=models.ForeignKey(
+                db_column="julkid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Publication",
+            ),
         ),
         migrations.AddField(
-            model_name='featurelink',
-            name='feature',
-            field=models.ForeignKey(db_column='tekstiid', on_delete=django.db.models.deletion.CASCADE, related_name='links', to='nature.Feature'),
+            model_name="featurelink",
+            name="feature",
+            field=models.ForeignKey(
+                db_column="tekstiid",
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="links",
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='featurelink',
-            name='link_type',
-            field=models.ForeignKey(db_column='tyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.LinkType'),
+            model_name="featurelink",
+            name="link_type",
+            field=models.ForeignKey(
+                db_column="tyyppiid",
+                on_delete=django.db.models.deletion.PROTECT,
+                to="nature.LinkType",
+            ),
         ),
         migrations.AddField(
-            model_name='feature',
-            name='feature_class',
-            field=models.ForeignKey(db_column='luokkatunnus', on_delete=django.db.models.deletion.PROTECT, related_name='features', to='nature.FeatureClass'),
+            model_name="feature",
+            name="feature_class",
+            field=models.ForeignKey(
+                db_column="luokkatunnus",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="features",
+                to="nature.FeatureClass",
+            ),
         ),
         migrations.AddField(
-            model_name='feature',
-            name='publications',
-            field=models.ManyToManyField(related_name='features', through='nature.FeaturePublication', to='nature.Publication'),
+            model_name="feature",
+            name="publications",
+            field=models.ManyToManyField(
+                related_name="features",
+                through="nature.FeaturePublication",
+                to="nature.Publication",
+            ),
         ),
         migrations.AddField(
-            model_name='feature',
-            name='values',
-            field=models.ManyToManyField(related_name='features', through='nature.FeatureValue', to='nature.Value'),
+            model_name="feature",
+            name="values",
+            field=models.ManyToManyField(
+                related_name="features",
+                through="nature.FeatureValue",
+                to="nature.Value",
+            ),
         ),
         migrations.AddField(
-            model_name='transactionregulation',
-            name='regulation',
-            field=models.ForeignKey(db_column='saaid', on_delete=django.db.models.deletion.CASCADE, to='nature.Regulation'),
+            model_name="transactionregulation",
+            name="regulation",
+            field=models.ForeignKey(
+                db_column="saaid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Regulation",
+            ),
         ),
         migrations.AddField(
-            model_name='transactionfeature',
-            name='feature',
-            field=models.ForeignKey(db_column='kohdeid', on_delete=django.db.models.deletion.CASCADE, to='nature.Feature'),
+            model_name="transactionfeature",
+            name="feature",
+            field=models.ForeignKey(
+                db_column="kohdeid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='transaction',
-            name='transaction_type',
-            field=models.ForeignKey(related_name='transactions', db_column='tapahtumatyyppiid', on_delete=django.db.models.deletion.PROTECT, to='nature.TransactionType'),
+            model_name="transaction",
+            name="transaction_type",
+            field=models.ForeignKey(
+                related_name="transactions",
+                db_column="tapahtumatyyppiid",
+                on_delete=django.db.models.deletion.PROTECT,
+                to="nature.TransactionType",
+            ),
         ),
         migrations.AddField(
-            model_name='transaction',
-            name='features',
-            field=models.ManyToManyField(related_name='transactions', through='nature.TransactionFeature', to='nature.Feature'),
+            model_name="transaction",
+            name="features",
+            field=models.ManyToManyField(
+                related_name="transactions",
+                through="nature.TransactionFeature",
+                to="nature.Feature",
+            ),
         ),
         migrations.AddField(
-            model_name='transaction',
-            name='person',
-            field=models.ForeignKey(blank=True, db_column='hloid', null=True, on_delete=django.db.models.deletion.PROTECT, to='nature.Person'),
+            model_name="transaction",
+            name="person",
+            field=models.ForeignKey(
+                blank=True,
+                db_column="hloid",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="nature.Person",
+            ),
         ),
         migrations.AddField(
-            model_name='transaction',
-            name='regulations',
-            field=models.ManyToManyField(related_name='transactions', through='nature.TransactionRegulation', to='nature.Regulation'),
+            model_name="transaction",
+            name="regulations",
+            field=models.ManyToManyField(
+                related_name="transactions",
+                through="nature.TransactionRegulation",
+                to="nature.Regulation",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='featurevalue',
-            unique_together=set([('value', 'feature')]),
+            name="featurevalue",
+            unique_together=set([("value", "feature")]),
         ),
         migrations.AlterUniqueTogether(
-            name='speciesregulation',
-            unique_together=set([('species', 'regulation')]),
+            name="speciesregulation",
+            unique_together=set([("species", "regulation")]),
         ),
         migrations.AddField(
-            model_name='protectioncriterion',
-            name='protection',
-            field=models.ForeignKey(db_column='suoid', on_delete=django.db.models.deletion.CASCADE, to='nature.Protection'),
+            model_name="protectioncriterion",
+            name="protection",
+            field=models.ForeignKey(
+                db_column="suoid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Protection",
+            ),
         ),
         migrations.AddField(
-            model_name='protectionconservationprogramme',
-            name='protection',
-            field=models.ForeignKey(db_column='suojeluid', on_delete=django.db.models.deletion.CASCADE, to='nature.Protection'),
+            model_name="protectionconservationprogramme",
+            name="protection",
+            field=models.ForeignKey(
+                db_column="suojeluid",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="nature.Protection",
+            ),
         ),
         migrations.AddField(
-            model_name='protection',
-            name='conservation_programmes',
-            field=models.ManyToManyField(blank=True, related_name='protections', through='nature.ProtectionConservationProgramme', to='nature.ConservationProgramme'),
+            model_name="protection",
+            name="conservation_programmes",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="protections",
+                through="nature.ProtectionConservationProgramme",
+                to="nature.ConservationProgramme",
+            ),
         ),
         migrations.AddField(
-            model_name='protection',
-            name='criteria',
-            field=models.ManyToManyField(blank=True, related_name='protections', through='nature.ProtectionCriterion', to='nature.Criterion'),
+            model_name="protection",
+            name="criteria",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="protections",
+                through="nature.ProtectionCriterion",
+                to="nature.Criterion",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='habitattyperegulation',
-            unique_together=set([('habitat_type', 'regulation')]),
+            name="habitattyperegulation",
+            unique_together=set([("habitat_type", "regulation")]),
         ),
         migrations.AlterUniqueTogether(
-            name='featurepublication',
-            unique_together=set([('feature', 'publication')]),
+            name="featurepublication",
+            unique_together=set([("feature", "publication")]),
         ),
         migrations.AlterUniqueTogether(
-            name='transactionregulation',
-            unique_together=set([('transaction', 'regulation')]),
+            name="transactionregulation",
+            unique_together=set([("transaction", "regulation")]),
         ),
         migrations.AlterUniqueTogether(
-            name='transactionfeature',
-            unique_together=set([('feature', 'transaction')]),
+            name="transactionfeature",
+            unique_together=set([("feature", "transaction")]),
         ),
         migrations.AlterUniqueTogether(
-            name='protectioncriterion',
-            unique_together=set([('criterion', 'protection')]),
+            name="protectioncriterion",
+            unique_together=set([("criterion", "protection")]),
         ),
         migrations.AlterUniqueTogether(
-            name='protectionconservationprogramme',
-            unique_together=set([('protection', 'conservation_programme')]),
+            name="protectionconservationprogramme",
+            unique_together=set([("protection", "conservation_programme")]),
         ),
     ]

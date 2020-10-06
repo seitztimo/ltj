@@ -5,8 +5,14 @@ from .models import File
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    readonly_fields = ('url', 'uploaded_by', 'uploaded_time', 'last_modified_by', 'last_modified_time')
-    list_display = ('__str__', 'url')
+    readonly_fields = (
+        "url",
+        "uploaded_by",
+        "uploaded_time",
+        "last_modified_by",
+        "last_modified_time",
+    )
+    list_display = ("__str__", "url")
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:

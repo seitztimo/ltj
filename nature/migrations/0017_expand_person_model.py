@@ -6,28 +6,47 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0016_transaction_order_by'),
+        ("nature", "0016_transaction_order_by"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='person',
-            name='created_by',
-            field=models.CharField(blank=True, db_column='lisaaja', max_length=150, null=True, verbose_name='created by'),
+            model_name="person",
+            name="created_by",
+            field=models.CharField(
+                blank=True,
+                db_column="lisaaja",
+                max_length=150,
+                null=True,
+                verbose_name="created by",
+            ),
         ),
         migrations.AddField(
-            model_name='person',
-            name='last_modified_by',
-            field=models.CharField(blank=True, db_column='muokkaaja', max_length=150, null=True, verbose_name='last modified by'),
+            model_name="person",
+            name="last_modified_by",
+            field=models.CharField(
+                blank=True,
+                db_column="muokkaaja",
+                max_length=150,
+                null=True,
+                verbose_name="last modified by",
+            ),
         ),
         migrations.AddField(
-            model_name='person',
-            name='last_modified_time',
-            field=models.DateTimeField(auto_now=True, db_column='muokkausaika', null=True, verbose_name='last modified time'),
+            model_name="person",
+            name="last_modified_time",
+            field=models.DateTimeField(
+                auto_now=True,
+                db_column="muokkausaika",
+                null=True,
+                verbose_name="last modified time",
+            ),
         ),
         migrations.AlterField(
-            model_name='person',
-            name='public_servant',
-            field=models.BooleanField(db_column='viranomainen', default=False, verbose_name='public servant'),
+            model_name="person",
+            name="public_servant",
+            field=models.BooleanField(
+                db_column="viranomainen", default=False, verbose_name="public servant"
+            ),
         ),
     ]

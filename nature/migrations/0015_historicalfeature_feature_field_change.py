@@ -6,14 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0014_feature_link_ordering_default'),
+        ("nature", "0014_feature_link_ordering_default"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalfeature',
-            name='feature',
-            field=models.IntegerField(db_column='kohde_id', default=0, verbose_name='feature'),
+            model_name="historicalfeature",
+            name="feature",
+            field=models.IntegerField(
+                db_column="kohde_id", default=0, verbose_name="feature"
+            ),
             preserve_default=False,
         ),
     ]

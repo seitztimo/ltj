@@ -8,23 +8,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0007_add_verbose_name'),
+        ("nature", "0007_add_verbose_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='feature',
-            name='last_modified_by',
-            field=models.CharField(blank=True, db_column='muokkaaja', max_length=150, null=True, verbose_name='last modified by'),
+            model_name="feature",
+            name="last_modified_by",
+            field=models.CharField(
+                blank=True,
+                db_column="muokkaaja",
+                max_length=150,
+                null=True,
+                verbose_name="last modified by",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalfeature',
-            name='last_modified_by',
-            field=models.CharField(blank=True, db_column='muokkaaja', max_length=150, null=True, verbose_name='last modified by'),
+            model_name="historicalfeature",
+            name="last_modified_by",
+            field=models.CharField(
+                blank=True,
+                db_column="muokkaaja",
+                max_length=150,
+                null=True,
+                verbose_name="last modified by",
+            ),
         ),
         migrations.AlterField(
-            model_name='transaction',
-            name='last_modified_by',
-            field=models.CharField(blank=True, db_column='paivittaja', max_length=150, null=True, verbose_name='last modified by'),
+            model_name="transaction",
+            name="last_modified_by",
+            field=models.CharField(
+                blank=True,
+                db_column="paivittaja",
+                max_length=150,
+                null=True,
+                verbose_name="last modified by",
+            ),
         ),
     ]

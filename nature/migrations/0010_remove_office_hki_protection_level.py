@@ -6,38 +6,68 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nature', '0009_add_office_hki_filter'),
+        ("nature", "0009_add_office_hki_filter"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='feature',
-            name='protection_level',
-            field=models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3, verbose_name='protection level'),
+            model_name="feature",
+            name="protection_level",
+            field=models.IntegerField(
+                choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                db_column="suojaustasoid",
+                default=3,
+                verbose_name="protection level",
+            ),
         ),
         migrations.AlterField(
-            model_name='featurelink',
-            name='protection_level',
-            field=models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3, verbose_name='protection level'),
+            model_name="featurelink",
+            name="protection_level",
+            field=models.IntegerField(
+                choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                db_column="suojaustasoid",
+                default=3,
+                verbose_name="protection level",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalfeature',
-            name='protection_level',
-            field=models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3, verbose_name='protection level'),
+            model_name="historicalfeature",
+            name="protection_level",
+            field=models.IntegerField(
+                choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                db_column="suojaustasoid",
+                default=3,
+                verbose_name="protection level",
+            ),
         ),
         migrations.AlterField(
-            model_name='observation',
-            name='protection_level',
-            field=models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3, verbose_name='protection level'),
+            model_name="observation",
+            name="protection_level",
+            field=models.IntegerField(
+                choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                db_column="suojaustasoid",
+                default=3,
+                verbose_name="protection level",
+            ),
         ),
         migrations.AlterField(
-            model_name='species',
-            name='protection_level',
-            field=models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3, verbose_name='protection level'),
+            model_name="species",
+            name="protection_level",
+            field=models.IntegerField(
+                choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                db_column="suojaustasoid",
+                default=3,
+                verbose_name="protection level",
+            ),
         ),
         migrations.AlterField(
-            model_name='transaction',
-            name='protection_level',
-            field=models.IntegerField(choices=[(1, 'Admin'), (2, 'Office'), (3, 'Public')], db_column='suojaustasoid', default=3, verbose_name='protection level'),
+            model_name="transaction",
+            name="protection_level",
+            field=models.IntegerField(
+                choices=[(1, "Admin"), (2, "Office"), (3, "Public")],
+                db_column="suojaustasoid",
+                default=3,
+                verbose_name="protection level",
+            ),
         ),
     ]
