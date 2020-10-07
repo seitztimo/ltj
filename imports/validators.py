@@ -7,8 +7,9 @@ from django.utils.deconstruct import deconstructible
 from django.utils.translation import ugettext_lazy as _
 
 from nature.models import FeatureClass
-from .importers import REQUIRED_SHAPEFILE_EXTENSIONS, SHAPEFILE_FIELD_MAPPING
+from .importers import SHAPEFILE_FIELD_MAPPING
 
+REQUIRED_SHAPEFILE_EXTENSIONS = (".shp", ".shx", ".dbf")
 
 @deconstructible
 class ZippedShapefilesValidator:
