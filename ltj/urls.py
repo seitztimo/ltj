@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from nature.api import router
 
 urlpatterns = [
+    path("pysocial/", include("social_django.urls", namespace="social")),
     path("helauth/", include("helusers.urls")),
     path("admin/", admin.site.urls),
     path("v1/", include(router.urls)),
