@@ -7,3 +7,5 @@ psycopg2
 sentry-sdk
 requests
 pyshp
+django-helusers
+social-auth-app-django
