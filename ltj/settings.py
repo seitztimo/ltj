@@ -46,6 +46,13 @@ env = environ.Env(
     SENTRY_ENVIRONMENT=(str, "unconfigured"),
     WFS_SERVER_URL=(str, "http://localhost/"),
     WFS_NAMESPACE=(str, "ltj-dev"),
+    OIDC_AUDIENCE=(str, ""),
+    OIDC_API_SCOPE_PREFIX=(str, ""),
+    OIDC_REQUIRE_API_SCOPE_FOR_AUTHENTICATION=(bool, False),
+    OIDC_ISSUER=(str, ""),
+    SOCIAL_AUTH_TUNNISTAMO_KEY=(str, ""),
+    SOCIAL_AUTH_TUNNISTAMO_SECRET=(str, ""),
+    SOCIAL_AUTH_TUNNISTAMO_OIDC_ENDPOINT=(str, ""),
 )
 
 # .env file, should load only in development environment
@@ -96,19 +103,22 @@ LOGGING = {
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "helusers.apps.HelusersConfig",
+    "helusers.apps.HelusersAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.gis",
+    "social_django",
     "ckeditor",
     "rest_framework",
     "rest_framework_gis",
     "nature",
     "imports",
     "files",
+    "users",
 ]
 
 # Sentry
@@ -186,6 +196,36 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Authentication & Authorization
+AUTH_USER_MODEL = "users.User"
+AUTHENTICATION_BACKENDS = (
+    "helusers.tunnistamo_oidc.TunnistamoOIDCAuth",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("helusers.oidc.ApiTokenAuthentication",),
+}
+
+OIDC_API_TOKEN_AUTH = {
+    "AUDIENCE": env("OIDC_AUDIENCE"),
+    "API_SCOPE_PREFIX": env("OIDC_API_SCOPE_PREFIX"),
+    "REQUIRE_API_SCOPE_FOR_AUTHENTICATION": env(
+        "OIDC_REQUIRE_API_SCOPE_FOR_AUTHENTICATION"
+    ),
+    "ISSUER": env("OIDC_ISSUER"),
+}
+
+SOCIAL_AUTH_TUNNISTAMO_KEY = env("SOCIAL_AUTH_TUNNISTAMO_KEY")
+SOCIAL_AUTH_TUNNISTAMO_SECRET = env("SOCIAL_AUTH_TUNNISTAMO_SECRET")
+SOCIAL_AUTH_TUNNISTAMO_OIDC_ENDPOINT = env("SOCIAL_AUTH_TUNNISTAMO_OIDC_ENDPOINT")
+
 
 # Custom settings
 
