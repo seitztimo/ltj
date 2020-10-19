@@ -1,14 +1,10 @@
-import os
-import zipfile
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from django.core.exceptions import ValidationError
-from django.core.files import File
 from django.test import TestCase
 
-from nature.tests.factories import FeatureFactory
 from .factories import ShapefileImportFactory
-from .utils import ZippedShapefilesGenerator
+from .utils import create_mock_zip_file_class
 from ..validators import ZippedShapefilesValidator
 
 
@@ -16,114 +12,45 @@ class TestValidateZippedShapefiles(TestCase):
     def setUp(self):
         self.validator = ZippedShapefilesValidator()
 
-    def test_not_raise_validation_error_for_valid_zipped_shapefiles(self):
-        feature = FeatureFactory()
-        filename = ZippedShapefilesGenerator.create_shapefiles([feature])
-        with open(filename, mode="rb") as f:
-            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
-            try:
-                self.validator(shp_import.shapefiles)
-            except ValidationError:
-                self.fail(
-                    "Should not raise ValidationError for valid zipped shapefiles"
-                )
-            finally:
-                f.close()
-                os.remove(filename)
+    @patch(
+        "imports.validators.zipfile.ZipFile",
+        create_mock_zip_file_class(["test.shp", "test.shx", "test.dbf"]),
+    )
+    @patch("imports.validators.zipfile.is_zipfile", return_value=True)
+    def test_not_raise_validation_error_for_valid_zipped_shapefiles(
+        self, mock_is_zipfile
+    ):
+        shp_import = ShapefileImportFactory.build()
+        try:
+            self.validator(shp_import.shapefiles)
+        except ValidationError:
+            self.fail("Should not raise ValidationError for valid zipped shapefiles")
 
-    def test_raise_validation_error_for_invalid_zip_file(self):
-        filename = "test.zip"
-        with open("test.zip", "w") as f:
-            f.write("test content")
+    @patch("imports.validators.zipfile.is_zipfile", return_value=False)
+    def test_raise_validation_error_for_invalid_zip_file(self, mock_is_zipfile):
+        shp_import = ShapefileImportFactory.build()
+        with self.assertRaises(ValidationError) as context:
+            self.validator(shp_import.shapefiles)
+        self.assertEqual(context.exception.code, "invalid_zipfile")
 
-        with open(filename, mode="rb") as f:
-            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
-            try:
-                self.validator(shp_import.shapefiles)
-                self.fail("Does not raise ValidationError for invalid zipfile.")
-            except ValidationError as e:
-                self.assertEqual(e.code, "invalid_zipfile")
-            finally:
-                f.close()
-                os.remove(filename)
+    @patch(
+        "imports.validators.zipfile.ZipFile",
+        create_mock_zip_file_class(["test.shp", "test.shx", "abc.dbf"]),
+    )
+    @patch("imports.validators.zipfile.is_zipfile", return_value=True)
+    def test_raise_validation_error_for_mismatched_filenames(self, mock_is_zipfile):
+        shp_import = ShapefileImportFactory.build()
+        with self.assertRaises(ValidationError) as context:
+            self.validator(shp_import.shapefiles)
+        self.assertEqual(context.exception.code, "mismatched_filenames")
 
-    def test_raise_validation_error_for_mismatched_filenames(self):
-        filename = "test.zip"
-        with zipfile.ZipFile(filename, "w") as zfile:
-            with open("test.shp", "w") as shp, open("file.shx", "w") as shx, open(
-                "test.dbf", "w"
-            ) as dbf:
-                zfile.write(shp.name)
-                zfile.write(shx.name)
-                zfile.write(dbf.name)
-                os.remove(shp.name)
-                os.remove(shx.name)
-                os.remove(dbf.name)
-
-        with open(filename, mode="rb") as f:
-            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
-            try:
-                self.validator(shp_import.shapefiles)
-                self.fail("Does not raise ValidationError for mismatches filenames.")
-            except ValidationError as e:
-                self.assertEqual(e.code, "mismatched_filenames")
-            finally:
-                f.close()
-                os.remove(filename)
-
-    def test_raise_validation_error_for_missing_required_filenames(self):
-        filename = "test.zip"
-        with zipfile.ZipFile(filename, "w") as zfile:
-            with open("test.shp", "w") as shp, open("test.dbf", "w") as dbf:
-                zfile.write(shp.name)
-                zfile.write(dbf.name)
-                os.remove(shp.name)
-                os.remove(dbf.name)
-
-        with open(filename, mode="rb") as f:
-            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
-            try:
-                self.validator(shp_import.shapefiles)
-                self.fail("Does not raise ValidationError for missing required files.")
-            except ValidationError as e:
-                self.assertEqual(e.code, "missing_required_files")
-            finally:
-                f.close()
-                os.remove(filename)
-
-    def test_raise_validation_error_for_not_allowed_fields(self):
-        feature = FeatureFactory()
-        filename = ZippedShapefilesGenerator.create_shapefiles([feature])
-
-        with open(filename, mode="rb") as f:
-            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
-            mock_fields = [("DeletionFlag",), ("test-field",)]
-            with patch(
-                "shapefile.Reader",
-                MagicMock(return_value=MagicMock(fields=mock_fields)),
-            ):
-                try:
-                    self.validator(shp_import.shapefiles)
-                    self.fail("Does not raise ValidationError for not allowed fields")
-                except ValidationError as e:
-                    self.assertEqual(e.code, "fields_not_allowed")
-                finally:
-                    f.close()
-                    os.remove(filename)
-
-    def test_raise_validation_error_for_not_exist_feature_classes(self):
-        feature = FeatureFactory.build()
-        filename = ZippedShapefilesGenerator.create_shapefiles([feature])
-
-        with open(filename, mode="rb") as f:
-            shp_import = ShapefileImportFactory.build(shapefiles=File(f))
-            try:
-                self.validator(shp_import.shapefiles)
-                self.fail(
-                    "Does not raise ValidationError for not exist feature classes"
-                )
-            except ValidationError as e:
-                self.assertEqual(e.code, "feature_classes_not_exist")
-            finally:
-                f.close()
-                os.remove(filename)
+    @patch(
+        "imports.validators.zipfile.ZipFile",
+        create_mock_zip_file_class(["test.shp", "test.shx"]),
+    )
+    @patch("imports.validators.zipfile.is_zipfile", return_value=True)
+    def test_raise_validation_error_for_missing_required_files(self, mock_is_zipfile):
+        shp_import = ShapefileImportFactory.build()
+        with self.assertRaises(ValidationError) as context:
+            self.validator(shp_import.shapefiles)
+        self.assertEqual(context.exception.code, "missing_required_files")
