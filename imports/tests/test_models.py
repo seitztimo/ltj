@@ -2,16 +2,15 @@ import os
 
 from django.test import TestCase
 
-from nature.tests.utils import make_user
 from .factories import ShapefileImportFactory
 
 
 class TestShapefileImport(TestCase):
     def setUp(self):
-        self.shp_import = ShapefileImportFactory(created_by=make_user())
+        self.shp_import = ShapefileImportFactory()
 
     def tearDown(self):
         os.remove(self.shp_import.shapefiles.path)
 
     def test__str__(self):
-        self.assertEqual(self.shp_import.__str__(), "shapefiles/testshapefiles.zip")
+        self.assertTrue(str(self.shp_import).startswith("shapefiles/testshapefiles"))
