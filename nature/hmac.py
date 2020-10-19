@@ -157,6 +157,8 @@ class HMACAuth:
 
     def _generate_signature(self, algorithm, message):
         digestmod = self.DIGEST_ALGORITHMS.get(algorithm)
+        if not digestmod:
+            raise InvalidAuthorization()
         hmac_obj = hmac.HMAC(
             key=settings.SHARED_SECRET.encode("utf-8"),
             msg=message.encode("utf-8"),

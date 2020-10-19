@@ -119,7 +119,7 @@ class TestHMACAuth(TestCase):
             hmac_auth.is_valid
 
     @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_return_false_for_invalid_digest_algorithm(self):
+    def test_is_valid_raise_exception_for_invalid_digest_algorithm(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -134,7 +134,8 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
+        with self.assertRaises(InvalidAuthorization):
+            hmac_auth.is_valid
 
     @freeze_time("2017-06-22 17:16:00")
     def test_is_valid_return_false_if_invalid_signature(self):
