@@ -1,16 +1,15 @@
-import logging
 import os
 import zipfile
 from tempfile import gettempdir
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.gis.gdal import DataSource
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from nature.models import Feature, FeatureClass
 
-logger = logging.getLogger(__name__)
 
 SHAPEFILE_FIELD_MAPPING = {
     "id": "id",
@@ -83,8 +82,7 @@ class ShapefileImporter:
         data_source = DataSource(shp)
         layer = data_source[0]  # shapefile always have one layer
         shapefile_importer._validate_layer(layer)
-        shapefile_importer._import_layer(layer)
-        return len(layer)
+        return shapefile_importer._import_layer(layer)
 
     def _extract_shapefile(self, zipped_shapefile):
         """
@@ -118,8 +116,7 @@ class ShapefileImporter:
         :param layer: The layer to be validated
         :raise ImportValidationError: if invalid field found
         """
-        layer_fields = layer.fields[1:]  # first field reserved as deletion flag
-        fields_not_allowed = set(layer_fields) - set(SHAPEFILE_FIELD_MAPPING.keys())
+        fields_not_allowed = set(layer.fields) - set(SHAPEFILE_FIELD_MAPPING.keys())
         if fields_not_allowed:
             error_code = "fields_not_allowed"
             raise ImportValidationError(
@@ -159,9 +156,14 @@ class ShapefileImporter:
 
         :param shapefile: The path to the shapefile shp file
         """
+        import_log = []
         if layer.srs and layer.srs.srid != settings.SRID:
-            logger.warning(f"Invalid projection {layer.srs.srid} will be ignored.")
+            msg = _("Invalid projection {0} found, will be ignored.").format(
+                layer.srs.srid
+            )
+            import_log.append([messages.WARNING, msg])
 
+        count = 0
         for feature in layer:
             feature_data = {}
             for shapefile_field in layer.fields:
@@ -171,9 +173,28 @@ class ShapefileImporter:
                     feature_data[model_field] = processor(
                         feature[shapefile_field].value
                     )
-            feature_id = feature_data.pop("id")
+            feature_id = feature_data.pop("id", None)
             geometry = feature.geom.geos
             # The geometries in shapefile must be using the same SRID as defined in settings
             geometry.srid = settings.SRID
             feature_data["geometry"] = geometry
-            Feature.objects.update_or_create(id=feature_id, defaults=feature_data)
+
+            if feature_id:
+                try:
+                    feature = Feature.objects.get(id=feature_id)
+                    for key, value in feature_data.items():
+                        setattr(feature, key, value)
+                    feature.save()
+                    count += 1
+                except Feature.DoesNotExist:
+                    msg = _(
+                        "Update feature failed: feature with id {0} does not exist"
+                    ).format(feature_id)
+                    import_log.append([messages.WARNING, msg])
+            else:
+                Feature.objects.create(**feature_data)
+                count += 1
+
+        msg = _("{0} features were imported").format(count)
+        import_log.append([messages.SUCCESS, msg])
+        return import_log

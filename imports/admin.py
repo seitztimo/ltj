@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib import messages
 from django.db import transaction
-from django.utils.translation import ugettext as _
 
 from .models import ShapefileImport
 from .importers import ShapefileImporter, ImportValidationError
@@ -17,12 +16,9 @@ class ShapefileImportAdmin(admin.ModelAdmin):
         if not obj.pk:
             # only do imports when creating new instances
             try:
-                num_features = ShapefileImporter.import_features(obj.shapefiles)
-                messages.add_message(
-                    request,
-                    messages.INFO,
-                    _("{0} features were imported").format(num_features),
-                )
+                import_log = ShapefileImporter.import_features(obj.shapefiles)
+                for level, msg in import_log:
+                    messages.add_message(request, level, msg)
                 obj.created_by = request.user
             except ImportValidationError as e:
                 for message in e.messages:
