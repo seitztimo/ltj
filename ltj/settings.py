@@ -119,6 +119,7 @@ INSTALLED_APPS = [
     "imports",
     "files",
     "users",
+    "axes",
 ]
 
 # Sentry
@@ -139,6 +140,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "ltj.urls"
@@ -200,6 +202,7 @@ USE_TZ = True
 # Authentication & Authorization
 AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = (
+    "axes.backends.AxesBackend",
     "helusers.tunnistamo_oidc.TunnistamoOIDCAuth",
     "django.contrib.auth.backends.ModelBackend",
 )
