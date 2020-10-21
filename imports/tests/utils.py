@@ -1,57 +1,74 @@
-import os
-import zipfile
-import shapefile
+from collections import UserDict
+
 from django.conf import settings
+from django.contrib.gis.gdal import SpatialReference
 
-from ..importers import SHAPEFILE_FIELD_MAPPING
+
+class MockAttribute:
+    def __init__(self, value):
+        self.value = value
 
 
-class ZippedShapefilesGenerator:
-    """A helper class to generate zipped shapefiles for given features"""
+class MockFeature(UserDict):
+    def __init__(self, data, ogr_geom):
+        super().__init__(data)
+        self.geom = ogr_geom
 
-    shape_fields = [
-        ["id", "N", 10, 0],
-        ["tunnus", "C", 10, 0],
-        ["luokkatunn", "C", 10, 0],
-        ["nimi", "C", 80, 0],
-        ["kuvaus", "C", 254, 0],
-        ["huom", "C", 254, 0],
-        ["voimassa", "C", 254, 0],
-        ["digipvm", "D", 8, 0],
-        ["numero", "N", 10, 0],
-        ["digitoija", "C", 50, 0],
-        ["suojaustas", "N", 10, 0],
-        ["pvm_editoi", "C", 24, 0],
-        ["muokkaaja", "C", 10, 0],
-        ["pinta_ala", "N", 24, 15],
-    ]
 
-    @classmethod
-    def create_shapefiles(cls, features):
-        with zipfile.ZipFile(
-            settings.MEDIA_ROOT + "/shapefiles/testshapefiles.zip", "w"
-        ) as zfile:
-            shapefiles = [
-                "{}.{}".format(zfile.filename.split(".")[0], ext)
-                for ext in ["shp", "shx", "dbf"]
-            ]
-            for shp_file in shapefiles:
-                shp_writer = shapefile.Writer(shp_file, shapeType=shapefile.POINT)
-                shp_writer.fields = cls.shape_fields
-                for feature in features:
-                    shp_writer.point(*feature.geometry)
-                    shp_writer.record(*cls._get_record(feature))
-                shp_writer.close()
-                zfile.write(shp_file, shp_file.split("/")[-1])
-            zfile.close()
-            for shp_file in shapefiles:
-                os.remove(shp_file)
-        return zfile.filename
+def create_mock_data_source(features):
+    """
+    Create a mock DataSource class that include the given features
 
-    @classmethod
-    def _get_record(cls, feature):
-        shape_field_names = [shape_field[0] for shape_field in cls.shape_fields]
-        return [
-            getattr(feature, SHAPEFILE_FIELD_MAPPING[field_name])
-            for field_name in shape_field_names
-        ]
+    :param features: features to be included in the layer
+    :return: A mock DataSource class
+    """
+
+    class MockLayer:
+        def __init__(self):
+            self.srs = SpatialReference(settings.SRID)
+            self.fields = list(features[0].keys())
+            self.mock_features = features
+
+        def __iter__(self):
+            yield from self.mock_features
+
+        def __len__(self):
+            return len(self.mock_features)
+
+        def get_fields(self, field_name):
+            return [feature.get(field_name).value for feature in self.mock_features]
+
+    class MockDataSource:
+        def __init__(self, ds_input):
+            self.mock_layers = [MockLayer()]
+
+        def __getitem__(self, index):
+            return self.mock_layers[index]
+
+    return MockDataSource
+
+
+def create_mock_zip_file_class(filenames):
+    """
+    Create a mock ZipFile class
+    :param filenames:  a list of files to be contained by zipfile instance
+    :return: A mocked ZipFile class
+    """
+
+    class MockZipFile:
+        def __init__(self, file):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            pass
+
+        def namelist(self):
+            return filenames
+
+        def extractall(self, path):
+            pass
+
+    return MockZipFile
