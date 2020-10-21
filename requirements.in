@@ -9,3 +9,4 @@ requests
 pyshp
 django-helusers
 social-auth-app-django
+django-axes
