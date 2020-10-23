@@ -26,17 +26,18 @@
     </style>
 {% endblock %}
 
-{% block report_header %}{{ feature.feature_class.name }} {% if feature.name %}<br> {{ feature.name }}{% endif %} {% if feature.fid %} ({{ feature.fid }}){% endif %}{% endblock %}
+{% block report_header %}{{ feature.feature_class.name }} {% if feature.name %}<br> {{ feature.name }}{% endif %}
+    {% if feature.fid %} ({{ feature.fid }}){% endif %}{% endblock %}
 
 {% block report_body %}
     <!-- Area and geometry -->
     {% if feature.area %}
-    <div class="row">
-        <b class="col-sm-2">{% trans "Area (from map)" %}</b>
-        <div class="col-sm-10">
-            {{ feature.area|floatformat:2 }} ha
+        <div class="row">
+            <b class="col-sm-2">{% trans "Area (from map)" %}</b>
+            <div class="col-sm-10">
+                {{ feature.area|floatformat:2 }} ha
+            </div>
         </div>
-    </div>
     {% endif %}
     <div class="row mb-2">
         <label for="background-map" class="col-sm-2 col-form-label font-weight-bold">{% trans "Backgroud map" %}</label>
@@ -61,7 +62,8 @@
                 <div class="col-md-4">{{ value.value }}</div>
                 <div class="col-md-4">{{ value.explanation }}</div>
                 {% if value.link %}
-                    <div class="col-md-4"><a target="_blank" rel="noopener noreferrer" href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
+                    <div class="col-md-4"><a target="_blank" rel="noopener noreferrer"
+                                             href="{{ value.link }}">{% trans "Value type basics" %}</a></div>
                 {% else %}
                     <div class="col-md-4"></div>
                 {% endif %}
@@ -85,13 +87,13 @@
     {% endif %}
 
     {% if feature.links.all %}
-    <div class="mb-5">
-        {% for link in feature.links.all|dictsort:"ordering" %}
-            <a target="_blank" rel="noopener noreferrer" href="{{ link.link }}">{{ link.link_text }}</a>
-            {% if link.text %} - {{ link.text }}{% endif %}<br/>
-        {% endfor %}
-    </div>
-    <hr class="mb-2">
+        <div class="mb-5">
+            {% for link in feature.links.all|dictsort:"ordering" %}
+                <a target="_blank" rel="noopener noreferrer" href="{{ link.link }}">{{ link.link_text }}</a>
+                {% if link.text %} - {{ link.text }}{% endif %}<br/>
+            {% endfor %}
+        </div>
+        <hr class="mb-2">
     {% endif %}
 
     {% if transactions %}
@@ -143,13 +145,13 @@
     {% endif %}
     {% if feature.publications.all %}
         <h4 class="text-uppercase">{% trans "publications" %}</h4>
-            {% for publication in feature.publications.all %}
-                {% include "nature/reports/stubs/publication-info.html" with publication=publication %}
-                {% if not forloop.last %}
-                    <hr class="mb-2 dashed">
-                {% endif %}
-            {% endfor %}
-            <hr class="mb-2">
+        {% for publication in feature.publications.all %}
+            {% include "nature/reports/stubs/publication-info.html" with publication=publication %}
+            {% if not forloop.last %}
+                <hr class="mb-2 dashed">
+            {% endif %}
+        {% endfor %}
+        <hr class="mb-2">
     {% endif %}
     {% if observations %}
         {% if feature.geometry.geom_type == 'Point' %}
@@ -184,15 +186,16 @@
 
 {% block report_footer %}
     {% if feature.feature_class.metadata %}
-        <p class="mb-2"><a target="_blank" href="{{ feature.feature_class.metadata }}">{% trans "Material description" %}</a></p>
+        <p class="mb-2"><a target="_blank"
+                           href="{{ feature.feature_class.metadata }}">{% trans "Material description" %}</a></p>
     {% endif %}
     {{ block.super }}
 {% endblock %}
 
 {% block extrajs %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
-<script src="//{{ request.META.HTTP_HOST }}{% static 'nature/js/ReportMap.js' %}"></script>
-<script type="text/javascript">
-    var reportMap = new ReportMap('map', '{{ feature.geometry.geojson|safe }}');
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
+    <script src="//{{ request.META.HTTP_HOST }}{% static 'nature/js/ReportMap.js' %}"></script>
+    <script type="text/javascript">
+        var reportMap = new ReportMap('map', '{{ feature.geometry.geojson|safe }}');
+    </script>
 {% endblock %}
