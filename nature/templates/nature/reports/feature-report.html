@@ -55,7 +55,7 @@
 
     <!-- Feature values -->
     {% if feature.values.all %}
-        <h4 class="text-uppercase">{% trans "Feature values" %}</h4>
+        <h4 class="text-uppercase">{% trans "Feature values" %}</h4>I'll update the
         <div class="row">
             {% for value in feature.values.all %}
                 <div class="col-md-4">{{ value.value }}</div>
@@ -128,7 +128,7 @@
                     <div class="form-group row mb-0">
                         <b class="col-sm-2"></b>
                         <div class="col-sm-10">
-                            {{ regulation.name }}, {{ regulation.paragraph }}
+                            {{ regulation.get_display_name }}
                         </div>
                     </div>
                 {% endfor %}

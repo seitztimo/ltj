@@ -1300,6 +1300,12 @@ class Regulation(models.Model):
             result += ", " + self.value
         return result
 
+    def get_display_name(self):
+        display_name = str(self.name)
+        if self.paragraph:
+            display_name += ", " + self.paragraph
+        return display_name
+
 
 class ConservationProgramme(models.Model):
     name = models.CharField(
