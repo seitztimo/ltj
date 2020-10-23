@@ -40,7 +40,7 @@ MOCK_FEATURE_1 = MockFeature(
 
 MOCK_FEATURE_2 = MockFeature(
     {
-        "id": MockAttribute(2),
+        "id": MockAttribute(0),
         "tunnus": MockAttribute("f-2"),
         "luokkatunn": MockAttribute("ABC"),
         "nimi": MockAttribute("feature 2"),
@@ -60,7 +60,7 @@ MOCK_FEATURE_2 = MockFeature(
 
 MOCK_FEATURE_WITH_INVALID_FIELD = MockFeature(
     {
-        "id": MockAttribute(2),
+        "id": MockAttribute(0),
         "tunnus": MockAttribute("f-2"),
         "luokkatunn": MockAttribute("ABC"),
         "nimi": MockAttribute("feature 2"),
@@ -81,7 +81,7 @@ MOCK_FEATURE_WITH_INVALID_FIELD = MockFeature(
 
 MOCK_FEATURE_WITH_INVALID_FEATURE_CLASS = MockFeature(
     {
-        "id": MockAttribute(2),
+        "id": MockAttribute(0),
         "tunnus": MockAttribute("f-2"),
         "luokkatunn": MockAttribute("INVALID-FEATURE-CLASS"),
         "nimi": MockAttribute("feature 2"),

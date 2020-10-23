@@ -1,6 +1,7 @@
 import os
 from unittest.mock import patch
 
+from django.contrib import messages
 from django.contrib.admin import AdminSite
 from django.test import TestCase, RequestFactory
 
@@ -18,7 +19,10 @@ class TestShapefileImportAdmin(TestCase):
         self.shp_import = ShapefileImportFactory.build()
 
     @patch("imports.admin.messages.add_message")
-    @patch("imports.importers.ShapefileImporter.import_features")
+    @patch(
+        "imports.importers.ShapefileImporter.import_features",
+        return_value=[(messages.INFO, "1 feature imported")],
+    )
     def test_save_model(self, mock_import, mock_add_message):
         shp_import_admin = ShapefileImportAdmin(ShapefileImport, self.site)
         request = self.factory.get("/fake-url/")
