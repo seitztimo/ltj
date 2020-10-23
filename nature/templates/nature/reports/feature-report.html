@@ -87,7 +87,8 @@
     {% if feature.links.all %}
     <div class="mb-5">
         {% for link in feature.links.all|dictsort:"ordering" %}
-            <a target="_blank" rel="noopener noreferrer" href="{{ link.link }}">{{ link.link_text }}</a> - {{ link.text }}<br/>
+            <a target="_blank" rel="noopener noreferrer" href="{{ link.link }}">{{ link.link_text }}</a>
+            {% if link.text %} - {{ link.text }}{% endif %}<br/>
         {% endfor %}
     </div>
     <hr class="mb-2">
