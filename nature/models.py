@@ -491,6 +491,7 @@ class Publication(models.Model):
         db_table = "julkaisu"
         verbose_name = _("publication")
         verbose_name_plural = _("publications")
+        ordering = ("-year",)
 
     def __str__(self):
         return str(self.name)
