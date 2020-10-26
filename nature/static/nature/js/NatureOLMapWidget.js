@@ -18,7 +18,8 @@ var GeometryTypeControl = function(opt_options) {
     var self = this;
     var switchType = function(e) {
         e.preventDefault();
-        if (options.widget.currentGeometryType !== self) {
+        var previousGeometryType = options.widget.currentGeometryType;
+        if (previousGeometryType !== self) {
             var isMultiGeometry = options.type.indexOf('Multi') > -1;
             options.widget.setIsDrawingMultiGeometry(isMultiGeometry);
             options.widget.map.removeInteraction(options.widget.interactions.draw);
@@ -27,8 +28,10 @@ var GeometryTypeControl = function(opt_options) {
                 type: options.type
             });
             options.widget.map.addInteraction(options.widget.interactions.draw);
-            var className = options.widget.currentGeometryType.element.className.replace(/ type-active/g, '');
-            options.widget.currentGeometryType.element.className = className;
+            if (previousGeometryType) {
+                var className = previousGeometryType.element.className.replace(/ type-active/g, '');
+                previousGeometryType.element.className = className;
+            }
             options.widget.currentGeometryType = self;
             element.className += " type-active";
         }
@@ -390,13 +393,13 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
         if (geomType === "Unknown" || geomType === "GeometryCollection") {
             // Default to Point, but create icons to switch type
             geomType = "Point";
-            this.currentGeometryType = new GeometryTypeControl({
+            this.currentGeometryType = null;
+            this.map.addControl(new GeometryTypeControl({
                 widget: this,
                 type: "Point",
-                active: true,
+                active: false,
                 title: "Piste"
-            });
-            this.map.addControl(this.currentGeometryType);
+            }));
             this.map.addControl(new GeometryTypeControl({
                 widget: this,
                 type: "LineString",
@@ -510,7 +513,7 @@ ol.inherits(GeometryTypeControl, ol.control.Control);
     };
 
     MapWidget.prototype.editFeatures = function() {
-        var isEditing = geodjango_geometry.map.getInteractions(geodjango_geometry).getArray().indexOf(geodjango_geometry.interactions.modify) !== -1; 
+        var isEditing = geodjango_geometry.map.getInteractions(geodjango_geometry).getArray().indexOf(geodjango_geometry.interactions.modify) !== -1;
         var editButtonContainer = document.querySelector(".edit_features")
         if (isEditing) {
             this.map.removeInteraction(this.interactions.draw);
