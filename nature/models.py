@@ -491,6 +491,7 @@ class Publication(models.Model):
         db_table = "julkaisu"
         verbose_name = _("publication")
         verbose_name_plural = _("publications")
+        ordering = ("-year",)
 
     def __str__(self):
         return str(self.name)
@@ -1298,6 +1299,12 @@ class Regulation(models.Model):
         if self.value:
             result += ", " + self.value
         return result
+
+    def get_display_name(self):
+        display_name = str(self.name)
+        if self.paragraph:
+            display_name += ", " + self.paragraph
+        return display_name
 
 
 class ConservationProgramme(models.Model):
