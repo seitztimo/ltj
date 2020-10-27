@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-22 13:21+0200\n"
+"POT-Creation-Date: 2020-10-27 14:55+0200\n"
 "PO-Revision-Date: 2018-06-14 15:22+0300\n"
 "Last-Translator: Sanna Elijoki <sanna.elijoki@hel.fi>\n"
 "Language-Team: \n"
@@ -38,12 +38,32 @@ msgstr "pvm editoitu"
 msgid "files"
 msgstr "tiedostot"
 
-#, python-brace-format
-msgid "{0} features are imported"
-msgstr "{0} kohdetta tuotu"
-
 msgid "shape-imports"
 msgstr "shape-tuonnit"
+
+#, python-format
+msgid ""
+"Fields not allowed: %(fields)s. Allowed shapefile fields are: "
+"%(allowed_fields)s."
+msgstr ""
+"Nämä kentät eivät kelpaa: %(fields)s. Sallitut kentät ovat: "
+"%(allowed_fields)s."
+
+#, python-format
+msgid "Feature classes do not exist: %(feature_classes)s."
+msgstr "Näitä kohdeluokkia ei ole: %(feature_classes)s."
+
+#, python-brace-format
+msgid "Invalid projection {0} found, will be ignored."
+msgstr ""
+
+#, python-brace-format
+msgid "Update feature failed: feature with id {0} does not exist"
+msgstr ""
+
+#, python-brace-format
+msgid "{0} features were imported"
+msgstr "{0} kohdetta tuotu"
 
 msgid "shapefiles"
 msgstr "shape-tiedostot"
@@ -75,23 +95,8 @@ msgstr "Tiedostonimien alkuosan tulee olla sama."
 msgid ".shp, .shx and .dbf files are required."
 msgstr "Tarvitaan tiedostot .shp, .shx ja .dbf."
 
-#, python-format
-msgid ""
-"Fields not allowed: %(fields)s. Allowed shapefile fields are: "
-"%(allowed_fields)s."
-msgstr ""
-"Nämä kentät eivät kelpaa: %(fields)s. Sallitut kentät ovat: "
-"%(allowed_fields)s."
-
-#, python-format
-msgid "Feature classes do not exist: %(feature_classes)s."
-msgstr "Näitä kohdeluokkia ei ole: %(feature_classes)s."
-
 msgid "Luontotietojärjestelmä site admin"
 msgstr "Luontotietojärjestelmä-sivuston ylläpito"
-
-msgid "Luontotietojärjestelmä administration"
-msgstr "Luontotietojärjestelmä ylläpito"
 
 msgid "Species report"
 msgstr "Lajiraportti"
@@ -205,7 +210,7 @@ msgid "valid"
 msgstr "voimassa"
 
 msgid "observation series"
-msgstr "havaintosarjat"
+msgstr "havaintosarja"
 
 msgid "surname"
 msgstr "sukunimi"
@@ -442,7 +447,7 @@ msgid "habitat type observations"
 msgstr "luontotyyppihavainnot"
 
 msgid "group"
-msgstr "luontotyyppiryhmä"
+msgstr "ryhmä"
 
 msgid "habitat types"
 msgstr "luontotyypit"
@@ -616,6 +621,9 @@ msgstr "Osuus kuviosta"
 msgid "Feature Report - Observations"
 msgstr "Kohderaportti - Lajihavainnot"
 
+msgid "Link"
+msgstr "Linkki"
+
 msgid "Observations"
 msgstr "Lajihavainto"
 
@@ -651,9 +659,6 @@ msgstr "Tapahtumatyyppi"
 
 msgid "Description"
 msgstr "Kuvaus"
-
-msgid "Link"
-msgstr "Linkki"
 
 msgid "Observations at this feature"
 msgstr "Kohteen lajihavainnot"
@@ -745,8 +750,8 @@ msgstr "Peruste"
 msgid "Protection value"
 msgstr "Suojeluarvo"
 
-msgid "Date of entry"
-msgstr "Voimaantulo"
+msgid "Luontotietojärjestelmä administration"
+msgstr "Luontotietojärjestelmä ylläpito"
 
 msgid "User guide"
 msgstr "Ohje"
@@ -759,21 +764,3 @@ msgstr "Voit lähettää palautetta osoitteeseen ltj.ymk@hel.fi"
 
 msgid "Log in again"
 msgstr "Kirjaudu uudelleen sisään"
-
-#, javascript-format
-msgid ""
-"This is the list of available %s. You may choose some by selecting them in "
-"the box below and then clicking the 'Choose' arrow between the two boxes."
-msgstr ""
-"%s, jotka ovat valittavissa. Valitse allaolevasta laatikosta "
-"haluamasi ja siirrä ne valittuihin klikkamalla 'Valitse'-nuolta "
-"laatikoiden välillä."
-
-#, javascript-format
-msgid ""
-"This is the list of chosen %s. You may remove some by selecting them in the "
-"box below and then clicking the 'Remove' arrow between the two boxes."
-msgstr ""
-"%s, jotka ovat valittuina. Voit poistaa valintoja valitsemalla ne "
-"allaolevasta laatikosta ja siirtämällä ne takaisin valitsemattomiin "
-"klikkamalla 'Poista'-nuolta laatikoiden välillä."
