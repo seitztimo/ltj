@@ -154,15 +154,9 @@ class ShapefileImporter:
         """
         Import features from shapefile layer
 
-        :param shapefile: The path to the shapefile shp file
+        :param layer: The layer from which the features are imported
         """
         import_log = []
-        if layer.srs and layer.srs.srid != settings.SRID:
-            msg = _("Invalid projection {0} found, will be ignored.").format(
-                layer.srs.srid
-            )
-            import_log.append([messages.WARNING, msg])
-
         count = 0
         for feature in layer:
             feature_data = {}
