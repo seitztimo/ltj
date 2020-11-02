@@ -430,10 +430,10 @@ class TestOrigin(TestCase):
 
 class TestValue(TestCase):
     def setUp(self):
-        self.value = ValueFactory(explanation="value")
+        self.value = ValueFactory(value="ABC", explanation="value")
 
     def test__str__(self):
-        self.assertEqual(self.value.__str__(), "value")
+        self.assertEqual(self.value.__str__(), "ABC, value")
 
 
 class TestOccurrence(TestCase):
