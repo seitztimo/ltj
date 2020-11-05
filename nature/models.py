@@ -290,7 +290,7 @@ class Value(models.Model):
         verbose_name_plural = _("values")
 
     def __str__(self):
-        return ", ".join([self.value, self.explanation])
+        return f"{self.value or ''}, {self.explanation or ''}".strip(", ")
 
 
 class FeatureValue(models.Model):
