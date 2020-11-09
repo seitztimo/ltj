@@ -9,25 +9,13 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.utils.encoding import force_bytes
+
+from hmac_auth.models import HMACGroup
 from .enums import UserRole
-
-
-class InvalidAuthorization(PermissionDenied):
-    default_message = "Invalid Authorization"
-
-    def __init__(self, *args):
-        if not args:
-            args = [self.default_message]
-        super().__init__(*args)
 
 
 class HMACAuth:
     """Validate a hmac request and check its authorization information."""
-
-    # Allowed HMAC user groups
-    ADMIN_GROUPS = ("ltj_admin", r"Paikkatietovipunen_ltj_admin")
-    OFFICE_HKI_GROUPS = ("ltj_virka_hki", r"Paikkatietovipunen_ltj_virka")
-    OFFICE_GROUPS = ("ltj_virka",)
 
     ALLOWED_CLOCK_SKEW_IN_SECONDS = 300
 
@@ -41,7 +29,12 @@ class HMACAuth:
 
     def __init__(self, request):
         self.request = request
-        self._is_valid = None
+
+    @property
+    def auth_header(self):
+        return self.request.META.get(
+            "HTTP_PROXY_AUTHORIZATION"
+        ) or self.request.META.get("HTTP_AUTHORIZATION")
 
     @property
     def is_valid(self):
@@ -54,40 +47,45 @@ class HMACAuth:
         :return: True if the request is valid
         :rtype: bool
         """
-        if self._is_valid is None:
-            self._is_valid = self.within_clock_skew and self.has_valid_credentials
-        return self._is_valid
+        return self.within_clock_skew and self.has_valid_credentials
 
     @property
     def has_admin_group(self):
         """Return true if the user has an admin group"""
-        return self.is_valid and bool(set(self.ADMIN_GROUPS).intersection(self.groups))
+        return any([group.is_admin_group for group in self.groups])
 
     @property
     def has_office_hki_group(self):
         """Return true if user has an office hki group"""
-        return self.is_valid and bool(
-            set(self.OFFICE_HKI_GROUPS).intersection(self.groups)
-        )
+        return any([group.is_office_hki_group for group in self.groups])
 
     @property
     def has_office_group(self):
         """Return true if user has an office group"""
-        return self.is_valid and bool(set(self.OFFICE_GROUPS).intersection(self.groups))
+        return any([group.is_office_group for group in self.groups])
 
     @property
     def groups(self):
-        return self.request.META.get("HTTP_X_FORWARDED_GROUPS", "").split(";")
+        group_names = self.request.META.get("HTTP_X_FORWARDED_GROUPS", "").split(";")
+        return HMACGroup.objects.filter(name__in=group_names)
 
     @property
     def user_role(self):
+        # seen as public access if no auth header provided
+        if not self.auth_header:
+            return UserRole.PUBLIC
+
+        if not self.is_valid:
+            raise PermissionDenied()
+
         if self.has_admin_group:
             return UserRole.ADMIN
         elif self.has_office_hki_group:
             return UserRole.OFFICE_HKI
         elif self.has_office_group:
             return UserRole.OFFICE
-        return UserRole.PUBLIC
+        else:
+            raise PermissionDenied()
 
     @property
     def within_clock_skew(self):
@@ -99,31 +97,22 @@ class HMACAuth:
         gmt = pytz.timezone("GMT")  # DATE header is always in GMT
         date = date.replace(tzinfo=gmt)
         now = timezone.now()
-        is_within_clock_skew = abs(date - now) < timezone.timedelta(
+        return abs(date - now) < timezone.timedelta(
             seconds=self.ALLOWED_CLOCK_SKEW_IN_SECONDS
         )
-        if is_within_clock_skew:
-            return True
-        raise InvalidAuthorization()
 
     @property
     def has_valid_credentials(self):
-        auth_header = self.request.META.get(
-            "HTTP_PROXY_AUTHORIZATION"
-        ) or self.request.META.get("HTTP_AUTHORIZATION")
-        if not auth_header:
-            return False
-
-        auth_type, credentials = auth_header.split(" ", maxsplit=1)
+        auth_type, credentials = self.auth_header.split(" ", maxsplit=1)
         if auth_type.lower() != "hmac":
-            raise InvalidAuthorization()  # only hmac auth allowed
+            return False  # only hmac auth allowed
 
         p = re.compile(r'(\w+)="([^"]+)"')
         auth_info = dict(p.findall(credentials))
 
         required_keys = {"algorithm", "headers", "signature"}
         if not required_keys.issubset(auth_info):
-            raise InvalidAuthorization()
+            return False
 
         algorithm = auth_info["algorithm"]
         headers = auth_info["headers"].split(" ")
@@ -133,10 +122,13 @@ class HMACAuth:
             "HTTP_{0}".format(header.replace("-", "_").upper()) for header in headers
         ]
         if not set(meta_keys).issubset(self.request.META):
-            raise InvalidAuthorization()
+            return False
 
         signature_string = self._generate_signature_message(headers, meta_keys)
-        expected_signature = self._generate_signature(algorithm, signature_string)
+        digestmod = self.DIGEST_ALGORITHMS.get(algorithm)
+        if not digestmod:
+            return False
+        expected_signature = self._generate_signature(digestmod, signature_string)
         return hmac.compare_digest(expected_signature, force_bytes(signature))
 
     def _generate_signature_message(self, headers, meta_keys):
@@ -155,10 +147,7 @@ class HMACAuth:
                 )
         return "\n".join(header_lines)
 
-    def _generate_signature(self, algorithm, message):
-        digestmod = self.DIGEST_ALGORITHMS.get(algorithm)
-        if not digestmod:
-            raise InvalidAuthorization()
+    def _generate_signature(self, digestmod, message):
         hmac_obj = hmac.HMAC(
             key=settings.SHARED_SECRET.encode("utf-8"),
             msg=message.encode("utf-8"),
