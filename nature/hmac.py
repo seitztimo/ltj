@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.utils.encoding import force_bytes
+from sentry_sdk import capture_event
 
 from hmac_auth.models import HMACGroup
 from .enums import UserRole
@@ -76,6 +77,10 @@ class HMACAuth:
             return UserRole.PUBLIC
 
         if not self.is_valid:
+            event = self._get_event(
+                "invalid-auth", "Authorization failed: invalid auth header provided"
+            )
+            capture_event(event)
             raise PermissionDenied()
 
         if self.has_admin_group:
@@ -85,6 +90,10 @@ class HMACAuth:
         elif self.has_office_group:
             return UserRole.OFFICE
         else:
+            event = self._get_event(
+                "invalid-group", "Authorization failed: invalid group provided"
+            )
+            capture_event(event)
             raise PermissionDenied()
 
     @property
@@ -154,3 +163,20 @@ class HMACAuth:
             digestmod=digestmod,
         )
         return base64.b64encode(hmac_obj.digest())
+
+    def _get_event(self, event_type, message):
+        return {
+            "type": event_type,
+            "headers": self.request.headers,
+            "path": self.request.get_full_path(),
+            "ip-address": self._get_client_ip(),
+            "message": message,
+        }
+
+    def _get_client_ip(self):
+        x_forwarded_for = self.request.META.get("HTTP_X_FORWARDED_FOR")
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(",")[-1].strip()
+        else:
+            ip = self.request.META.get("REMOTE_ADDR")
+        return ip
