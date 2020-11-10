@@ -25,11 +25,12 @@ class ProtectedReportViewMixin:
             return qs
 
         hmac_auth = self._get_hmac_auth()
-        if hmac_auth.has_admin_group:
+        role = hmac_auth.user_role
+        if role == UserRole.ADMIN:
             return qs.for_admin()
-        elif hmac_auth.has_office_hki_group:
+        elif role == UserRole.OFFICE_HKI:
             return qs.for_office_hki()
-        elif hmac_auth.has_office_group:
+        elif role == UserRole.OFFICE:
             return qs.for_office()
 
         return qs.www()
@@ -74,11 +75,12 @@ class ProtectedObservationListReportViewMixin(ProtectedReportViewMixin):
         """Get filtered observations based on hmac user roles"""
         qs = self.get_observation_queryset()
         hmac_auth = self._get_hmac_auth()
-        if self.request.user.is_staff or hmac_auth.has_admin_group:
+        role = hmac_auth.user_role
+        if self.request.user.is_staff or role == UserRole.ADMIN:
             qs = qs.for_admin()
-        elif hmac_auth.has_office_hki_group:
+        elif role == UserRole.OFFICE_HKI:
             qs = qs.for_office_hki()
-        elif hmac_auth.has_office_group:
+        elif role == UserRole.OFFICE:
             qs = qs.for_office()
         else:
             qs = qs.www()

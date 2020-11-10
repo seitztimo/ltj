@@ -115,11 +115,12 @@ INSTALLED_APPS = [
     "ckeditor",
     "rest_framework",
     "rest_framework_gis",
+    "axes",
     "nature",
     "imports",
     "files",
     "users",
-    "axes",
+    "hmac_auth",
 ]
 
 # Sentry

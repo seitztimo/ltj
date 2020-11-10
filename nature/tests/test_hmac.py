@@ -1,7 +1,11 @@
+from django.core.exceptions import PermissionDenied
 from django.test import TestCase, RequestFactory, override_settings
 from freezegun import freeze_time
 
-from nature.hmac import HMACAuth, InvalidAuthorization
+from hmac_auth.models import HMACGroup
+from hmac_auth.tests.factories import HMACGroupFactory
+from nature.enums import UserRole
+from nature.hmac import HMACAuth
 
 
 @override_settings(SHARED_SECRET="secret")
@@ -14,6 +18,9 @@ class TestHMACAuth(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
+        HMACGroupFactory(name="ltj_admin", permission_level=HMACGroup.ADMIN)
+        HMACGroupFactory(name="ltj_virka_hki", permission_level=HMACGroup.OFFICE_HKI)
+        HMACGroupFactory(name="ltj_virka", permission_level=HMACGroup.OFFICE)
 
     @freeze_time("2017-06-22 17:16:00")
     def test_is_valid_return_true_for_valid_request(self):
@@ -34,7 +41,7 @@ class TestHMACAuth(TestCase):
         self.assertTrue(hmac_auth.is_valid)
 
     @freeze_time("2017-06-22 20:00:00")
-    def test_out_of_clock_skew_raises_exception(self):
+    def test_user_role_raise_permission_denied_if_out_of_clock_skew(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -49,11 +56,11 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        with self.assertRaises(InvalidAuthorization):
-            hmac_auth.within_clock_skew
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
     @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_raises_exception_for_non_hmac_auth(self):
+    def test_user_role_raise_permission_denied_for_non_hmac_auth(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -68,22 +75,13 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        with self.assertRaises(InvalidAuthorization):
-            hmac_auth.is_valid
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
     @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_return_false_if_missing_auth_header(self):
-        request = self.factory.get(
-            "/test-url/",
-            HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
-            HTTP_HOST="hmac.com",
-            HTTP_REQUEST_LINE="GET /requests HTTP/1.1",
-        )
-        hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
-
-    @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_raises_exception_if_missing_header_used_in_credentials(self):
+    def test_user_role_raise_permission_denied_if_using_wrong_headers(
+        self,
+    ):
         request = self.factory.get(
             "/test-url/",
             HTTP_HOST="hmac.com",
@@ -97,11 +95,11 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        with self.assertRaises(InvalidAuthorization):
-            hmac_auth.is_valid
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
     @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_raises_exception_if_missing_required_credential_key(self):
+    def test_user_role_raise_permission_denied_if_missing_required_credential_key(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -115,11 +113,11 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        with self.assertRaises(InvalidAuthorization):
-            hmac_auth.is_valid
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
     @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_raise_exception_for_invalid_digest_algorithm(self):
+    def test_user_role_raise_permission_denied_for_invalid_digest_algorithm(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -134,11 +132,11 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        with self.assertRaises(InvalidAuthorization):
-            hmac_auth.is_valid
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
     @freeze_time("2017-06-22 17:16:00")
-    def test_is_valid_return_false_if_invalid_signature(self):
+    def test_user_role_raise_permission_denied_if_invalid_signature(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -153,26 +151,59 @@ class TestHMACAuth(TestCase):
             ),
         )
         hmac_auth = HMACAuth(request)
-        self.assertFalse(hmac_auth.is_valid)
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
-    def test_has_auth_group_return_true(self):
+    def test_return_public_role_if_missing_auth_header(self):
         request = self.factory.get(
             "/test-url/",
-            HTTP_X_FORWARDED_GROUPS="ltj_admin;ltj_virka_hki;ltj_virka",
+            HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
+            HTTP_HOST="hmac.com",
+            HTTP_REQUEST_LINE="GET /requests HTTP/1.1",
         )
         hmac_auth = HMACAuth(request)
-        hmac_auth._is_valid = True
-        self.assertTrue(hmac_auth.has_admin_group)
-        self.assertTrue(hmac_auth.has_office_hki_group)
-        self.assertTrue(hmac_auth.has_office_group)
+        self.assertEqual(hmac_auth.user_role, UserRole.PUBLIC)
 
-    def test_has_auth_group_return_false(self):
+    @freeze_time("2017-06-22 17:16:00")
+    def test_user_role_return_expected_user_role(self):
+        group_roles = [
+            ("ltj_admin", UserRole.ADMIN),
+            ("ltj_virka_hki", UserRole.OFFICE_HKI),
+            ("ltj_virka", UserRole.OFFICE),
+        ]
+        for group, expected_role in group_roles:
+            request = self.factory.get(
+                "/test-url/",
+                HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
+                HTTP_HOST="hmac.com",
+                HTTP_REQUEST_LINE="GET /requests HTTP/1.1",
+                HTTP_PROXY_AUTHORIZATION=(
+                    "hmac "
+                    'username="alice123", '
+                    'algorithm="hmac-sha256", '
+                    'headers="date request-line", '
+                    'signature="ujWCGHeec9Xd6UD2zlyxiNMCiXnDOWeVFMu5VeRUxtw="'
+                ),
+                HTTP_X_FORWARDED_GROUPS=group,
+            )
+            hmac_auth = HMACAuth(request)
+            self.assertEqual(hmac_auth.user_role, expected_role)
+
+    def test_user_role_raise_permission_denied_for_invalid_group(self):
         request = self.factory.get(
             "/test-url/",
-            HTTP_X_FORWARDED_GROUPS="",
+            HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
+            HTTP_HOST="hmac.com",
+            HTTP_REQUEST_LINE="GET /requests HTTP/1.1",
+            HTTP_PROXY_AUTHORIZATION=(
+                "hmac "
+                'username="alice123", '
+                'algorithm="hmac-sha256", '
+                'headers="date request-line", '
+                'signature="ujWCGHeec9Xd6UD2zlyxiNMCiXnDOWeVFMu5VeRUxtw="'
+            ),
+            HTTP_X_FORWARDED_GROUPS="invalid_group",
         )
         hmac_auth = HMACAuth(request)
-        hmac_auth._is_valid = True
-        self.assertFalse(hmac_auth.has_admin_group)
-        self.assertFalse(hmac_auth.has_office_hki_group)
-        self.assertFalse(hmac_auth.has_office_group)
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role

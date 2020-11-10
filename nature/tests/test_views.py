@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.utils.translation import activate
 from freezegun import freeze_time
 
+from hmac_auth.models import HMACGroup
+from hmac_auth.tests.factories import HMACGroupFactory
 from nature.models import PROTECTION_LEVELS, OFFICE_HKI_ONLY_FEATURE_CLASS_ID
 from nature.tests.factories import (
     FeatureClassFactory,
@@ -18,6 +20,7 @@ from nature.tests.factories import (
     SpeciesFactory,
 )
 from nature.tests.utils import make_user
+from ..enums import UserRole
 from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReportView
 
 
@@ -25,6 +28,10 @@ from ..views import FeatureWFSView, SpeciesReportView, FeatureObservationsReport
 class TestFeatureReportHMACAuth(TestCase):
     def setUp(self):
         activate("fi")
+        HMACGroupFactory(name="ltj_admin", permission_level=HMACGroup.ADMIN)
+        HMACGroupFactory(name="ltj_virka_hki", permission_level=HMACGroup.OFFICE_HKI)
+        HMACGroupFactory(name="ltj_virka", permission_level=HMACGroup.OFFICE)
+
         feature_class_office_hki = FeatureClassFactory(
             id=OFFICE_HKI_ONLY_FEATURE_CLASS_ID
         )
@@ -170,19 +177,11 @@ class TestFeatureReportHMACAuth(TestCase):
         )
 
     @freeze_time("2019-01-17 12:00:00")
-    def test_hmac_unauthorized_group_can_access_public_reports(self):
+    def test_request_without_auth_header_can_access_public_reports(self):
         headers = {
             "HTTP_HOST": "localhost",
             "HTTP_DATE": "Fri, 17 Jan 2019 12:00:00 GMT",
             "HTTP_REQUEST_LINE": "GET /test-path HTTP/1.1",
-            "HTTP_X_FORWARDED_GROUPS": "unauthorized_group",
-            "HTTP_PROXY_AUTHORIZATION": (
-                "hmac "
-                'username="ltj", '
-                'algorithm="hmac-sha256", '
-                'headers="host date request-line x-forwarded-groups", '
-                'signature="YnL36A5onS7CjpNvgUcyJ29O6twqqkyIQ1k0i4v+Q7M="'
-            ),
         }
 
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_admin.id})
@@ -363,8 +362,8 @@ class TestSpeciesReportView(TestCase):
         )
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=True),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.ADMIN),
     )
     def test_get_context_data_for_admin(self, *args):
         view = SpeciesReportView()
@@ -388,12 +387,8 @@ class TestSpeciesReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 0)
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_hki_group",
-        new_callable=PropertyMock(return_value=True),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.OFFICE_HKI),
     )
     def test_get_context_data_for_office_hki(self, *args):
         view = SpeciesReportView()
@@ -416,16 +411,8 @@ class TestSpeciesReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 1)
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_hki_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_group",
-        new_callable=PropertyMock(return_value=True),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.OFFICE),
     )
     def test_get_context_data_for_office(self, *args):
         view = SpeciesReportView()
@@ -444,16 +431,8 @@ class TestSpeciesReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 2)
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_hki_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_group",
-        new_callable=PropertyMock(return_value=False),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.PUBLIC),
     )
     def test_get_context_data_for_public_www(self, *args):
         view = SpeciesReportView()
@@ -493,8 +472,8 @@ class TestFeatureObservationsReportView(TestCase):
         )
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=True),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.ADMIN),
     )
     def test_get_context_data_for_admin(self, *args):
         view = FeatureObservationsReportView()
@@ -519,12 +498,8 @@ class TestFeatureObservationsReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 0)
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_hki_group",
-        new_callable=PropertyMock(return_value=True),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.OFFICE_HKI),
     )
     def test_get_context_data_for_office_hki(self, *args):
         view = FeatureObservationsReportView()
@@ -545,16 +520,8 @@ class TestFeatureObservationsReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 1)
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_hki_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_group",
-        new_callable=PropertyMock(return_value=True),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.OFFICE),
     )
     def test_get_context_data_for_office(self, *args):
         view = FeatureObservationsReportView()
@@ -575,16 +542,8 @@ class TestFeatureObservationsReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 1)
 
     @patch(
-        "nature.hmac.HMACAuth.has_admin_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_hki_group",
-        new_callable=PropertyMock(return_value=False),
-    )
-    @patch(
-        "nature.hmac.HMACAuth.has_office_group",
-        new_callable=PropertyMock(return_value=False),
+        "nature.views.HMACAuth.user_role",
+        new_callable=PropertyMock(return_value=UserRole.PUBLIC),
     )
     def test_get_context_data_for_public_www(self, *args):
         view = FeatureObservationsReportView()
