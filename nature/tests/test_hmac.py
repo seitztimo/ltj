@@ -154,7 +154,8 @@ class TestHMACAuth(TestCase):
         with self.assertRaises(PermissionDenied):
             hmac_auth.user_role
 
-    def test_return_public_role_if_missing_auth_header(self):
+    @freeze_time("2017-06-22 17:16:00")
+    def test_raise_permission_denied_if_missing_auth_header(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -162,7 +163,8 @@ class TestHMACAuth(TestCase):
             HTTP_REQUEST_LINE="GET /requests HTTP/1.1",
         )
         hmac_auth = HMACAuth(request)
-        self.assertEqual(hmac_auth.user_role, UserRole.PUBLIC)
+        with self.assertRaises(PermissionDenied):
+            hmac_auth.user_role
 
     @freeze_time("2017-06-22 17:16:00")
     def test_user_role_return_expected_user_role(self):
@@ -189,7 +191,8 @@ class TestHMACAuth(TestCase):
             hmac_auth = HMACAuth(request)
             self.assertEqual(hmac_auth.user_role, expected_role)
 
-    def test_user_role_raise_permission_denied_for_invalid_group(self):
+    @freeze_time("2017-06-22 17:16:00")
+    def test_user_role_return_public_role_for_invalid_group(self):
         request = self.factory.get(
             "/test-url/",
             HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
@@ -205,5 +208,22 @@ class TestHMACAuth(TestCase):
             HTTP_X_FORWARDED_GROUPS="invalid_group",
         )
         hmac_auth = HMACAuth(request)
-        with self.assertRaises(PermissionDenied):
-            hmac_auth.user_role
+        self.assertEqual(hmac_auth.user_role, UserRole.PUBLIC)
+
+    @freeze_time("2017-06-22 17:16:00")
+    def test_user_role_return_public_role_if_no_group_provided(self):
+        request = self.factory.get(
+            "/test-url/",
+            HTTP_DATE="Thu, 22 Jun 2017 17:15:21 GMT",
+            HTTP_HOST="hmac.com",
+            HTTP_REQUEST_LINE="GET /requests HTTP/1.1",
+            HTTP_PROXY_AUTHORIZATION=(
+                "hmac "
+                'username="alice123", '
+                'algorithm="hmac-sha256", '
+                'headers="date request-line", '
+                'signature="ujWCGHeec9Xd6UD2zlyxiNMCiXnDOWeVFMu5VeRUxtw="'
+            ),
+        )
+        hmac_auth = HMACAuth(request)
+        self.assertEqual(hmac_auth.user_role, UserRole.PUBLIC)

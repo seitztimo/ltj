@@ -74,9 +74,12 @@ class ProtectedObservationListReportViewMixin(ProtectedReportViewMixin):
     def get_filtered_observations(self):
         """Get filtered observations based on hmac user roles"""
         qs = self.get_observation_queryset()
+        if self.request.user.is_staff:
+            return qs
+
         hmac_auth = self._get_hmac_auth()
         role = hmac_auth.user_role
-        if self.request.user.is_staff or role == UserRole.ADMIN:
+        if role == UserRole.ADMIN:
             qs = qs.for_admin()
         elif role == UserRole.OFFICE_HKI:
             qs = qs.for_office_hki()
@@ -88,6 +91,9 @@ class ProtectedObservationListReportViewMixin(ProtectedReportViewMixin):
 
     def get_secret_observation_count(self):
         """Return the number of secret observations for current user role"""
+        if self.request.user.is_staff:
+            return 0
+
         hmac_auth = self._get_hmac_auth()
         user_role = hmac_auth.user_role
 

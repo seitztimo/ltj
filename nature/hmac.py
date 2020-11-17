@@ -74,7 +74,11 @@ class HMACAuth:
     def user_role(self):
         # seen as public access if no auth header provided
         if not self.auth_header:
-            return UserRole.PUBLIC
+            event = self._get_event(
+                "no-auth", "Authorization failed: no auth header provided"
+            )
+            capture_event(event)
+            raise PermissionDenied()
 
         if not self.is_valid:
             event = self._get_event(
@@ -90,11 +94,7 @@ class HMACAuth:
         elif self.has_office_group:
             return UserRole.OFFICE
         else:
-            event = self._get_event(
-                "invalid-group", "Authorization failed: invalid group provided"
-            )
-            capture_event(event)
-            raise PermissionDenied()
+            return UserRole.PUBLIC
 
     @property
     def within_clock_skew(self):
