@@ -177,7 +177,7 @@ class TestFeatureReportHMACAuth(TestCase):
         )
 
     @freeze_time("2019-01-17 12:00:00")
-    def test_request_without_auth_header_can_access_public_reports(self):
+    def test_access_reports_without_auth_header_forbidden(self):
         headers = {
             "HTTP_HOST": "localhost",
             "HTTP_DATE": "Fri, 17 Jan 2019 12:00:00 GMT",
@@ -186,24 +186,21 @@ class TestFeatureReportHMACAuth(TestCase):
 
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_admin.id})
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
         url = reverse(
             "nature:feature-report", kwargs={"pk": self.feature_office_hki.id}
         )
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_office.id})
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_public.id})
         response = self.client.get(url, **headers)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(
-            "<title>Kohderaportti - Yleisö</title>".encode("utf-8"), response.content
-        )
+        self.assertEqual(response.status_code, 403)
 
 
 class TestProtectedReportViewMixin(TestCase):
@@ -227,27 +224,27 @@ class TestProtectedReportViewMixin(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_user_access_report_non_www_not_found(self):
+    def test_user_access_report_non_www_denied(self):
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_non_www.id})
         self.client.force_login(self.user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
-    def test_user_access_report_www_success(self):
+    def test_user_access_report_www_denied(self):
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_www.id})
         self.client.force_login(self.user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 403)
 
-    def test_anonymous_user_access_report_non_www_not_found(self):
+    def test_anonymous_user_access_report_non_www_denied(self):
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_non_www.id})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
-    def test_anonymous_user_access_report_www_success(self):
+    def test_anonymous_user_access_report_www_denied(self):
         url = reverse("nature:feature-report", kwargs={"pk": self.feature_www.id})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 403)
 
 
 class MockResponse:
@@ -564,6 +561,10 @@ class TestFeatureObservationsReportView(TestCase):
         self.assertEqual(context["secret_observation_count"], 0)
 
 
+@patch(
+    "nature.views.HMACAuth.user_role",
+    new_callable=PropertyMock(return_value=UserRole.ADMIN),
+)
 class TestReportViews(TestCase):
     """
     TestCase that verifies that report views can be rendered correctly
@@ -572,13 +573,13 @@ class TestReportViews(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_feature_report(self):
+    def test_feature_report(self, *args):
         feature = FeatureFactory()
         url = reverse("nature:feature-report", kwargs={"pk": feature.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_observationseries_report(self):
+    def test_observationseries_report(self, *args):
         observation_series = ObservationSeriesFactory()
         url = reverse(
             "nature:observationseries-report", kwargs={"pk": observation_series.id}
@@ -586,14 +587,14 @@ class TestReportViews(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_feature_observations_report(self):
+    def test_feature_observations_report(self, *args):
         feature = FeatureFactory()
         ObservationFactory(feature=feature)
         url = reverse("nature:feature-observations-report", kwargs={"pk": feature.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_feature_habitattypeobservations_report(self):
+    def test_feature_habitattypeobservations_report(self, *args):
         feature = FeatureFactory()
         HabitatTypeObservationFactory(feature=feature)
         url = reverse(
@@ -602,7 +603,7 @@ class TestReportViews(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_species_report(self):
+    def test_species_report(self, *args):
         species_regulation = SpeciesRegulationFactory()
         url = reverse(
             "nature:species-report", kwargs={"pk": species_regulation.species_id}
@@ -610,7 +611,7 @@ class TestReportViews(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_species_regulations_report(self):
+    def test_species_regulations_report(self, *args):
         species_regulation = SpeciesRegulationFactory()
         url = reverse(
             "nature:species-regulations-report",
@@ -619,7 +620,7 @@ class TestReportViews(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_observation_report(self):
+    def test_observation_report(self, *args):
         observation = ObservationFactory()
         url = reverse("nature:observation-report", kwargs={"pk": observation.id})
         response = self.client.get(url)
