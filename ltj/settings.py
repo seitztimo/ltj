@@ -2,7 +2,7 @@ import os
 import environ
 import sentry_sdk
 import subprocess
-from helusers.defaults import SOCIAL_AUTH_PIPELINE
+from helusers.defaults import SOCIAL_AUTH_PIPELINE  # noqa: F401
 from sentry_sdk.integrations.django import DjangoIntegration
 
 root = environ.Path(__file__) - 2
