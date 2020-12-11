@@ -229,7 +229,7 @@ SOCIAL_AUTH_TUNNISTAMO_SECRET = env("SOCIAL_AUTH_TUNNISTAMO_SECRET")
 SOCIAL_AUTH_TUNNISTAMO_OIDC_ENDPOINT = env("SOCIAL_AUTH_TUNNISTAMO_OIDC_ENDPOINT")
 # Scopes in addition to default OIDC scopes
 # "ad_groups" requests user AD groups
-SOCIAL_AUTH_TUNNISTAMO_SCOPE = ['ad_groups']
+SOCIAL_AUTH_TUNNISTAMO_SCOPE = ["ad_groups"]
 
 # Custom settings
 
