@@ -14,17 +14,10 @@ info:
       several years. It is not particularly specific to Helsinki and should be
       usable elsewhere as well.
 
-  termsOfService: |-
-      Term of service here
-
-  license: ''
-  contact: ''
+#  termsOfService: ''
+#  license: ''
+#  contact: ''
   version: v1
-
-
-servers:
-  - description: City of Helsinki nature database development server
-    url: https://ltj.dev.hel.ninja/ltj-dev/v1/,
 
 
 paths:
