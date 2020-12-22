@@ -3,6 +3,9 @@ openapi: 3.0.2
 #
 # This document is work in progress
 #
+# Description and other text fields are not checked. These locations are
+# marked with TODO comment line
+
 
 #TODO Change these fields
 info:
@@ -14,6 +17,7 @@ info:
       several years. It is not particularly specific to Helsinki and should be
       usable elsewhere as well.
 
+# TODO Update legale documents and contat information
 #  termsOfService: ''
 #  license: ''
 #  contact: ''
@@ -24,7 +28,8 @@ paths:
   /abundance/:
     get:
       operationId: listAbundances
-      description: Abundance information for observation
+      #TODO
+      description: List of abundance information for observation
       parameters:
       - name: page
         required: false
@@ -63,7 +68,7 @@ paths:
   /abundance/{id}/:
     get:
       operationId: retrieveAbundance
-      description: Ambudance information for observation
+      description: Abudance information for observation
       parameters:
       - name: id
         in: path
@@ -144,7 +149,7 @@ paths:
   /feature/:
     get:
       operationId: listFeatures
-      description: ''
+      description: List of features or locations in nature
       parameters:
       - name: page
         required: false
@@ -176,14 +181,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Feature'
-          description: ''
+          description: Paginated list of features and locations in nature
       tags:
       - v1
 
   /feature/{id}/:
     get:
       operationId: retrieveFeature
-      description: ''
+      description: Feature or location in nature
       parameters:
       - name: id
         in: path
@@ -197,13 +202,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feature'
-          description: ''
+          description: Feature or location in ature
       tags:
       - v1
+
   /feature_class/:
     get:
       operationId: listFeatureClass
-      description: ''
+      description: List of feature classes
       parameters:
       - name: page
         required: false
@@ -235,13 +241,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/FeatureClass'
-          description: ''
+          description: Paginated list of feature classes
       tags:
       - v1
+
   /feature_class/{id}/:
     get:
       operationId: retrieveFeatureClass
-      description: ''
+      description: Feature class
       parameters:
       - name: id
         in: path
@@ -255,13 +262,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FeatureClass'
-          description: ''
+          description: Feature class
       tags:
       - v1
+
   /feature_value/:
     get:
       operationId: listFeatureValues
-      description: ''
+      description: List of connections between features and values
       parameters:
       - name: page
         required: false
@@ -293,13 +301,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/FeatureValue'
-          description: ''
+          description: Paginated list of feature and value connections
       tags:
       - v1
+
   /feature_value/{id}/:
     get:
       operationId: retrieveFeatureValue
-      description: ''
+      description: Connection between features and values
       parameters:
       - name: id
         in: path
@@ -313,13 +322,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FeatureValue'
-          description: ''
+          description: Connection between feature and value
       tags:
       - v1
+
   /feature_publication/:
     get:
       operationId: listFeaturePublications
-      description: ''
+      description: List of connections between features and publications
       parameters:
       - name: page
         required: false
@@ -351,13 +361,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/FeaturePublication'
-          description: ''
+          description: Paginated list of connections between features and publications
       tags:
       - v1
+
   /feature_publication/{id}/:
     get:
       operationId: retrieveFeaturePublication
-      description: ''
+      description: Connection between feature and publication
       parameters:
       - name: id
         in: path
@@ -371,13 +382,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FeaturePublication'
-          description: ''
+          description: Connection between feature and publication
       tags:
       - v1
+
   /feature_link/:
     get:
       operationId: listFeatureLinks
-      description: ''
+      description: List of links for features
       parameters:
       - name: page
         required: false
@@ -409,13 +421,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/FeatureLink'
-          description: ''
+          description: Paginated list of feature links
       tags:
       - v1
+
   /feature_link/{id}/:
     get:
       operationId: retrieveFeatureLink
-      description: ''
+      description: Link for feature
       parameters:
       - name: id
         in: path
@@ -429,13 +442,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FeatureLink'
-          description: ''
+          description: Link for feature
       tags:
       - v1
+
   /frequency/:
     get:
       operationId: listFrequencys
-      description: ''
+      description: List of friequencies for observation
       parameters:
       - name: page
         required: false
@@ -467,13 +481,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Frequency'
-          description: ''
+          description: Paginated list of frequencies for observation
       tags:
       - v1
+
   /frequency/{id}/:
     get:
       operationId: retrieveFrequency
-      description: ''
+      description: Frequency of observation
       parameters:
       - name: id
         in: path
@@ -487,9 +502,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Frequency'
-          description: ''
+          description: Frequency information of observation
       tags:
       - v1
+
   /value/:
     get:
       operationId: listValues
@@ -1845,11 +1861,13 @@ components:
           nullable: true
           maxLength: 5
           description: Short numeral description of abundance
+            #TODO This needs some more explanation
         explanation:
           type: string
           nullable: true
           maxLength: 50
           description: Short textual description of abundance
+            #TODO This needs some more explanation
         source:
           type: string
           nullable: true
@@ -1871,11 +1889,13 @@ components:
           nullable: true
           maxLength: 50
           description: Values 1-8
+            #TODO This needs some more explanation
         explanation:
           type: string
           nullable: true
           maxLength: 50
           description: Short description of breeding degree type
+            #TODO This needs some more explanation
         source:
           type: string
           nullable: true
@@ -1888,69 +1908,110 @@ components:
         id:
           type: integer
           readOnly: true
+          description: Database ID number
         url:
           type: string
           readOnly: true
+          description: Direct link to this object in API
         name:
           type: string
           nullable: true
           maxLength: 80
+          description: Feature or area name
         fid:
           type: string
           nullable: true
           maxLength: 10
+          description: Feature identification number. May include letters and digits
         feature_class:
           type: string
+          description: URL to feature class object
+            #TODO This needs a description
         geometry:
-          type: string
-          description: Point or area polygon in EPSG:4326 (WGS 84) geodesy system
+          type: object
+          properties:
+            type:
+              type: string
+              nullable: false
+              description: Type of coordinate. Possible values are Point, Polygon, MultiPolygon or LineString
+                #TODO This needs to be checked
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+              nullable: false
+              description: |-
+                  List of geolocations in EPSG:4326 (WGS 84) system. Entries
+                  in includes longitude and latitude. Some values may include
+                  latitude of zero.
+                    #TODO This needs to be checked
+          description: Geolocation or shape of feature
         description:
           type: string
           nullable: true
           maxLength: 255
+          description: Short description of feature
         notes:
           type: string
           nullable: true
           maxLength: 255
+          description: Additional information or notes for feature
         active:
           type: boolean
+          description: Is this feature active
+            #TODO Needs checking and some more information
         created_time:
           type: string
           format: date
           readOnly: true
+          nullable: true
+          description: Date for when this feature was added to database
         last_modified_time:
           type: string
           format: date-time
           readOnly: true
+          nullable: true
+          description: Date and time for last modification of this feature
         number:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
+          description: Additional field for additional information
+            #TODO This needs clarification
         area:
           type: number
           readOnly: true
+          description: Area size in hectare
         text:
           type: string
           readOnly: true
+          description: Textual description for the feature. Text may include HTML formating
+            #TODO This needs to be checked
         values:
           type: array
           items:
             type: string
           readOnly: true
+          description: List of api urls to related value objects
         publications:
           type: array
           items:
             type: string
           readOnly: true
+          description: List of api urls to related publications
         observations:
           type: array
           items:
             type: string
+          description: List of api urls to related publications
         habitat_type_observations:
           type: array
           items:
             type: string
+          description: List of api urls to habitat type observation relaed to this feature
         links:
           type: array
           items:
@@ -1959,40 +2020,41 @@ components:
               id:
                 type: integer
                 readOnly: true
+                description: Database ID number
               url:
                 type: string
                 readOnly: true
+                description: Direct link to this object in API
               link:
                 type: string
                 nullable: true
                 maxLength: 4000
+                description: Link URL address
               text:
                 type: string
                 nullable: true
                 maxLength: 4000
+                description: Text related to link ei. image caption
               link_type:
                 type: string
                 readOnly: true
+                description: Description of link type
               ordering:
                 type: integer
                 maximum: 2147483647
                 minimum: -2147483648
+                description: Links are ordered based on this value in report
+                  #TODO May need better wording
               link_text:
                 type: string
                 nullable: true
                 maxLength: 100
+                description: One line description for link
               protection_level:
-                enum:
-                - 1
-                - 2
-                - 3
+                enum: [1, 2, 3]
                 type: integer
-                minimum: -2147483648
-                maximum: 2147483647
-              feature:
-                type: string
-            required:
-            - feature
+                description: API visibility level for this feature
+          description: List of links related to this article
         square:
           type: object
           properties:
