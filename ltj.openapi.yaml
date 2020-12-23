@@ -1844,66 +1844,13 @@ paths:
 
 
 components:
-
   schemas:
-    Abundance:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          readOnly: true
-          description: Direct url to abundance object
-        value:
-          type: string
-          nullable: true
-          maxLength: 5
-          description: Short numeral description of abundance
-            #TODO This needs some more explanation
-        explanation:
-          type: string
-          nullable: true
-          maxLength: 50
-          description: Short textual description of abundance
-            #TODO This needs some more explanation
-        source:
-          type: string
-          nullable: true
-          maxLength: 50
-          description: Source for abundance definition ie. person or publication name
-
-    BreedingDegree:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          readOnly: true
-          description: Direct url to breeding degree object
-        value:
-          type: string
-          nullable: true
-          maxLength: 50
-          description: Values 1-8
-            #TODO This needs some more explanation
-        explanation:
-          type: string
-          nullable: true
-          maxLength: 50
-          description: Short description of breeding degree type
-            #TODO This needs some more explanation
-        source:
-          type: string
-          nullable: true
-          maxLength: 50
-          description: Source for breeding degree definition ie. person or publication
 
     Feature:
       type: object
+      description: |-
+          Natural feature or area
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -1926,7 +1873,6 @@ components:
         feature_class:
           type: string
           description: URL to feature class object
-            #TODO This needs a description
         geometry:
           type: object
           properties:
@@ -1946,7 +1892,7 @@ components:
                   List of geolocations in EPSG:4326 (WGS 84) system. Entries
                   in includes longitude and latitude. Some values may include
                   latitude of zero.
-                    #TODO This needs to be checked
+                  #TODO This needs to be checked
           description: Geolocation or shape of feature
         description:
           type: string
@@ -1979,7 +1925,7 @@ components:
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-          description: Additional field for additional information
+          description: Field for additional information
             #TODO This needs clarification
         area:
           type: number
@@ -2014,127 +1960,23 @@ components:
           description: List of api urls to habitat type observation relaed to this feature
         links:
           type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                readOnly: true
-                description: Database ID number
-              url:
-                type: string
-                readOnly: true
-                description: Direct link to this object in API
-              link:
-                type: string
-                nullable: true
-                maxLength: 4000
-                description: Link URL address
-              text:
-                type: string
-                nullable: true
-                maxLength: 4000
-                description: Text related to link ei. image caption
-              link_type:
-                type: string
-                readOnly: true
-                description: Description of link type
-              ordering:
-                type: integer
-                maximum: 2147483647
-                minimum: -2147483648
-                description: Links are ordered based on this value in report
-                  #TODO May need better wording
-              link_text:
-                type: string
-                nullable: true
-                maxLength: 100
-                description: One line description for link
-              protection_level:
-                enum: [1, 2, 3]
-                type: integer
-                description: API visibility level for this feature
           description: List of links related to this article
+          items:
+            $ref: '#/components/schemas/FeatureLink'
         square:
-          type: object
-          properties:
-            url:
-              type: string
-              readOnly: true
-            number:
-              type: string
-              nullable: true
-              maxLength: 10
-            degree_of_determination:
-              type: integer
-              maximum: 2147483647
-              minimum: -2147483648
-              nullable: true
-            additional_info:
-              type: string
-              nullable: true
-              maxLength: 255
-            feature:
-              type: string
-          required:
-          - feature
+          $ref: '#/components/schemas/Square'
         protection:
-          type: object
-          properties:
-            url:
-              type: string
-              readOnly: true
-            reported_area:
-              type: string
-              nullable: true
-              maxLength: 50
-            land_area:
-              type: string
-              nullable: true
-              maxLength: 50
-            water_area:
-              type: string
-              nullable: true
-              maxLength: 50
-            hiking:
-              type: string
-              nullable: true
-              maxLength: 255
-            regulations:
-              type: string
-              nullable: true
-              maxLength: 255
-            additional_info:
-              type: string
-              nullable: true
-              maxLength: 255
-            criteria:
-              type: array
-              items:
-                type: string
-              readOnly: true
-            conservation_programmes:
-              type: array
-              items:
-                type: string
-              readOnly: true
-            feature:
-              type: string
-          required:
-          - feature
+          $ref: '#/components/schemas/Protection'
         transactions:
           type: array
           items:
             type: string
           readOnly: true
+          description: List of API URLs related to this feature
         protection_level:
-          enum:
-          - 1
-          - 2
-          - 3
+          enum: [1, 2, 3]
           type: integer
-          minimum: -2147483648
-          maximum: 2147483647
+          description: API visibility level for this object
       required:
       - feature_class
       - geometry
@@ -2143,117 +1985,336 @@ components:
       - links
       - square
       - protection
+
     FeatureClass:
       type: object
+      description: Class for natural feature or area
+        #TODO Check this description
       properties:
         id:
           type: string
           maxLength: 10
+          description: Short text ID
         url:
           type: string
           readOnly: true
+          description: API URL to this object
         name:
           type: string
           nullable: true
           maxLength: 50
+          description: Class name
         additional_info:
           type: string
           nullable: true
           maxLength: 255
+          description: Additional comments or information
         super_class:
           type: string
           nullable: true
+          description: API URL to super class object
         reporting:
           type: boolean
+          description: Is this class included in reporting
+            #TODO This description needs checking and clarification
         www:
           type: boolean
+          description: Is this class shown in public version
+            #TODO This needs to be checked
         metadata:
           type: string
           nullable: true
           maxLength: 4000
+          description: Link to metadata
         features:
           type: array
           items:
             type: string
+          description: List of links to features in this class
         open_data:
           type: boolean
+          description: Will this class be shown in public API
       required:
       - id
       - features
-    FeatureValue:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          readOnly: true
-        value:
-          type: string
-        feature:
-          type: string
-      required:
-      - value
-      - feature
-    FeaturePublication:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          readOnly: true
-        feature:
-          type: string
-        publication:
-          type: string
-      required:
-      - feature
-      - publication
+
     FeatureLink:
       type: object
+      description: Web link for feature
+        #TODO Check this description
       properties:
         id:
           type: integer
           readOnly: true
+          description: Link database ID number
         url:
           type: string
           readOnly: true
+          description: Direct link to this object in API
         link:
           type: string
           nullable: true
           maxLength: 4000
+          description: Link URL address
         text:
           type: string
           nullable: true
           maxLength: 4000
+          description: Text related to link ei. image caption
         link_type:
           type: string
           readOnly: true
+          description: Description of link type
         ordering:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
+          description: Links are ordered based on this value in report
+            #TODO May need better wording
         link_text:
           type: string
           nullable: true
           maxLength: 100
+          description: One line description for link
         protection_level:
-          enum:
-          - 1
-          - 2
-          - 3
+          enum: [1, 2, 3]
           type: integer
-          minimum: -2147483648
-          maximum: 2147483647
+          description: API visibility level for this object
+
+    Value:
+      type: object
+      description: |-
+          Description about value this natural feature holds
+          #TODO Check this description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Database ID for this object
+        url:
+          type: string
+          readOnly: true
+          description: API URL to this object
+        explanation:
+          type: string
+          nullable: true
+          maxLength: 50
+          description: Short description what this value means
+        value:
+          type: string
+          nullable: true
+          maxLength: 10
+          description: Value class ei. 1, 2 or 3 or i, ii or iii
+            #TODO Check this description
+        date:
+          type: string
+          format: date
+          nullable: true
+          description: Date given by user
+        link:
+          type: string
+          nullable: true
+          maxLength: 4000
+          description: Link to additional information
+        features:
+          type: array
+          items:
+            type: string
+          readOnly: true
+          description: List of links to related feature objects
+
+    FeatureValue:
+      type: object
+      description: Connection table for features and values
+        #TODO Check this description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Database ID for this object
+        url:
+          type: string
+          readOnly: true
+          description: API URL to this object
+        value:
+          type: string
+          description: API URL to value object
         feature:
           type: string
+          description: API URL to feature object
+      required:
+      - value
+      - feature
+
+    FeaturePublication:
+      type: object
+      description: Connection table for features and publications
+        #TODO Check this description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Database ID for this object
+        url:
+          type: string
+          readOnly: true
+          description: API URL to this object
+        feature:
+          type: string
+          description: API URL to feature object
+        publication:
+          type: string
+          description: API URL to publication object
       required:
       - feature
+      - publication
+
+
+    Observation:
+      type: object
+      description: |-
+          Species observation
+          #TODO Check this description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Database ID for this object
+        url:
+          type: string
+          readOnly: true
+          description: API URL to this object
+        feature:
+          type: string
+          description: API URL to realated feature
+        species:
+          type: string
+          description: API URL to observed species
+        series:
+          type: string
+          nullable: true
+          description: API URL to observation series this observation os part of
+        abundance:
+          $ref: '#/components/schemas/Abundance'
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+        migration_class:
+          $ref: '#/components/schemas/MigrationClass'
+        origin:
+          $ref: '#/components/schemas/Origin'
+        breeding_degree:
+          $ref: '#/components/schemas/BreedingDegree'
+        description:
+          type: string
+          nullable: true
+          maxLength: 255
+          description: Description of observation
+        notes:
+          type: string
+          nullable: true
+          maxLength: 100
+          description: Information about observation or other notes
+        date:
+          type: string
+          format: date
+          nullable: true
+          description: User given date. Date may come from observation series and in that case this is not needed
+        occurrence:
+          type: string
+          readOnly: true
+          description: API URL to occurance object
+        created_time:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date and time this object was added to database
+        last_modified_time:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Last modification time
+        protection_level:
+          enum: [1, 2, 3]
+          type: integer
+          description: API visibility level for this object
+        code:
+          type: string
+          nullable: true
+          maxLength: 100
+          description: Unique identification code for observation
+      required:
+      - feature
+      - species
+      - abundance
+      - frequency
+      - migration_class
+      - origin
+      - breeding_degree
+
+    Abundance:
+      type: object
+      description: Abudance information for species observataion
+        #TODO Check this description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          readOnly: true
+          description: Direct url to abundance object
+        value:
+          type: string
+          nullable: true
+          maxLength: 5
+          description: Short numeral description of abundance
+            #TODO This needs some more explanation
+        explanation:
+          type: string
+          nullable: true
+          maxLength: 50
+          description: Short textual description of abundance
+            #TODO This needs some more explanation
+        source:
+          type: string
+          nullable: true
+          maxLength: 50
+          description: Source for abundance definition ie. person or publication name
+
+    BreedingDegree:
+      type: object
+      description: Breeding degree information for species
+        #TODO Check this description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          readOnly: true
+          description: Direct url to breeding degree object
+        value:
+          type: string
+          nullable: true
+          maxLength: 50
+          description: Values 1-8
+            #TODO This needs some more explanation
+        explanation:
+          type: string
+          nullable: true
+          maxLength: 50
+          description: Short description of breeding degree type
+            #TODO This needs some more explanation
+        source:
+          type: string
+          nullable: true
+          maxLength: 50
+          description: Source for breeding degree definition ie. person or publication
+
     Frequency:
       type: object
+      description: Observation frequency
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2273,38 +2334,11 @@ components:
           type: string
           nullable: true
           maxLength: 50
-    Value:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          readOnly: true
-        explanation:
-          type: string
-          nullable: true
-          maxLength: 50
-        value:
-          type: string
-          nullable: true
-          maxLength: 10
-        date:
-          type: string
-          format: date
-          nullable: true
-        link:
-          type: string
-          nullable: true
-          maxLength: 4000
-        features:
-          type: array
-          items:
-            type: string
-          readOnly: true
     Species:
       type: object
+      description: |-
+          Species information
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2358,13 +2392,8 @@ components:
           nullable: true
           maxLength: 150
         protection_level:
-          enum:
-          - 1
-          - 2
-          - 3
+          enum: [1, 2, 3]
           type: integer
-          minimum: -2147483648
-          maximum: 2147483647
         additional_info:
           type: string
           nullable: true
@@ -2385,6 +2414,8 @@ components:
       - observations
     LinkType:
       type: object
+      description: Type information for feature link
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2398,6 +2429,8 @@ components:
           maxLength: 20
     MigrationClass:
       type: object
+      description: Migration information for observation
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2420,6 +2453,8 @@ components:
           maxLength: 50
     Occurrence:
       type: object
+      description: Observation occurance
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2431,169 +2466,11 @@ components:
           type: string
           nullable: true
           maxLength: 50
-    Observation:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        url:
-          type: string
-          readOnly: true
-        feature:
-          type: string
-        species:
-          type: string
-        series:
-          type: string
-          nullable: true
-        abundance:
-          type: object
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            url:
-              type: string
-              readOnly: true
-            value:
-              type: string
-              nullable: true
-              maxLength: 5
-            explanation:
-              type: string
-              nullable: true
-              maxLength: 50
-            source:
-              type: string
-              nullable: true
-              maxLength: 50
-        frequency:
-          type: object
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            url:
-              type: string
-              readOnly: true
-            value:
-              type: string
-              nullable: true
-              maxLength: 5
-            explanation:
-              type: string
-              nullable: true
-              maxLength: 50
-            source:
-              type: string
-              nullable: true
-              maxLength: 50
-        migration_class:
-          type: object
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            url:
-              type: string
-              readOnly: true
-            value:
-              type: integer
-              maximum: 2147483647
-              minimum: -2147483648
-              nullable: true
-            explanation:
-              type: string
-              nullable: true
-              maxLength: 50
-            source:
-              type: string
-              nullable: true
-              maxLength: 50
-        origin:
-          type: object
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            url:
-              type: string
-              readOnly: true
-            explanation:
-              type: string
-              nullable: true
-              maxLength: 50
-            source:
-              type: string
-              nullable: true
-              maxLength: 50
-        breeding_degree:
-          type: object
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            url:
-              type: string
-              readOnly: true
-            value:
-              type: string
-              nullable: true
-              maxLength: 50
-            explanation:
-              type: string
-              nullable: true
-              maxLength: 50
-            source:
-              type: string
-              nullable: true
-              maxLength: 50
-        description:
-          type: string
-          nullable: true
-          maxLength: 255
-        notes:
-          type: string
-          nullable: true
-          maxLength: 100
-        date:
-          type: string
-          format: date
-          nullable: true
-        occurrence:
-          type: string
-          readOnly: true
-        created_time:
-          type: string
-          format: date-time
-          readOnly: true
-        last_modified_time:
-          type: string
-          format: date-time
-          readOnly: true
-        protection_level:
-          enum:
-          - 1
-          - 2
-          - 3
-          type: integer
-          minimum: -2147483648
-          maximum: 2147483647
-        code:
-          type: string
-          nullable: true
-          maxLength: 100
-      required:
-      - feature
-      - species
-      - abundance
-      - frequency
-      - migration_class
-      - origin
-      - breeding_degree
     ObservationSeries:
       type: object
+      description: |-
+          Observation series information
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2645,6 +2522,9 @@ components:
       - habitat_type_observations
     HabitatType:
       type: object
+      description: |-
+          Habitat type register
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2685,6 +2565,9 @@ components:
       - habitat_type_observations
     HabitatTypeObservation:
       type: object
+      description: |-
+          Habitat type observation
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2721,6 +2604,7 @@ components:
       - observation_series
     HabitatTypeRegulation:
       type: object
+      description: Connection table for habitat type and regulation
       properties:
         id:
           type: integer
@@ -2737,6 +2621,9 @@ components:
       - regulation
     Publication:
       type: object
+      description: |-
+          Publication information
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2782,6 +2669,8 @@ components:
           readOnly: true
     PublicationType:
       type: object
+      description: Publication type information
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2795,50 +2684,71 @@ components:
           maxLength: 20
     Protection:
       type: object
+      description: |-
+          Protection information for feature
+          #TODO Check this description
       properties:
         url:
           type: string
           readOnly: true
+          description: API URL to this protection object
         reported_area:
           type: string
           nullable: true
           maxLength: 50
+          description: Size for reported area
+            #TODO What unit is this in
         land_area:
           type: string
           nullable: true
           maxLength: 50
+          description: Size of land area
+            #TODO What unit is this in
         water_area:
           type: string
           nullable: true
           maxLength: 50
+          description: Size of water area
+            #TODO What unit is this in
         hiking:
           type: string
           nullable: true
           maxLength: 255
+          description: Small description of hiking and other outdoor activity possibilities
+            #TODO Check this
         regulations:
           type: string
           nullable: true
           maxLength: 255
+          description: Short text description of regulations concerning this feature
         additional_info:
           type: string
           nullable: true
           maxLength: 255
+          description: Extra information about feature protection
         criteria:
           type: array
           items:
             type: string
           readOnly: true
+          description: List of API URLs to protection criteria object
         conservation_programmes:
           type: array
           items:
             type: string
           readOnly: true
+          description: List of API URLs to conservation programmes for this protection type
+            #TODO Check this description
         feature:
           type: string
+          description: API URL to protected feature
       required:
       - feature
     Regulation:
       type: object
+      description: |-
+          Ragulation information concerning species
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2895,6 +2805,9 @@ components:
       - valid
     Transaction:
       type: object
+      description: |-
+          Information about changes for regulations or protection concerning natural features or areas
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -2906,7 +2819,8 @@ components:
           type: string
           nullable: true
           maxLength: 20
-          description: Journal number given by Centre for Environment #TODO
+          description: Journal number given by Centre for Environment
+            #TODO Document says these are IDs given by luontokeskus
         description:
           type: string
           nullable: true
@@ -2952,6 +2866,8 @@ components:
       - transaction_type
     TransactionType:
       type: object
+      description: Type information for transaction
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2971,6 +2887,8 @@ components:
       - transactions
     TransactionFeature:
       type: object
+      description: Connection table for features and transactions
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -2987,6 +2905,9 @@ components:
       - transaction
     Criterion:
       type: object
+      description: |-
+          Description of protection criterion
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -3014,6 +2935,8 @@ components:
       - protected_features
     ProtectionConservationProgramme:
       type: object
+      description: Connection table for protection and conservation program
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -3030,6 +2953,9 @@ components:
       - conservation_programme
     ConservationProgramme:
       type: object
+      description: |-
+          Conservation program description for protection
+          #TODO Check this description
       properties:
         id:
           type: integer
@@ -3049,6 +2975,8 @@ components:
       - protected_features
     Origin:
       type: object
+      description: Observation origin information
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -3066,6 +2994,8 @@ components:
           maxLength: 50
     SpeciesRegulation:
       type: object
+      description: Connection table for species register and regulation
+        #TODO Check this description
       properties:
         id:
           type: integer
@@ -3080,27 +3010,37 @@ components:
       required:
       - species
       - regulation
+
     Square:
       type: object
+      description: ''
+        #TODO This needs a description
       properties:
         url:
           type: string
           readOnly: true
+          description: API url for square object
         number:
           type: string
           nullable: true
           maxLength: 10
+          description: Square number
+            #TODO Needs more clarification
         degree_of_determination:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
+          description: Values ie. from 1 to 5
+            #TODO This needs clarification: arvon selitys määritellään aineistokuvauksessa
         additional_info:
           type: string
           nullable: true
           maxLength: 255
+          description: Additional information about suqare
         feature:
           type: string
+          description: URL to related feature
       required:
       - feature
 
