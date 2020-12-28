@@ -2408,7 +2408,7 @@ components:
           type: string
           nullable: true
           maxLength: 5
-          description: Highest classification: plant, mushroom, animal
+          description: Highest classification. plant, mushroom, animal
         taxon_1:
           type: string
           nullable: true
@@ -2483,7 +2483,8 @@ components:
           type: string
           nullable: true
           maxLength: 100
-          description: 2016: MX-code from lajitietokeskus
+          description: 2016, MX-code from lajitietokeskus
+            #TODO Needs better description
       required:
       - observations
 
