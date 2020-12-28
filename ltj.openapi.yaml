@@ -509,7 +509,7 @@ paths:
   /value/:
     get:
       operationId: listValues
-      description: ''
+      description: List of feature value objects
       parameters:
       - name: page
         required: false
@@ -541,13 +541,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Value'
-          description: ''
+          description: Paginated list of frequencies for value objects
       tags:
       - v1
+
   /value/{id}/:
     get:
       operationId: retrieveValue
-      description: ''
+      description: Feature value
       parameters:
       - name: id
         in: path
@@ -561,13 +562,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Value'
-          description: ''
+          description: Feature value object
       tags:
       - v1
+
   /species/:
     get:
       operationId: listSpecies
-      description: ''
+      description: List of species information objects
       parameters:
       - name: page
         required: false
@@ -599,13 +601,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Species'
-          description: ''
+          description: Paginated list of frequencies for species objects
       tags:
       - v1
+
   /species/{id}/:
     get:
       operationId: retrieveSpecies
-      description: ''
+      description: Species information
       parameters:
       - name: id
         in: path
@@ -619,13 +622,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Species'
-          description: ''
+          description: Species information object
       tags:
       - v1
+
   /link_type/:
     get:
       operationId: listLinkTypes
-      description: ''
+      description: List of feature link types
       parameters:
       - name: page
         required: false
@@ -657,13 +661,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/LinkType'
-          description: ''
+          description: Paginated list of frequencies for link type objects
       tags:
       - v1
+
   /link_type/{id}/:
     get:
       operationId: retrieveLinkType
-      description: ''
+      description: Feature link type
       parameters:
       - name: id
         in: path
@@ -677,13 +682,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LinkType'
-          description: ''
+          description: Feature link type object
       tags:
       - v1
+
   /migration_class/:
     get:
       operationId: listMigrationClass
-      description: ''
+      description: List of migration information for observation data
       parameters:
       - name: page
         required: false
@@ -715,13 +721,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/MigrationClass'
-          description: ''
+          description: Paginated list of frequencies for migration class objects
       tags:
       - v1
+
   /migration_class/{id}/:
     get:
       operationId: retrieveMigrationClass
-      description: ''
+      description: Migration information for observation
       parameters:
       - name: id
         in: path
@@ -735,13 +742,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MigrationClass'
-          description: ''
+          description: Migration class object
       tags:
       - v1
+
   /occurrence/:
     get:
       operationId: listOccurrences
-      description: ''
+      description: List of observation occurrence information
       parameters:
       - name: page
         required: false
@@ -773,13 +781,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Occurrence'
-          description: ''
+          description: Paginated list of frequencies for occurrence objects
       tags:
       - v1
+
   /occurrence/{id}/:
     get:
       operationId: retrieveOccurrence
-      description: ''
+      description: Observation occurrence
       parameters:
       - name: id
         in: path
@@ -793,13 +802,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Occurrence'
-          description: ''
+          description: Occurrence object
       tags:
       - v1
+
   /observation/:
     get:
       operationId: listObservations
-      description: ''
+      description: List of species observations
       parameters:
       - name: page
         required: false
@@ -831,13 +841,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Observation'
-          description: ''
+          description: Paginated list of frequencies for observation objects
       tags:
       - v1
+
   /observation/{id}/:
     get:
       operationId: retrieveObservation
-      description: ''
+      description: Species observation
       parameters:
       - name: id
         in: path
@@ -851,13 +862,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Observation'
-          description: ''
+          description: Observation object
       tags:
       - v1
+
   /observation_series/:
     get:
       operationId: listObservationSeries
-      description: ''
+      description: List of observation series
       parameters:
       - name: page
         required: false
@@ -889,13 +901,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/ObservationSeries'
-          description: ''
+          description: Paginated list of frequencies for observation series objects
       tags:
       - v1
+
   /observation_series/{id}/:
     get:
       operationId: retrieveObservationSeries
-      description: ''
+      description: Observation series information
       parameters:
       - name: id
         in: path
@@ -909,13 +922,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ObservationSeries'
-          description: ''
+          description: Observation series object
       tags:
       - v1
+
   /habitat_type/:
     get:
       operationId: listHabitatTypes
-      description: ''
+      description: List of habitat types
       parameters:
       - name: page
         required: false
@@ -947,13 +961,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/HabitatType'
-          description: ''
+          description: Paginated list of frequencies for habitat type objects
       tags:
       - v1
+
   /habitat_type/{id}/:
     get:
       operationId: retrieveHabitatType
-      description: ''
+      description: Habitat type register
       parameters:
       - name: id
         in: path
@@ -967,13 +982,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HabitatType'
-          description: ''
+          description: Habitat type object
       tags:
       - v1
+
   /habitat_type_observation/:
     get:
       operationId: listHabitatTypeObservations
-      description: ''
+      description: List of habitat type observations
       parameters:
       - name: page
         required: false
@@ -1005,13 +1021,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/HabitatTypeObservation'
-          description: ''
+          description: Paginated list of frequencies for habitat type observation objects
       tags:
       - v1
+
   /habitat_type_observation/{id}/:
     get:
       operationId: retrieveHabitatTypeObservation
-      description: ''
+      description: Habitat type observation
       parameters:
       - name: id
         in: path
@@ -1025,13 +1042,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HabitatTypeObservation'
-          description: ''
+          description: habitat type observation object
       tags:
       - v1
+
   /habitat_type_regulation/:
     get:
       operationId: listHabitatTypeRegulations
-      description: ''
+      description: List of habitat type and regulation connections
       parameters:
       - name: page
         required: false
@@ -1063,13 +1081,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/HabitatTypeRegulation'
-          description: ''
+          description: Paginated list of frequencies for habitat type and regulation objects connections
       tags:
       - v1
+
   /habitat_type_regulation/{id}/:
     get:
       operationId: retrieveHabitatTypeRegulation
-      description: ''
+      description: Connection between habitat type and regulation
       parameters:
       - name: id
         in: path
@@ -1083,13 +1102,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HabitatTypeRegulation'
-          description: ''
+          description: Habitat type and regulation objects connection
       tags:
       - v1
+
   /publication/:
     get:
       operationId: listPublications
-      description: ''
+      description: List of publications relevant to natural features
       parameters:
       - name: page
         required: false
@@ -1121,13 +1141,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Publication'
-          description: ''
+          description: Paginated list of frequencies for publication objects
       tags:
       - v1
+
   /publication/{id}/:
     get:
       operationId: retrievePublication
-      description: ''
+      description: Publication related to natural feature
       parameters:
       - name: id
         in: path
@@ -1141,13 +1162,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Publication'
-          description: ''
+          description: Publication object
       tags:
       - v1
+
   /publication_type/:
     get:
       operationId: listPublicationTypes
-      description: ''
+      description: List of publication types
       parameters:
       - name: page
         required: false
@@ -1179,13 +1201,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/PublicationType'
-          description: ''
+          description: Paginated list of frequencies for pyblication type objects
       tags:
       - v1
+
   /publication_type/{id}/:
     get:
       operationId: retrievePublicationType
-      description: ''
+      description: Publication type information
       parameters:
       - name: id
         in: path
@@ -1199,13 +1222,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicationType'
-          description: ''
+          description: Publication type object
       tags:
       - v1
+
   /protection/:
     get:
       operationId: listProtections
-      description: ''
+      description: List of protection information
       parameters:
       - name: page
         required: false
@@ -1237,13 +1261,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Protection'
-          description: ''
+          description: Paginated list of frequencies for protection objects
       tags:
       - v1
+
   /protection/{id}/:
     get:
       operationId: retrieveProtection
-      description: ''
+      description: Protection information for feature
       parameters:
       - name: id
         in: path
@@ -1257,13 +1282,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Protection'
-          description: ''
+          description: Protection objects
       tags:
       - v1
+
   /regulation/:
     get:
       operationId: listRegulations
-      description: ''
+      description: List of species regulation information
       parameters:
       - name: page
         required: false
@@ -1295,13 +1321,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Regulation'
-          description: ''
+          description: Paginated list of frequencies for regulation object
       tags:
       - v1
+
   /regulation/{id}/:
     get:
       operationId: retrieveRegulation
-      description: ''
+      description: Ragulation information concerning species
       parameters:
       - name: id
         in: path
@@ -1315,13 +1342,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Regulation'
-          description: ''
+          description: Regultaion object
       tags:
       - v1
+
   /transaction/:
     get:
       operationId: listTransactions
-      description: ''
+      description: List of regulation transaction information
       parameters:
       - name: page
         required: false
@@ -1353,13 +1381,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Transaction'
-          description: ''
+          description: Paginated list of frequencies for transaction objects
       tags:
       - v1
+
   /transaction/{id}/:
     get:
       operationId: retrieveTransaction
-      description: ''
+      description: Information about changes for regulations or protection concerning natural features or areas
       parameters:
       - name: id
         in: path
@@ -1373,13 +1402,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transaction'
-          description: ''
+          description: Transaction object
       tags:
       - v1
+
   /transaction_type/:
     get:
       operationId: listTransactionTypes
-      description: ''
+      description: List of transaction types
       parameters:
       - name: page
         required: false
@@ -1411,13 +1441,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/TransactionType'
-          description: ''
+          description: Paginated list of frequencies for transaction type objects
       tags:
       - v1
+
   /transaction_type/{id}/:
     get:
       operationId: retrieveTransactionType
-      description: ''
+      description: Type information for transaction
       parameters:
       - name: id
         in: path
@@ -1431,13 +1462,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionType'
-          description: ''
+          description: Transaction type object
       tags:
       - v1
+
   /transaction_feature/:
     get:
       operationId: listTransactionFeatures
-      description: ''
+      description: List of connections between transactions and features
       parameters:
       - name: page
         required: false
@@ -1469,13 +1501,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/TransactionFeature'
-          description: ''
+          description: Paginated list of frequencies of connections between transactions and features
       tags:
       - v1
+
   /transaction_feature/{id}/:
     get:
       operationId: retrieveTransactionFeature
-      description: ''
+      description: Connection between features and transactions
       parameters:
       - name: id
         in: path
@@ -1489,13 +1522,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionFeature'
-          description: ''
+          description: transaction feature object
       tags:
       - v1
+
   /protection_criterion/:
     get:
       operationId: listCriterions
-      description: ''
+      description: List of protection criterions
       parameters:
       - name: page
         required: false
@@ -1527,13 +1561,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Criterion'
-          description: ''
+          description: Paginated list of frequencies for protection criterion objects
       tags:
       - v1
+
   /protection_criterion/{id}/:
     get:
       operationId: retrieveCriterion
-      description: ''
+      description: Description of protection criterion
       parameters:
       - name: id
         in: path
@@ -1547,13 +1582,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Criterion'
-          description: ''
+          description: Protection criterion objects
       tags:
       - v1
+
   /protection_conservation_programme/:
     get:
       operationId: listProtectionConservationProgrammes
-      description: ''
+      description: List of connections between protection and conservation program objects
       parameters:
       - name: page
         required: false
@@ -1585,13 +1621,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/ProtectionConservationProgramme'
-          description: ''
+          description: Paginated list of frequencies of connections between protection and conservation program objects
       tags:
       - v1
+
   /protection_conservation_programme/{id}/:
     get:
       operationId: retrieveProtectionConservationProgramme
-      description: ''
+      description: Connection between protection and conservation program
       parameters:
       - name: id
         in: path
@@ -1606,13 +1643,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProtectionConservationProgramme'
-          description: ''
+          description: protection conservation programme object
       tags:
       - v1
+
   /conservation_programme/:
     get:
       operationId: listConservationProgrammes
-      description: ''
+      description: List of conservation programs
       parameters:
       - name: page
         required: false
@@ -1644,13 +1682,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/ConservationProgramme'
-          description: ''
+          description: Paginated list of frequencies for conservation program objects
       tags:
       - v1
+
   /conservation_programme/{id}/:
     get:
       operationId: retrieveConservationProgramme
-      description: ''
+      description: Conservation program description for protection
       parameters:
       - name: id
         in: path
@@ -1664,13 +1703,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConservationProgramme'
-          description: ''
+          description: Conservation program object
       tags:
       - v1
+
   /origin/:
     get:
       operationId: listOrigins
-      description: ''
+      description: List of origin information for species observations
       parameters:
       - name: page
         required: false
@@ -1702,13 +1742,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Origin'
-          description: ''
+          description: Paginated list of frequencies for origin objects
       tags:
       - v1
+
   /origin/{id}/:
     get:
       operationId: retrieveOrigin
-      description: ''
+      description: Species observation origin information
       parameters:
       - name: id
         in: path
@@ -1722,13 +1763,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Origin'
-          description: ''
+          description: Origin object
       tags:
       - v1
+
   /species_regulation/:
     get:
       operationId: listSpeciesRegulations
-      description: ''
+      description: List of connections between species and regulations
       parameters:
       - name: page
         required: false
@@ -1760,13 +1802,14 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/SpeciesRegulation'
-          description: ''
+          description: Paginated list of frequencies for species regulation objects
       tags:
       - v1
+
   /species_regulation/{id}/:
     get:
       operationId: retrieveSpeciesRegulation
-      description: ''
+      description: Connection between species register and regulation
       parameters:
       - name: id
         in: path
@@ -1780,13 +1823,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpeciesRegulation'
-          description: ''
+          description: Species regulation object
       tags:
       - v1
+
   /square/:
     get:
       operationId: listSquares
-      description: ''
+      description: List of squares
+        #TODO This needs clarification
       parameters:
       - name: page
         required: false
@@ -1818,13 +1863,15 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Square'
-          description: ''
+          description: Paginated list of frequencies for square objects
       tags:
       - v1
+
   /square/{id}/:
     get:
       operationId: retrieveSquare
-      description: ''
+      description: Square
+        #TODO This needs a description
       parameters:
       - name: id
         in: path
@@ -1838,7 +1885,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Square'
-          description: ''
+          description: square object
       tags:
       - v1
 
@@ -3110,7 +3157,7 @@ components:
 
     Origin:
       type: object
-      description: Observation origin information
+      description: Species observation origin information
         #TODO Check this description
       properties:
         id:
@@ -3157,7 +3204,7 @@ components:
 
     Square:
       type: object
-      description: ''
+      description: Square
         #TODO This needs a description
       properties:
         url:
