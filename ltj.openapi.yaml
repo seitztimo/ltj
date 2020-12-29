@@ -24,6 +24,11 @@ info:
   version: v1
 
 
+servers:
+  - description: City of Helsinki nature database development server
+    url: https://ltj.dev.hel.ninja/ltj-dev/v1
+
+
 paths:
   /abundance/:
     get:
@@ -1929,6 +1934,7 @@ components:
               description: Type of coordinate. Possible values are Point, Polygon, MultiPolygon or LineString
                 #TODO This needs to be checked
             coordinates:
+              #TODO This is usualy an array of arrays
               type: array
               items:
                 type: array
