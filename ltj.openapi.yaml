@@ -11,11 +11,7 @@ openapi: 3.0.2
 info:
   title: 'City of Helsinki nature database API (LTJ)'
   description: |-
-      LTJ is a backend service for storing and retrieving data about important
-      natural sites and observations thereof. This information is structured
-      along the form of a database developed in the City of Helsinki during
-      several years. It is not particularly specific to Helsinki and should be
-      usable elsewhere as well.
+      This document is work in progress and API is not yet published
 
 # TODO Update legal documents and contact information
 #  termsOfService: ''
@@ -1934,7 +1930,9 @@ components:
               description: Type of coordinate. Possible values are Point, Polygon, MultiPolygon or LineString
                 #TODO This needs to be checked
             coordinates:
-              #TODO This is usualy an array of arrays
+              #TODO This is usualy an array of arrays but with MultiPolygon it
+              # is array of arrays but there didn't seem to be a way to document
+              # different types of return values
               type: array
               items:
                 type: array
