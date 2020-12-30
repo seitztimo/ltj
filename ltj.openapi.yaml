@@ -3239,5 +3239,3 @@ components:
           description: URL to related feature
       required:
       - feature
-
-#muokkaustestaus Sanna
