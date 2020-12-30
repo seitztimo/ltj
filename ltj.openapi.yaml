@@ -76,14 +76,14 @@ paths:
         required: true
         description: ID of this abundance
         schema:
-          type: string
+          type: string        
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Abundance'
-          description: Abundance infrotmation of observation
+          description: Abundance information of observation
       tags:
       - v1
 
@@ -1985,7 +1985,7 @@ components:
         text:
           type: string
           readOnly: true
-          description: Textual description for the feature. Text may include HTML formating
+          description: Textual description for the feature. Text may include HTML formatting
             #TODO This needs to be checked
         values:
           type: array
@@ -2008,7 +2008,7 @@ components:
           type: array
           items:
             type: string
-          description: List of api URLs to habitat type observation relaed to this feature
+          description: List of api URLs to habitat type observation related to this feature
         links:
           type: array
           description: List of links related to this article
